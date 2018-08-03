@@ -71,8 +71,8 @@ export default class Home extends React.Component {
                                 <Left>
                                     <Button rounded transparent onPress={() => this.props.navigation.goBack()}
                                         style={{ width: 50, height: 50 }} >
-                                        <Icon name="search" style={styles.icon} /> 
-                                        {/* <CustomIcon name="clubs" size ={30} style={{color:"#ffffff"}} /> */}
+                                        {/* <Icon name="search" style={styles.icon} />  */}
+                                        <CustomIcon name="clubs" size ={30} style={{color:"#ffffff"}} />
                                     </Button>
                                 </Left>
                                 <View>
