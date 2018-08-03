@@ -29,7 +29,7 @@ import IconRippe from '../../Components/IconRippe.js'
 
 import LinearGradient from 'react-native-linear-gradient';
 
-const screenBg = require("../../../assets/background.png");
+//const screenBg = require("../../../assets/background.png");
 const logo = require("../../../assets/logo.png");
 const playSrc = require("../../../assets/play3x.png");
 const replaySrc = require("../../../assets/replay3x.png");
