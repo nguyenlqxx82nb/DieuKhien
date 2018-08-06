@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, View, TouchableWithoutFeedback, Animated, Easing, Platform, Image} from 'react-native';
 import PropTypes from 'prop-types';
+import CustomIcon from './CustomIcon.js'
+
 import {
     Icon
 } from "native-base";
@@ -42,11 +44,13 @@ const propTypes = {
     */
     disabled: PropTypes.bool,
     
-    square : PropTypes.bool,
+    square: PropTypes.bool,
 
-    height : PropTypes.number,
+    height: PropTypes.number,
 
-    width : PropTypes.number,
+    width: PropTypes.number,
+
+    vector: PropTypes.bool,
 
     /**
     * Size of icon (default is 24 - see spacing in palette)
@@ -55,7 +59,7 @@ const propTypes = {
     /**
     * Name of icon to show
     */
-    //name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     /**
     * It'll be used instead of icon (see props name) if exists
     */
@@ -73,7 +77,7 @@ const propTypes = {
 const defaultProps = {
     children: null,
     onPress: null,
-    color: null,
+    color: "#ffffff",
     underlayColor: null,
     square : true,
     height : null,
@@ -83,6 +87,7 @@ const defaultProps = {
     percent: 90,
     maxOpacity: 0.16,
     style: {},
+    vector  :false
 };
 
 class IconRippe extends PureComponent {
@@ -147,16 +152,31 @@ class IconRippe extends PureComponent {
             />
         );
     }
-    render() {
-        const { size, color, iconSource, width, height,square } = this.props;
-        const {containerSize} = this.state;
-        const iconContainer = { width: containerSize.width, height: containerSize.height };
-        const iconSize = {width:size, height:size};
 
+    renderImageView(){
+        const { size, color, iconSource, width, height,square, name, vector } = this.props;
+        const iconSize = {width:size, height:size};
         if(!square){
             iconSize.height = height;
             iconSize.width = width;
         }
+
+        if(!vector){
+            return(<Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />);
+        }
+        else{
+            //console.warn("Vector icon = "+name +", size = "+size);
+            return(
+                <CustomIcon name={name} size ={size} style={{color:color}} />
+            );
+        }
+    }
+
+    render() {
+        //const { size, color, iconSource, width, height,square, name, vector } = this.props;
+        const {containerSize} = this.state;
+        const iconContainer = { width: containerSize.width, height: containerSize.height };
+        
         //console.warn(" render width= "+containerSize.width +" , height = "+containerSize.height +", size = "+size);
         return (
             <View onLayout={(event) => { this.find_dimesions(event.nativeEvent.layout) }} 
@@ -164,7 +184,7 @@ class IconRippe extends PureComponent {
                 <TouchableWithoutFeedback onPressIn={this.onPressedIn} onPressOut={this.onPressedOut}>
                     <View style={[styles.iconContainer,iconContainer]}>
                         {this.renderRippleView()}
-                        <Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />
+                        {this.renderImageView()}
                     </View>
                 </TouchableWithoutFeedback>
             </View>

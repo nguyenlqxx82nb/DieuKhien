@@ -1,46 +1,24 @@
 import React from "react";
-import { StatusBar, ImageBackground, Image, StyleSheet, Dimensions } from "react-native";
+import { StatusBar, Image, StyleSheet, Dimensions } from "react-native";
 
 import {
     Button,
     Text,
     Container,
-    Card,
-    CardItem,
-    Body,
-    Content,
-    Header,
-    Title,
     Left,
-    Icon,
     Right,
-    View,
-    Footer,
-    FooterTab
+    View
 } from "native-base";
 
-import CustomIcon from '../../Components/CustomIcon.js'
 import AutoHeightImage from 'react-native-auto-height-image';
 import { Col, Grid, Row } from "react-native-easy-grid";
-import TextTicker from 'react-native-text-ticker'
-
-import styles from "./styles";
 import IconRippe from '../../Components/IconRippe.js'
 
 import LinearGradient from 'react-native-linear-gradient';
+import Footer from '../Footer/footer.js';
 
-//const screenBg = require("../../../assets/background.png");
+
 const logo = require("../../../assets/logo.png");
-const playSrc = require("../../../assets/play3x.png");
-const replaySrc = require("../../../assets/replay3x.png");
-const nextSrc = require("../../../assets/next3x.png");
-const micSrc = require("../../../assets/mic3x.png");
-const emojiSrc = require("../../../assets/emoji3x.png");
-const volmSrc = require("../../../assets/volume3x.png");
-const listSrc = require("../../../assets/iconList3x.png");
-const arrowLeftSrc = require("../../../assets/arrowLeft.png");
-const arrowRightSrc = require("../../../assets/arrowRight.png");
-const marqBgSrc = require("../../../assets/marqBg.png");
 const singerOptSrc = require("../../../assets/singer.png");
 const hotOptSrc = require("../../../assets/hot.png");
 const onlineOptSrc = require("../../../assets/online.png");
@@ -58,7 +36,7 @@ export default class Home extends React.Component {
     }
 
     render() {
-        console.warn("SCREEN WIDTH : "+screen.width+" , Height: "+screen.height);
+        //console.warn("SCREEN WIDTH : "+screen.width+" , Height: "+screen.height);
         return (
 
             <Container>
@@ -69,19 +47,18 @@ export default class Home extends React.Component {
                             <View style={{justifyContent: "center",flex:1, flexDirection: "row", backgroundColor: 'rgba(52, 52, 52, 0.0)',
                                             alignItems: "center", marginTop: 25, height: 55 }}>
                                 <Left>
-                                    <Button rounded transparent onPress={() => this.props.navigation.goBack()}
-                                        style={{ width: 50, height: 50 }} >
-                                        {/* <Icon name="search" style={styles.icon} />  */}
-                                        <CustomIcon name="clubs" size ={30} style={{color:"#ffffff"}} />
-                                    </Button>
+                                    {/* <CustomIcon name="search" size ={30} style={{color:"#ffffff"}} />  */}
+                                    <View style={{ width: 50, height: 50, marginLeft:0}}>
+                                        <IconRippe vector={true} name="search" size={25} color="#fff"/> 
+                                    </View>
                                 </Left>
                                 <View>
                                     <AutoHeightImage source={logo} width={70} ></AutoHeightImage>
                                 </View>
                                 <Right>
-                                    <Button rounded transparent>
-                                        <Icon name="menu" style={styles.icon} />
-                                    </Button>
+                                    <View style={{ width: 50, height: 50, marginLeft:0}}>
+                                        <IconRippe vector={true} name="menu" size={25} color="#fff"/> 
+                                    </View>
                                 </Right>
                             </View>
                         </Row>
@@ -127,77 +104,9 @@ export default class Home extends React.Component {
                         </Row>
 
                         <Row style={{ height: 120, justifyContent:"center",alignItems:"center"}}>
-                            <View style={{opacity:1, flex:1, backgroundColor: "#444083", flexDirection: "row", height: 120, paddingTop: 5, paddingBottom: 5 }}>
-                                <Grid>
-                                    <Row size={1}>
-                                        <Grid>
-                                            <Col style={{ width: 60, alignItems: "flex-start" }}>
-                                                <View style={{ flex: 1, width: 40, marginLeft: 10 }}>
-                                                    <IconRippe size={25} iconSource={volmSrc} />
-                                                </View>
-                                            </Col>
-                                            <Col style={{ justifyContent: "center", alignItems: "center" }}>
-                                                <View style={{ width: 190, position: "relative" }}>
-                                                    <Image source={arrowLeftSrc} style={{ position: "absolute", left: -20, top: 5, width: 16, height: 16 }} />
-                                                    <TextTicker
-                                                        style={{ fontSize: 16, color: 'white', width: 190 }}
-                                                        duration={20000}
-                                                        loop
-                                                        scroll
-                                                        repeatSpacer={0}
-                                                        marqueeDelay={0}
-                                                    >
-                                                        Super long piece of text is long. The quick brown fox jumps over the lazy dog.
-                                            </TextTicker>
-                                                    <Image source={marqBgSrc} style={{ position: "absolute", left: 0, top: 0, width: 190, height: 25 }} />
-                                                    <Image source={arrowRightSrc} style={{ position: "absolute", right: -20, top: 5, width: 16, height: 16 }} />
-                                                </View>
-                                            </Col>
-                                            <Col style={{ width: 60, alignItems: "flex-end" }}>
-                                                <View style={{ flex: 1, width: 40, marginRight: 10 }}>
-                                                    <IconRippe size={25} iconSource={listSrc} />
-                                                </View>
-                                            </Col>
-                                        </Grid>
-                                    </Row>
-                                    <Row size={2}>
-                                        <Grid>
-                                            <Col size={1} style={[style.container_center]}>
-                                                <View style={style.container2}>
-                                                    <IconRippe size={30} iconSource={emojiSrc} />
-                                                </View>
-                                            </Col>
-                                            <Col size={1} style={[style.container_center]}>
-                                                <View style={style.container2}>
-                                                    <IconRippe size={30} iconSource={replaySrc} />
-                                                </View>
-                                            </Col>
-                                            <Col size={1}>
-                                                <IconRippe size={50} iconSource={playSrc} />
-                                            </Col>
-                                            <Col size={1} style={[style.container_center]}>
-                                                <View style={style.container2}>
-                                                    <IconRippe size={25} iconSource={nextSrc} />
-                                                </View>
-                                            </Col>
-                                            <Col size={1} style={[style.container_center]}>
-                                                <View style={style.container2}>
-                                                    <IconRippe size={25} iconSource={micSrc} />
-                                                </View>
-                                            </Col>
-                                        </Grid>
-                                    </Row>
-                                </Grid>
-                            </View>
+                            <Footer />
                         </Row>
                     </Grid>
-                    {/* 
-
-                    <Content padder>
-                       
-                    </Content>
-
-                     */}
                 </LinearGradient>
                 <StatusBar
                     backgroundColor="transparent"
