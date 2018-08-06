@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Animated, Easing, Platform, Image} from 'react-native';
+import { StyleSheet, View, TouchableWithoutFeedback, Animated, Easing, Platform, Image, Text} from 'react-native';
 import PropTypes from 'prop-types';
 import CustomIcon from './CustomIcon.js'
 
@@ -52,6 +52,9 @@ const propTypes = {
 
     vector: PropTypes.bool,
 
+    text : PropTypes.object,
+
+    textColor : PropTypes.string,
     /**
     * Size of icon (default is 24 - see spacing in palette)
     */
@@ -87,7 +90,14 @@ const defaultProps = {
     percent: 90,
     maxOpacity: 0.16,
     style: {},
-    vector  :false
+    vector  :false,
+    textColor : "#fff",
+    text:{
+        content :"",
+        layout : 1,
+        fontFamily: "Arial",
+        fontSize : 16
+    }
 };
 
 class IconRippe extends PureComponent {
@@ -154,22 +164,55 @@ class IconRippe extends PureComponent {
     }
 
     renderImageView(){
-        const { size, color, iconSource, width, height,square, name, vector } = this.props;
+        const { textColor,size, color, iconSource, width, height,square, name, vector,text } = this.props;
         const iconSize = {width:size, height:size};
         if(!square){
             iconSize.height = height;
             iconSize.width = width;
         }
 
-        if(!vector){
-            return(<Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />);
+        if(text.content == ""){
+            if(!vector){
+                return(<Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />);
+            }
+            else{
+                return(
+                    <CustomIcon name={name} size ={size} style={{color:color}} />
+                );
+            }
         }
         else{
-            //console.warn("Vector icon = "+name +", size = "+size);
-            return(
-                <CustomIcon name={name} size ={size} style={{color:color}} />
-            );
+            if(!vector){
+                return(
+                    <View>
+                        <Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />
+                        <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize}}>{text.content}</Text>
+                    </View>
+                );
+            }
+            else{
+               // console.warn("text = "+text.content + " , layout = "+text.layout);
+                if(text.layout == 1){
+                    return(
+                        <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
+                            <CustomIcon name={name} size ={size} style={{color:color}} />
+                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingLeft:5}}>{text.content}</Text>
+                        </View>
+                    );
+                }    
+                else{
+                    return(
+                        <View style={{alignItems:"center"}}>
+                            <View style={{width:size,height:size,alignItems:"center",justifyContent:"center"}}>
+                                <CustomIcon name={name} size ={size} style={{color:color}} />
+                            </View>
+                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingTop:5}}>{text.content}</Text>
+                        </View>
+                    );
+                }
+            }
         }
+        
     }
 
     render() {

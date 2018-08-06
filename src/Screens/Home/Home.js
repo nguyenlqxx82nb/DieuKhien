@@ -70,13 +70,15 @@ export default class Home extends React.Component {
                                         <Grid>
                                             <Col size={1}>
                                                 <LinearGradient start={{x: 0.0, y: 0}} end={{x: 0.9, y: 0.7}} colors={['#FF8888', '#EE4B4C', '#DB0909']} style={[style.container3, { backgroundColor: "#DE1313" }]}>
-                                                    <IconRippe square={false} width={75} height={103} iconSource={hotOptSrc} /> 
+                                                    <IconRippe vector={true} name="hotOpt" size={80} text={{content:"BÀI HOT",layout : 2,
+                                                                                                fontFamily: "Arial",fontSize : 20}} /> 
                                                 </LinearGradient>
                                             </Col>
                                             <Col size={1}>
                                                 <LinearGradient  start={{x: 0.0, y: 0}} end={{x: 0.9, y: 0.7}}
                                                     locations={[0.3,0.6,1]} colors={['#FFF70A', '#FFBB06', '#FF5A01']} style={[style.container3, { backgroundColor: "#FF7B03" }]}>
-                                                    <IconRippe square={false} width={75} height={103} iconSource={singOptSrc} />
+                                                        <IconRippe vector={true} name="singOpt" size={77} text={{content:"BÀI HÁT",layout : 2,
+                                                                                                fontFamily: "Arial",fontSize : 20}} /> 
                                                 </LinearGradient>
                                             </Col>
                                         </Grid>
@@ -84,19 +86,22 @@ export default class Home extends React.Component {
                                     <Row size={1}>
                                         <Col size={1}>
                                             <LinearGradient colors={['#D1EB3F', '#6DCD34', '#0AAF29']}  style={[style.container3, { backgroundColor: "#52C531" }]}>
-                                                <IconRippe square={false} width={75} height={103} iconSource={singerOptSrc} />
+                                                <IconRippe vector={true} name="singerOpt" size={77} text={{content:"CA SỸ",layout : 2,
+                                                                                                fontFamily: "Arial",fontSize : 20}} /> 
                                             </LinearGradient>
                                         </Col>
                                         <Col size={1}>
                                             <LinearGradient colors={['#FF99CC', '#BD4ED4', '#7F08DC']}  style={[style.container3, { backgroundColor: "#A230D8" }]}>
-                                                <IconRippe square={false} width={75} height={103} iconSource={typeOptSrc} />
+                                                <IconRippe vector={true} name="theloai" size={77} text={{content:"THỂ LOẠI",layout : 2,
+                                                                                                fontFamily: "Arial",fontSize : 20}} /> 
                                             </LinearGradient>
                                         </Col>
                                     </Row>
                                     <Row size={1}>
                                         <LinearGradient start={{x: 0.0, y: 0}} end={{x: 0.9, y: 0.7}}
                                                     locations={[0.1,0.4,1]} colors={['#7DC4E3', '#59A3DB', '#3481D3']}  style={[style.container3, { backgroundColor: "#4994D8" }]}>
-                                            <IconRippe square={false} width={223} height={80} iconSource={onlineOptSrc} />
+                                            <IconRippe vector={true} name="musicOnline" size={80} text={{content:"NHẠC ONLINE",layout : 1,
+                                                                                                fontFamily: "Arial",fontSize : 20}} />
                                         </LinearGradient>
                                     </Row>
                                 </Grid>
