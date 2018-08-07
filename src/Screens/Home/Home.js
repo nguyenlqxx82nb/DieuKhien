@@ -49,7 +49,9 @@ export default class Home extends React.Component {
                                 <Left>
                                     {/* <CustomIcon name="search" size ={30} style={{color:"#ffffff"}} />  */}
                                     <View style={{ width: 50, height: 50, marginLeft:0}}>
-                                        <IconRippe vector={true} name="search" size={25} color="#fff"/> 
+                                        <IconRippe vector={true} name="menu" size={25} color="#fff"
+                                            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+                                        />
                                     </View>
                                 </Left>
                                 <View>
@@ -57,7 +59,9 @@ export default class Home extends React.Component {
                                 </View>
                                 <Right>
                                     <View style={{ width: 50, height: 50, marginLeft:0}}>
-                                        <IconRippe vector={true} name="menu" size={25} color="#fff"/> 
+                                        <IconRippe vector={true} name="search" size={25} color="#fff"
+                                            onPress={()=>this.props.navigation.navigate("Sing")}
+                                        /> 
                                     </View>
                                 </Right>
                             </View>

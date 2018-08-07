@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         // margin: 16,
         alignItems: 'center',
         justifyContent: 'center',
+        //backgroundColor:"red"
     },
 });
 
@@ -110,7 +111,7 @@ class IconRippe extends PureComponent {
             containerSize : {width:1,height:1},
             maxOpacity,
             scaleValue: new Animated.Value(0.01),
-            opacityValue: new Animated.Value(maxOpacity),
+            opacityValue: new Animated.Value(maxOpacity)
         };
 
         this.renderRippleView = this.renderRippleView.bind(this);
@@ -124,7 +125,8 @@ class IconRippe extends PureComponent {
             duration: 225,
             easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             useNativeDriver: Platform.OS === 'android',
-        }).start();
+        }).start(()=>{
+        });
     }
     onPressedOut() {
         const {containerSize} = this.state;
@@ -137,24 +139,22 @@ class IconRippe extends PureComponent {
             this.state.scaleValue.setValue(0.01);
             this.state.opacityValue.setValue(maxOpacity);
         });
-        //console.warn("container size : "+containerSize.width);
+        
         if(onPress){
             onPress();
         }
     }
     renderRippleView() {
         const { size, color } = this.props;
-        const { scaleValue, opacityValue, containerSize } = this.state;
+        const { scaleValue, opacityValue, containerSize,width } = this.state;
 
         return (
             <Animated.View
+                ref={component => this._rippleView = component}
                 style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    width: containerSize.width,
-                    height: containerSize.height,
-                    borderRadius: containerSize.height / 2,
                     transform: [{ scale: scaleValue }],
                     opacity: opacityValue,
                     backgroundColor: color || 'white',
@@ -217,15 +217,16 @@ class IconRippe extends PureComponent {
 
     render() {
         //const { size, color, iconSource, width, height,square, name, vector } = this.props;
-        const {containerSize} = this.state;
-        const iconContainer = { width: containerSize.width, height: containerSize.height };
+        const {size} = this.state;
+        const iconContainer = { width: size*2, height: size*2 };
         
         //console.warn(" render width= "+containerSize.width +" , height = "+containerSize.height +", size = "+size);
         return (
-            <View onLayout={(event) => { this.find_dimesions(event.nativeEvent.layout) }} 
+            <View 
+                onLayout={(event) => { this.find_dimesions(event.nativeEvent.layout) }} 
                 style={{flex: 1}} >
                 <TouchableWithoutFeedback onPressIn={this.onPressedIn} onPressOut={this.onPressedOut}>
-                    <View style={[styles.iconContainer,iconContainer]}>
+                    <View style={[styles.iconContainer]}>
                         {this.renderRippleView()}
                         {this.renderImageView()}
                     </View>
@@ -236,10 +237,10 @@ class IconRippe extends PureComponent {
 
     find_dimesions(layout){
         const {x, y, width, height} = layout;
-        this.state.containerSize.width = width;
-        this.state.containerSize.height = height;
-        //console.warn(" find_dimesions width= "+width +" , height = "+height);
-        this.forceUpdate();
+        this._rippleView.setNativeProps({style:{
+            width: width,
+            height: height,
+            borderRadius: width/2}});
     }
 }
 
