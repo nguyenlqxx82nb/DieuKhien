@@ -1,14 +1,33 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import HomeScreen from "./Home.js";
 import SideBar from "../../SideBar/SideBar.js";
-import { DrawerNavigator } from "react-navigation";
+import SingScreen from "../BaiHat/index.js"
 
-const HomeScreenRouter = DrawerNavigator(
+import { StackNavigator, DrawerNavigator } from "react-navigation";
+
+const Drawer = DrawerNavigator(
     {
-        Home : {screen : HomeScreen}
+        Home: { screen: HomeScreen },
+        Sing: { screen: SingScreen }
     },
     {
-        contentComponent: props => <SideBar {...props}/>
+        initialRouteName: "Home",
+        contentComponent: props => <SideBar {...props} />
     }
 );
-export default HomeScreenRouter;
+
+const AppNavigator = StackNavigator(
+    {
+        Drawer: { screen: Drawer },
+        //Header1: { screen: Header1 }
+    },
+    {
+        initialRouteName: "Drawer",
+        headerMode: "none"
+    }
+);
+
+export default () =>
+  <Root>
+    <AppNavigator />
+  </Root>;
