@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Dimensions } from "react-native";
+import { Image, StyleSheet, Dimensions, Animated } from "react-native";
 import {
     Right,
     View
@@ -8,6 +8,8 @@ import {
 import { Col, Grid, Row } from "react-native-easy-grid";
 import TextTicker from 'react-native-text-ticker'
 import IconRippe from '../../Components/IconRippe.js'
+import PropTypes from 'prop-types';
+import BaseScreen from '../ScreenBase.js';
 
 const arrowLeftSrc = require("../../../assets/arrowLeft.png");
 const arrowRightSrc = require("../../../assets/arrowRight.png");
@@ -18,17 +20,34 @@ const screen = {
     height : Dimensions.get("window").height
 }
 
-export default class Footer extends React.Component {
+export default class FooterHome extends BaseScreen {
+    static propTypes = {
+        //number: PropTypes.number.isRequired,
+        //color: PropTypes.string.isRequired,
+        onTest: PropTypes.func,
+        //duration : PropTypes.number
+    };
+
     constructor(props) {
         super(props);
+        //this.onPlayPress = this.onPlayPress.bind(this);
+    }
+
+    onPlayPress =() => {
+        const {onTest} = this.props;
+        if(onTest != null){
+            onTest();
+        }
     }
 
     render() {
-        //console.warn("SCREEN WIDTH : "+screen.width+" , Height: "+screen.height);
+        const {opacityValue} = this.state1;
         return (
-            <View style={{opacity:1, flex:1, backgroundColor: "#444083", flexDirection: "row", height: 120, paddingTop: 5, paddingBottom: 5 }}>
+            <Animated.View
+                ref={ref => (this._container = ref)} 
+                style={[styles.footerContainer,{opacity:opacityValue}]}>
                 <Grid>
-                    <Row size={1}>
+                    <Row style={{height:40}}>
                         <Grid>
                             <Col style={{ width: 60, alignItems: "flex-start" }}>
                                 <View style={{ flex: 1, width: 40, marginLeft: 10 }}>
@@ -59,42 +78,54 @@ export default class Footer extends React.Component {
                             </Col>
                         </Grid>
                     </Row>
-                    <Row size={2}>
+                    <Row style={{height:75}}>
                         <Grid>
-                            <Col size={1} style={[style.container_center]}>
-                                <View style={style.container2}>
+                            <Col size={1} style={[styles.container_center]}>
+                                <View style={styles.container2}>
                                     <IconRippe vector={true} size={30} name="emoji" />
                                 </View>
                             </Col>
-                            <Col size={1} style={[style.container_center]}>
-                                <View style={style.container2}>
+                            <Col size={1} style={[styles.container_center]}>
+                                <View style={styles.container2}>
                                     <IconRippe vector={true} size={30} name="replay" />
                                 </View>
                             </Col>
                             <Col size={1}>
-                                <IconRippe vector={true} size={50} name="play" />
+                                <IconRippe vector={true} size={50} name="play" onPress={this.onPlayPress} />
                             </Col>
-                            <Col size={1} style={[style.container_center]}>
-                                <View style={style.container2}>
+                            <Col size={1} style={[styles.container_center]}>
+                                <View style={styles.container2}>
                                     <IconRippe vector={true} size={25} name="next" />
                                 </View>
                             </Col>
-                            <Col size={1} style={[style.container_center]}>
-                                <View style={style.container2}>
+                            <Col size={1} style={[styles.container_center]}>
+                                <View style={styles.container2}>
                                     <IconRippe vector={true} size={30} name="micOn" />
                                 </View>
                             </Col>
                         </Grid>
                     </Row>
                 </Grid>
-            </View>
+            </Animated.View>
         );
     }
 }
 
-const style = StyleSheet.create({
-    container_center: {
-        justifyContent: "center", alignItems: "center"
+
+const styles = StyleSheet.create({
+    container_center :{
+        justifyContent:"center",
+        alignItems:"center"
+    },
+    footerContainer: {
+        position:"absolute",
+        width: screen.width,
+        bottom:0,
+        backgroundColor: "#444083", 
+        height: 115, 
+        paddingTop: 5, 
+        paddingBottom: 5,
+        zIndex:2,
     },
     container2: {
         width: 55, height: 55, marginTop: 15

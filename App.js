@@ -8,13 +8,16 @@
 
 import React, {Component} from 'react';
 //import {Platform, StyleSheet, Text, View} from 'react-native';
-import HomeScreen from "./src/Screens/Home/index.js"
+import Test from "./src/Screens/index.js"
+import ExamAni from "./src/Animate/App.js"
+import UList from "./src/ulist/index.js"
+//import FluidExam from "./src/fluid/index.js"
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <HomeScreen />
+      <Test />
     );
   }
 }

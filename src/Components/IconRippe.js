@@ -191,25 +191,34 @@ class IconRippe extends PureComponent {
                 );
             }
             else{
-               // console.warn("text = "+text.content + " , layout = "+text.layout);
-                if(text.layout == 1){
+                if(name == ""){
                     return(
                         <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
-                            <CustomIcon name={name} size ={size} style={{color:color}} />
-                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingLeft:5}}>{text.content}</Text>
-                        </View>
-                    );
-                }    
-                else{
-                    return(
-                        <View style={{alignItems:"center"}}>
-                            <View style={{width:size,height:size,alignItems:"center",justifyContent:"center"}}>
-                                <CustomIcon name={name} size ={size} style={{color:color}} />
-                            </View>
-                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingTop:5}}>{text.content}</Text>
+                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor}}>{text.content}</Text>
                         </View>
                     );
                 }
+                else{
+                    if(text.layout == 1){
+                        return(
+                            <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
+                                <CustomIcon name={name} size ={size} style={{color:color}} />
+                                <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingLeft:text.left}}>{text.content}</Text>
+                            </View>
+                        );
+                    }    
+                    else{
+                        return(
+                            <View style={{alignItems:"center"}}>
+                                <View style={{width:size,height:size,alignItems:"center",justifyContent:"center"}}>
+                                    <CustomIcon name={name} size ={size} style={{color:color}} />
+                                </View>
+                                <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor}}>{text.content}</Text>
+                            </View>
+                        );
+                    }
+                }
+                
             }
         }
         
