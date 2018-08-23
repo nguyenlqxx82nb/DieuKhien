@@ -9,10 +9,7 @@
 import React, {Component} from 'react';
 //import {Platform, StyleSheet, Text, View} from 'react-native';
 import Test from "./src/Screens/index.js"
-import ExamAni from "./src/Animate/App.js"
-import UList from "./src/ulist/index.js"
-//import FluidExam from "./src/fluid/index.js"
-
+//import RTCSocket from './RctSockets.js'
 type Props = {};
 export default class App extends Component<Props> {
   render() {

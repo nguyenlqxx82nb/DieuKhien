@@ -23,6 +23,7 @@ class BaseScreen extends React.Component {
     show = () => {
         let container = this._container;
         const {maxZindex} = this.props;
+        var that = this;
         //console.warn("maxZindex = "+maxZindex);
         //if(maxZindex == '')
         Animated.timing(this.state1.opacityValue, {
@@ -35,8 +36,15 @@ class BaseScreen extends React.Component {
                     zIndex: maxZindex
                 }
             });
+
+            that.showCompleted();
         });
     }
+
+    showCompleted = () =>{
+
+    }
+
     hide = () => {
         let container = this._container;
         Animated.timing(this.state1.opacityValue, {
