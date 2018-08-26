@@ -77,7 +77,7 @@ export default class SongTabsView extends React.Component {
                             underlineStyle={{ height: 0 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 14, color: "#fff" }}
+                            textStyle={{ fontSize: 13, color: "#fff", fontFamily:"SF-Pro-Text-Bold" }}
                             style={{ borderWidth: 0 }}
                         />}
                     >
@@ -88,28 +88,12 @@ export default class SongTabsView extends React.Component {
                                 <SongListView lan={lan} ref={ref => (this._tabs[index] = ref)} />
                             </View>) ;
                     })}
-                        {/* <View style={[styles.tabContent]} tabLabel='VIỆT NAM'>
-                            <SongListView lan='vn' ref={ref => (this._tabs[0] = ref)} />
-                        </View>
-                        <View style={[styles.tabContent]} tabLabel='ENGLISH'>
-                            <SongListView lan='en' ref={ref => (this._tabs[1] = ref)} />
-                        </View>
-                        <View style={[styles.tabContent]} tabLabel='CHINESE'>
-                            <SongListView lan='cn' ref={ref => (this._tabs[2] = ref)}  />
-                        </View>
-                        <View style={[styles.tabContent]} tabLabel='JAPANESE'>
-                            <SongListView lan='ja' ref={ref => (this._tabs[3] = ref)} />
-                        </View>
-                        <View style={[styles.tabContent]} tabLabel='KOREAN'>
-                            <SongListView lan='kr' ref={ref => (this._tabs[4] = ref)} />
-                        </View> */}
                     </ScrollableTabView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    
     tabContent: {
         flex: 1,
         marginTop: 50,

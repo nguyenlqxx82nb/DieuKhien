@@ -8,6 +8,13 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 public class Tools {
 
     public static void getPlaybackInfo() {
@@ -92,6 +99,105 @@ public class Tools {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void synchronousPlaybackQueue(final ReactContext reactContext) {
+        new Thread(new Runnable() {
+            public void run() {
+                Boolean isFirst = true;
+                while (true) {
+                    Socket socket = null;
+                    OutputStream writes = null;
+                    Boolean flag = false;
+                    while(Constants.HOST_IP.length()<5)
+                    {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        socket = new Socket();
+                        SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                        socket.connect(socketAddress, 3000);
+                        writes = socket.getOutputStream();
+                        byte[] buff = new byte[2048];
+                        buff[3] = (byte) 149;
+                        writes.write(buff);
+                        writes.flush();
+
+                        InputStream inputStream = socket.getInputStream();// ������������������socket��������
+                        byte[] bytes = new byte[1024];
+                        inputStream.read(bytes);
+                        byte[] songIdQueue = new byte[1020];
+                        System.arraycopy(bytes, 4, songIdQueue, 0, 1020);
+                        String songIdQueueString = new String(songIdQueue);
+                        String[] songIdQueueArray = songIdQueueString.split(",");
+                        int queueLen = Global.playQueue.size();
+                        WritableArray queue = Arguments.createArray();
+                        if (queueLen != songIdQueueArray.length - 1 || isFirst) {
+                            Global.playQueue.clear();
+                            for (int i = 0; i < songIdQueueArray.length - 1; i++) {
+                                Global.playQueue.add(songIdQueueArray[i]);
+                                queue.pushString(songIdQueueArray[i]);
+                            }
+                            flag = true;
+                        } else {
+                            for (int i = 0; i < songIdQueueArray.length - 1; i++) {
+                                if (Global.playQueue.get(i).equals(songIdQueueArray[i])) {
+                                    continue;
+                                }
+                                Global.playQueue.clear();
+                                for (int j = 0; j < songIdQueueArray.length - 1; j++) {
+                                    Global.playQueue.add(songIdQueueArray[j]);
+                                    queue.pushString(songIdQueueArray[i]);
+                                }
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            WritableMap params = Arguments.createMap();
+                            params.putArray("taisao",queue);
+
+                            reactContext
+                                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                    .emit("test", params);
+                        }
+
+//                        WritableMap params = Arguments.createMap();
+//                        params.putInt("taisao",1);
+//
+//                        reactContext
+//                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+//                                .emit("test", params);
+
+                        isFirst = false;
+
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        //XLog.e(" synchronousPlaybackQueue error :" + e.getMessage());
+                        // alert("���ڲ���ʹ�ã�������ָ����wifi!");
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (Exception e) {
+                            // e.printStackTrace();
+                        }
+                    }
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
 }

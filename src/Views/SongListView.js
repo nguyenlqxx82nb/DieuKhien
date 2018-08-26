@@ -13,6 +13,7 @@ import { EventRegister } from 'react-native-event-listeners';
 import Databases from '../DataManagers/DatabaseManager.js';
 import DataInfo from '../DataManagers/DataInfo.js';
 import IndicatorView from './IndicatorView.js';
+import BoxControl from '../DataManagers/BoxControl.js';
 
 let { height, width } = Dimensions.get('window');
 export default class SongListView extends React.Component {
@@ -43,6 +44,7 @@ export default class SongListView extends React.Component {
     _hasData = true;
     _pageCount = 30;
     _searchTerm = "";
+    _hasChanged = false;
 
     constructor(props) {
         super(props);
@@ -64,20 +66,34 @@ export default class SongListView extends React.Component {
             }
         );
     }
-    updateSong = () => {
-        let hasChanged = false;
-        var newArr = this.state.datas.slice();
-        for (i = 0; i < DataInfo.PLAY_QUEUE.length; i++) {
-            if (this._dataKey[DataInfo.PLAY_QUEUE[i]] != null)
-                newArr[this._dataKey[DataInfo.PLAY_QUEUE[i]]].status = GLOBALS.SING_STATUS.SELECTED;
-        }
-        //this.state.datas.splice(this.state.datas.length - 1,1);
-        this.setState({
-            dataProvider: this.state.dataProvider.cloneWithRows(newArr),
-            datas: newArr
-        });
+    componentWillMount() {
+        this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
+            this.hasChanged = true;
+        })
+    }
+    
+    componentWillUnmount() {
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent)
+    }
 
-        //console.warn("updateSong "+this.state.datas.length);
+    updateSong = () => {
+        this.hasChanged = false;
+        var isChange = false;
+        for(i = 0; i < this.state.datas.length; i++){
+            if(DataInfo.PLAY_QUEUE.indexOf(this.state.datas[i].id) > -1){
+                this.state.datas[i].status = GLOBALS.SING_STATUS.SELECTED;
+                isChange = true;
+            }
+            else if(this.state.datas[i].status == GLOBALS.SING_STATUS.SELECTED){
+                this.state.datas[i].status = GLOBALS.SING_STATUS.NORMAL;
+                isChange = true;
+            }
+        }
+        
+        if(isChange)
+            this.setState({
+                dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas)
+            });
     }
 
     searchData = (term)=>{
@@ -104,11 +120,11 @@ export default class SongListView extends React.Component {
     loadData = (term) => {
         if(this._loading)
             return;
-
         if (this._loaded && this._searchTerm == term) {
-            setTimeout(() => {
-                this.updateSong();
-            }, 50);
+            if(this.hasChanged)
+                setTimeout(() => {
+                    this.updateSong();
+                }, 50);
             return;
         }
        // console.warn("loadData "+term);
@@ -184,7 +200,9 @@ export default class SongListView extends React.Component {
             songId: id,
             cmd: GLOBALS.CONTROL_CMD.SELECT
         }
-        EventRegister.emit('ControlEvent', data);
+
+        BoxControl.selectSong(id);
+        //EventRegister.emit('SongEvent', data);
     }
 
     _onEndReached = () => {
@@ -201,7 +219,7 @@ export default class SongListView extends React.Component {
     _renderFooter = () => {
         return (this._loading && this._loaded) ?
             <View style={{ height: 60, width: '100%', justifyContent: "center", alignContent: "center" }}>
-                <IndicatorView />
+                <IndicatorView isShow ={true} />
             </View> :
             <View style={{ height: 1, width: '100%' }} />;
     }
@@ -226,7 +244,7 @@ export default class SongListView extends React.Component {
                     alignItems: "center", height: 60, marginLeft: 17, marginRight: 5
                 }}>
                     <View style={{ flex: 1 }}>
-                        <Text style={[styles.listText, { fontSize: 17, lineHeight: 30, color: singColor }]}>
+                        <Text style={[styles.listText, { fontSize: 17, lineHeight: 25, color: singColor }]}>
                             {singTitle}
                         </Text>
                         <Text style={[styles.listText, { fontSize: 13, color: singerColor }]}>
@@ -254,9 +272,7 @@ export default class SongListView extends React.Component {
                     rowRenderer={this._rowRenderer}
                     renderFooter={this._renderFooter}
                     extendedState={this.state.dataProvider} />
-
-                <IndicatorView ref={ref => (this._indicator = ref)} />
-
+                <IndicatorView ref={ref => (this._indicator = ref)}/>
             </View>
 
         );
@@ -282,7 +298,8 @@ const styles = StyleSheet.create({
     },
 
     listText: {
-        color: "#fff"
+        color: "#fff",
+        fontFamily:'SF-Pro-Text-Regular'
     },
 
     indicator: {

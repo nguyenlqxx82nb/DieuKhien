@@ -3,6 +3,14 @@ include ':react-native-bte-lib'
 project(':react-native-bte-lib').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bte-lib/android')
 include ':react-native-bte-lib'
 project(':react-native-bte-lib').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bte-lib/android')
+include ':react-native-threads'
+project(':react-native-threads').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-threads/android')
+include ':react-native-bte-lib'
+project(':react-native-bte-lib').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bte-lib/android')
+include ':react-native-bte-lib'
+project(':react-native-bte-lib').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bte-lib/android')
+include ':react-native-bte-lib'
+project(':react-native-bte-lib').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-bte-lib/android')
 include ':react-native-tcp'
 project(':react-native-tcp').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-tcp/android')
 include ':react-native-linear-gradient'

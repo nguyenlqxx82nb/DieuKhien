@@ -21,10 +21,6 @@ export default class SingScreen extends BaseScreen {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
     };
-    static defaultProps = {
-        onOptionOverlayOpen: null,
-        onBack: null,
-    };
     constructor(props) {
         super(props);
     }
@@ -35,9 +31,8 @@ export default class SingScreen extends BaseScreen {
             onBack();
         }
     }
-    showCompleted = () =>{
+    _showCompleted = () =>{
         this._songTabs.loadData(this._searchInput.getValue());
-        
     }
 
     focusSearchInput = () =>{
@@ -45,8 +40,10 @@ export default class SingScreen extends BaseScreen {
     }
 
     _onChangeTab = (page) =>{
-        //console.warn("_onChangeTab");
-        this._songTabs.loadData(this._searchInput.getValue());
+        if(this._isVisible){
+            //console.warn("_onChangeTab");
+            this._songTabs.loadData(this._searchInput.getValue());
+        }
     }
     _onSearch =(value)=> {
         this._songTabs.searchData(value);
@@ -67,7 +64,7 @@ export default class SingScreen extends BaseScreen {
                     <SearchInput ref={ref=>(this._searchInput = ref)} onSearch={this._onSearch} />
                 </View>
 
-                <View style={{ flex: 1, marginBottom: 115 }}>
+                <View style={{ flex: 1}}>
                     <SongTabsView lanTabs={['vn','en','cn','ja','kr']} ref={ref => (this._songTabs = ref)} 
                         onChangeTab = {this._onChangeTab} />
                 </View>

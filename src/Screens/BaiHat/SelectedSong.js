@@ -22,99 +22,62 @@ export default class SelectedSong extends BaseScreen {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
     };
-    static defaultProps = {
-        onOptionOverlayOpen: null,
-        onBack: null,
-    };
+
     constructor(props) {
         super(props);
 
-        this._pos = new Animated.Value(screen.height);
+        this.songChanged = false;
     }
-
-    show = () => {
-        let that = this;
-        const { maxZindex } = this.props;
-
-        Animated.timing(this._pos, {
-            toValue: 0,
-            useNativeDriver: Platform.OS === 'android',
-            duration: 300,
-        }).start(function onComplete() {
-            that._songList.refreshData("");
-            // container.setNativeProps({
-            //     style: {
-            //         zIndex: maxZindex
-            //     }
-            // });
+    componentWillMount() {
+        // selected song changed
+        this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
+            if(this._isVisible){
+                this._songList.refreshData("");
+            }
+            else{
+                this.songChanged = true;
+            }
         });
     }
-
-    hide = () => {
-        let container = this._container;
-        //console.warn("maxZindex = "+maxZindex);
-        //if(maxZindex == '')
-        Animated.timing(this._pos, {
-            toValue: screen.height,
-            useNativeDriver: Platform.OS === 'android',
-            duration: 250,
-        }).start(function onComplete() {
-            // container.setNativeProps({
-            //     style: {
-            //         zIndex: 0
-            //     }
-            // });
-        });
+    componentWillUnmount() {
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
     }
-
     _onBack = () => {
         const { onBack } = this.props;
         if (onBack) {
             onBack();
         }
     }
-    showCompleted = () =>{
-        this._songList.refreshData("");
+    _showCompleted = () =>{
+        if(this.songChanged){
+            this._songList.refreshData("");
+            this.songChanged = false;
+        }
     }
-    render = () => {
+    renderContentView = () => {
         //const { maxZindex } = this.props;
         return (
-            <Animated.View
-                ref={ref => (this._container = ref)}
-                style={[styles.container, { transform: [{ translateY: this._pos }] }]}>
-                {/* <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} /> */}
-                <View style={{ flex: 1,width:'100%' }}>
-                    <View style={styles.headerContainer}>
-                        <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                            <IconRippe vector={true} name="listClose" size={20} color="#fff"
-                                onPress={this._onBack}
-                            />
-                        </View>
-                        <Text style={[styles.title]}>
-                                Bài đã chọn
-                        </Text>
+            <View style={{ flex: 1,width:'100%' }}>
+                <View style={styles.headerContainer}>
+                    <View style={{ width: 40, height: 40, marginLeft: 10 }}>
+                        <IconRippe vector={true} name="listClose" size={20} color="#fff"
+                            onPress={this._onBack}
+                        />
                     </View>
-
-                    <View style={{ flex: 1, marginBottom: 115 }}>
-                        <SongListView ref={ref=>(this._songList = ref)} type = {GLOBALS.SONG_LIST_TYPE.SELECTED}  />
-                    </View>
+                    <Text style={[styles.title]}>
+                            Bài đã chọn
+                    </Text>
                 </View>
-            </Animated.View>
+
+                <View style={{ flex: 1}}>
+                    <SongListView ref={ref=>(this._songList = ref)} type = {GLOBALS.SONG_LIST_TYPE.SELECTED}  />
+                </View>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: "center",
-        alignItems: "center",
-        top:0,
-        position:"absolute",
-        height: screen.height,
-        width: screen.width,
-        zIndex:2,
-    },
-    
     headerContainer: {
         flexDirection: "row",
         alignItems: "center", 
@@ -128,11 +91,12 @@ const styles = StyleSheet.create({
         borderColor: '#00ECBC',
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '300',
-        marginLeft:20,
+        marginLeft:10,
         color:"#fff",
-        flex:1
+        flex:1,
+        fontFamily:'SF-Pro-Text-Regular'
     },
     imageBg:{
         position:"absolute",

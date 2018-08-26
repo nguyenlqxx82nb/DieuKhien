@@ -10,13 +10,19 @@ import SingScreen from '../BaiHat/index.js';
 import SelectedSong from '../BaiHat/SelectedSong.js';
 import SingOptionOverlay from './SingOptionOverlay.js';
 import { EventRegister } from 'react-native-event-listeners'
-import DataInfo from '../../DataManagers/DataInfo.js';
 import Globals from "../../DataManagers/Globals.js";
+import BoxControl from "../../DataManagers/BoxControl.js";
+import DATA_INFO from "../../DataManagers/DataInfo.js";
+import BTElib from 'react-native-bte-lib';
+import { DeviceEventEmitter } from 'react-native';
 
 const screen = {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
 }
+
+var songPlaying = null;
+var song_queue = [];
 
 export default class Taisao extends React.Component {
     _currentScreen = null;
@@ -24,18 +30,23 @@ export default class Taisao extends React.Component {
         super(props);
     }
 
-    componentWillMount() {
-        this._listenerControlEvent = EventRegister.addEventListener('ControlEvent', (data) => {
-            if(data.cmd == Globals.CONTROL_CMD.SELECT){
-                if(DataInfo.PLAY_QUEUE.indexOf(data.songId) === -1){
-                    DataInfo.PLAY_QUEUE.push(data.songId);
-                    setTimeout(()=>{
-                        EventRegister.emit('SongUpdate',DataInfo.PLAY_QUEUE);
-                    },500);
-                }
-            }
-        });
+    componentDidMount() {
+        //console.warn("componentDidMount");
+        this._currentScreen = this._homeScreen; 
+        //BoxControl.syncPlaybackQueue();
+        setTimeout(()=>{
+            this.ping();
+        },1000);
 
+       // BTElib.synsPlaybackQueue();
+        DeviceEventEmitter.addListener('test', this.test);
+    }
+
+    test = (e) =>{
+        console.warn("event leng = "+e['taisao'].length);
+    }
+
+    componentWillMount() {
         // Hide Footer
         this._listenerHideFooterEvent = EventRegister.addEventListener('HideFooter', (data) => {
             this._footer.hide();
@@ -44,7 +55,7 @@ export default class Taisao extends React.Component {
         this._listenerShowFooterEvent = EventRegister.addEventListener('ShowFooter', (data) => {
             setTimeout(()=>{
                 this._footer.show();
-            },500);
+            },300);
         });
         // Show overlay
         this._listenerShowOptOverlayEvent = EventRegister.addEventListener('ShowOptOverlay', (data) => {
@@ -54,40 +65,38 @@ export default class Taisao extends React.Component {
         });
     }
     componentWillUnmount() {
-        EventRegister.removeEventListener(this._listenerControlEvent);
+        //EventRegister.removeEventListener(this._listenerControlEvent);
         EventRegister.removeEventListener(this._listenerHideFooterEvent);
         EventRegister.removeEventListener(this._listenerShowFooterEvent);
         EventRegister.removeEventListener(this._listenerShowOptOverlayEvent);
     }
-
-    componentDidMount() {
-        this._currentScreen = this._homeScreen; 
-    }
     
     _onOpenSearch = () => {
-        this._homeScreen.hide();
         this._singScreen.show();
-        this._singScreen.focusSearchInput();
-        
+        setTimeout(()=>{
+            this._singScreen.focusSearchInput();
+        },300);
+
         this._currentScreen = this._singScreen;
     }
     _onOpenSelectedSong = () => {
-        this._currentScreen.hide();
+       // this._currentScreen.hide();
         this._selectedSong.show();
-
-        //this._currentScreen = this._selectedSong;
     }
-
+    _onOpenEmoji = () =>{
+        this._singOverlay.updateView(-1,Globals.SING_OVERLAY.EMOJI);
+        this._footer.hide();
+        this._singOverlay.show();
+    }
     _onBackHome = ()=>{
-        this._homeScreen.show();
+        //this._homeScreen.show();
         this._currentScreen.hide();
 
         this._currentScreen = this._homeScreen; 
     }
-
     _onCloseSelectedSong = () => {
         this._selectedSong.hide();
-        this._currentScreen.show();
+        //this._currentScreen.show();
     }
     _onSingOverlayClose = () => {
         this._footer.show();
@@ -95,22 +104,22 @@ export default class Taisao extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Image source={Globals.BackgroundImage} style={style.imageBg} />
-
                 <SingOptionOverlay opacity={0} maxZindex={5} ref={ref => (this._singOverlay = ref)} 
                     onClose ={this._onSingOverlayClose}
                 />
-                <SingScreen opacity= {0} maxZindex ={1}
+                <SingScreen opacity= {0} maxZindex ={2} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
                     onBack={this._onBackHome} ref={ref => (this._singScreen = ref)}
                 />
-                <SelectedSong maxZindex ={2}
+                <SelectedSong maxZindex ={2} transition = {Globals.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
-
                 <HomeScreen zIndex={1} opacity= {1} maxZindex ={1} onOpenSearch={this._onOpenSearch}
                     ref={ref => (this._homeScreen = ref)} />
 
-                <Footer ref={ref => (this._footer = ref)} maxZindex ={3} onSelectedSong={this._onOpenSelectedSong} />
+                <Footer ref={ref => (this._footer = ref)} maxZindex ={4} 
+                    onOpenEmoji = {this._onOpenEmoji} 
+                    onSelectedSong={this._onOpenSelectedSong} />
                 <StatusBar
                     backgroundColor="transparent"
                     translucent={true}
@@ -119,13 +128,55 @@ export default class Taisao extends React.Component {
             </View>
         );
     }
+
+    ping = () => {
+        if(DATA_INFO.PLAY_QUEUE.length > 0){
+            var timeDiff = 0;
+            var date = new Date();
+            var isChange = false;
+    
+            if(songPlaying != null){
+                timeDiff = date.getTime() - songPlaying.time;
+            }
+    
+            if(songPlaying == null || timeDiff > 30*1000){
+                let id = DATA_INFO.PLAY_QUEUE.shift();
+                songPlaying = {}
+                songPlaying.id = id;
+                songPlaying.time = date.getTime();
+    
+                song_queue = DATA_INFO.PLAY_QUEUE.slice(0);
+                isChange = true;
+            }
+            else {
+                if(song_queue.length != DATA_INFO.PLAY_QUEUE.length){
+                    song_queue = DATA_INFO.PLAY_QUEUE.slice(0);
+                    isChange = true;
+                }
+                else {
+                    for(var i =0; i<DATA_INFO.PLAY_QUEUE.length; i++ ){
+                        if(song_queue[i].id == DATA_INFO.PLAY_QUEUE[i].id){
+                            continue;
+                        }
+    
+                        song_queue =  DATA_INFO.PLAY_QUEUE.slice(0);
+                        isChange = true;
+                        break;
+                    }
+                }
+            }
+    
+            if(isChange){
+                EventRegister.emit("SongUpdate",{});
+            }
+        }
+
+        setTimeout(()=>{
+            this.ping();
+        },1000);
+    }
 }
 
-const style = StyleSheet.create({
-    imageBg:{
-        position:"absolute",
-        width: screen.width,
-        height:screen.height,
-        zIndex:0
-    }
+const styles = StyleSheet.create({
+    
 })

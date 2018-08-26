@@ -10,52 +10,39 @@ import {
 
 export default class IndicatorView extends React.Component {
     static propTypes = {
-       // lan: PropTypes.string.isRequired,
-        //onOptionOverlayOpen: PropTypes.func,
-        //onBack: PropTypes.func,
-        //duration : PropTypes.number
+        isShow : PropTypes.bool
     };
 
     static defaultProps = {
-        //number: PropTypes.number.isRequired,
-        //color: PropTypes.string.isRequired,
-        //onOptionOverlayOpen: null,
-        //onBack: null,
-        //duration : 200
+        isShow : false,
     };
-    //page = 0;
-    state = {
-        isShowing : true,
-        //opacityValue: new Animated.Value(0)
-    };
-
+    
     _loaded = false;
 
     constructor(props) {
         super(props);
+        this.state = {
+            isShowing : this.props.isShow,
+        };
     }
     
     show = () =>{
-        this.state.isShowing = true;
         this.setState({isShowing : true});
     }
 
     hide = ()=>{
         if(this.state.isShowing){
-            this.state.isShowing = false;
             this.setState({isShowing : false});
         }
     }
 
     render = () => {
         const {isShowing} = this.state;
-        return (
+        return (isShowing)?
             <ActivityIndicator 
-            animating={isShowing}
             style={styles.indicator}
             color="#00ECBC"
-            size="large" />
-        );
+            size="large" /> : null;
     }
 }
 

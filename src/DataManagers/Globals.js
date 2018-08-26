@@ -57,7 +57,8 @@ export default {
 
     SING_OVERLAY :{
         NONE: 0,
-        NORMAL : 1
+        NORMAL : 1,
+        EMOJI : 2
     },
 
     LANGUAGE : {
@@ -89,6 +90,19 @@ export default {
         AUTO : 4
     },
 
-    BackgroundImage : require("../../assets/background.png")
+    TRANSITION : {
+        FADE : 1,
+        SLIDE_LEFT: 2,
+        SLIDE_TOP : 3
+    },
 
+    BackgroundImage : require("../../assets/background.png"),
+    Emo1 : require("../../assets/Emojiii2.png"),
+    Emo2 : require("../../assets/Emojiii1.png"),
+    Emo3 : require("../../assets/Emojiii3.png"),
+    Emo4 : require("../../assets/Emojiii4.png"),
+    Emo5 : require("../../assets/Emojiii5.png"),
+    Emo6 : require("../../assets/clap1.png"),
+    Emo7 : require("../../assets/rose.png"),
+    Emo8 : require("../../assets/like.png"),
   };

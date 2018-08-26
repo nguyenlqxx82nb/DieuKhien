@@ -1,24 +1,18 @@
 import React from "react";
 import { Image, StyleSheet, Dimensions, Animated, Platform } from "react-native";
 import {
-    Right,
     View
 } from "native-base";
 
 import { Col, Grid, Row } from "react-native-easy-grid";
-import TextTicker from 'react-native-text-ticker'
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
-import BTELib from 'react-native-bte-lib';
 import GLOBALS from "../../DataManagers/Globals.js";
 import DATA_INFO from '../../DataManagers/DataInfo.js';
 import BoxControl from '../../DataManagers/BoxControl.js';
 import { EventRegister } from 'react-native-event-listeners';
 import Slider from 'react-native-slider';
-
-const arrowLeftSrc = require("../../../assets/arrowLeft.png");
-const arrowRightSrc = require("../../../assets/arrowRight.png");
-const marqBgSrc = require("../../../assets/marqBg.png");
+import SongTextRun from '../../Views/SongTextRun.js';
 
 const screen = {
     width: Dimensions.get("window").width,
@@ -30,6 +24,7 @@ export default class FooterHome extends React.Component {
         //number: PropTypes.number.isRequired,
         //color: PropTypes.string.isRequired,
         onSelectedSong: PropTypes.func,
+        onOpenEmoji : PropTypes.func
         //duration : PropTypes.number
     };
 
@@ -58,17 +53,19 @@ export default class FooterHome extends React.Component {
             this._micBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsMute ? 2 : 1);
             this.setState({volume:DATA_INFO.PLAYBACK_INFO.Volume});
         });
+
+        this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
+            this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
+        });
+        
     }
     componentWillUnmount() {
         EventRegister.removeEventListener(this._listenerPlaybackInfoEvent);
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
     }
 
     _onPlayPress = () => {
         const { onTest } = this.props;
-        if (onTest != null) {
-            onTest();
-        }
-
         // BTELib.getPlaybackInfo((volume)=>{
         //     BTELib.alert('volume = '+volume);
         // });
@@ -77,6 +74,12 @@ export default class FooterHome extends React.Component {
 
     _onMicPress = () => {
         BoxControl.mic();
+    }
+
+    _onEmojiPress = () => {
+        if(this.props.onOpenEmoji != null){
+            this.props.onOpenEmoji();
+        }
     }
 
     _openSongList = () =>{
@@ -93,7 +96,7 @@ export default class FooterHome extends React.Component {
         Animated.timing(this._state.bottomValue, {
             toValue: 0,
             useNativeDriver: Platform.OS === 'android',
-            duration: 150,
+            duration: 250,
         }).start(function onComplete() {
             container.setNativeProps({
                 style: {
@@ -181,7 +184,6 @@ export default class FooterHome extends React.Component {
 
     render() {
         const { bottomValue } = this._state;
-
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
         var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
 
@@ -190,47 +192,30 @@ export default class FooterHome extends React.Component {
                 ref={ref => (this._container = ref)}
                 style={[styles.footerContainer, { transform: [{ translateY: bottomValue }] }]}>
                 <Grid>
-                    <Row style={{ height: 35 }}>
+                    <Row style={{ height: 40 }}>
                         <Animated.View style={[styles.topContainer,{zIndex:1,opacity:this._topViewOpacity.text}]} ref={ref => (this._textView=ref)}>
                             <Grid>
-                                <Col style={{ width: 60, alignItems: "flex-start" }}>
-                                    <View style={{ flex: 1, width: 40, marginLeft: 10 }}>
+                                <View style={{flex:1, flexDirection:"row",justifyContent:"center",alignItems:"center",}}>
+                                    <View style={styles.iconTopLeft}>
                                         <IconRippe vector={true} size={25} name="volumnOn"
                                             onPress ={this._openVolumeView} />
                                     </View>
-                                </Col>
-                                <Col style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ width: 190, position: "relative" }}>
-                                        <Image source={arrowLeftSrc} style={{ position: "absolute", left: -20, top: 5, width: 16, height: 16 }} />
-                                        <TextTicker
-                                            style={{ fontSize: 16, color: 'white', width: 190 }}
-                                            duration={20000}
-                                            loop
-                                            scroll
-                                            repeatSpacer={0}
-                                            marqueeDelay={0}>
-                                            Super long piece of text is long. The quick brown fox jumps over the lazy dog.
-                                        </TextTicker>
-                                        <Image source={marqBgSrc} style={{ position: "absolute", left: 0, top: 0, width: 190, height: 25 }} />
-                                        <Image source={arrowRightSrc} style={{ position: "absolute", right: -20, top: 5, width: 16, height: 16 }} />
+                                    <SongTextRun />
+                                    <View style={styles.iconTopRight}>
+                                        <IconRippe  vector={true} size={25} name="list" onPress={this._openSongList} badge ={0} ref={ref => (this._listBtn = ref)} />
                                     </View>
-                                </Col>
-                                <Col style={{ width: 60, alignItems: "flex-end" }}>
-                                    <View style={{ flex: 1, width: 40, marginRight: 10 }}>
-                                        <IconRippe vector={true} size={25} name="list" onPress={this._openSongList} />
-                                    </View>
-                                </Col>
+                                </View>
                             </Grid>
                         </Animated.View>
                         <Animated.View style={[styles.topContainer,{zIndex:0,opacity:this._topViewOpacity.volume}]} 
                             ref={ref => (this._volmView = ref)}>
                             <View style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection: "row"}}>
-                                <View style={{width: 40, marginLeft: 10,height:35 }}>
+                                <View style={styles.iconTopLeft}>
                                     <IconRippe vector={true} size={25} name="volumn"
                                             onPress ={this._closeVolumeView} />
                                 </View>
                                 <View style={{flex: 1,
-                                                height:35,
+                                                height:40,
                                                 alignItems: 'stretch',
                                                 justifyContent: 'center',}}>
                                     <Slider
@@ -243,36 +228,36 @@ export default class FooterHome extends React.Component {
                                         /> 
                                 </View>
                                 
-                                <View style={{width: 40, marginRight: 10,height:35 }}>
+                                <View style={styles.iconTopRight}>
                                     <IconRippe vector={true} size={25} name="volumnOn" 
                                     onPress ={this._closeVolumeView} />
                                 </View>
                             </View>
                         </Animated.View>
                     </Row>
-                    <Row style={{ height: 80, paddingBottom: 5 }}>
+                    <Row style={{ height: 75, paddingBottom: 5 }}>
                         <Grid>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={30} name="emoji" />
+                                    <IconRippe vector={true} size={25} name="emoji" onPress={this._onEmojiPress}  />
                                 </View>
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={30} name="replay" />
+                                    <IconRippe vector={true} size={28} name="replay" />
                                 </View>
                             </Col>
                             <Col size={1}>
-                                <IconRippe ref={ref => (this._playBtn = ref)} vector={true} size={50} name="play" name1="pause" iconType={playIconType} onPress={this._onPlayPress} />
+                                <IconRippe ref={ref => (this._playBtn = ref)} vector={true} size={45} name="play" name1="pause" iconType={playIconType} onPress={this._onPlayPress} />
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={25} name="next" />
+                                    <IconRippe vector={true} size={22} name="next" />
                                 </View>
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe ref={ref => (this._micBtn = ref)} vector={true} size={30} name="micOn" name1="micOff" iconType={micIconType} onPress={this._onMicPress} />
+                                    <IconRippe ref={ref => (this._micBtn = ref)} vector={true} size={25} name="micOn" name1="micOff" iconType={micIconType} onPress={this._onMicPress} />
                                 </View>
                             </Col>
                         </Grid>
@@ -314,10 +299,22 @@ const styles = StyleSheet.create({
     },
     topContainer:{
         width:"100%",
-        height:35,
+        height:40,
         position:"absolute",
         top:0,
         justifyContent:"center",
         alignItems:"center"
+    },
+    iconTopLeft:{
+        width : 40,
+        height: 40,
+        marginLeft:10,
+        marginRight:20,
+    },
+    iconTopRight:{
+        width : 40,
+        height: 40,
+        marginRight:10,
+        marginLeft:20
     }
 })

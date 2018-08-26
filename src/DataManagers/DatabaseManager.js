@@ -202,7 +202,7 @@ class Databases {
                     var id = SongDataTemp[i].id + moreId ;
                     var data = {
                         id : id,
-                        name : id + " - "+ SongDataTemp[i].name,
+                        name : SongDataTemp[i].name,
                         singer : SongDataTemp[i].singer,
                         download : SongDataTemp[i].download
                     };
@@ -235,10 +235,11 @@ class Databases {
             var retDatas = [];
             for(var i =0; i<DataInfo.PLAY_QUEUE.length; i++){
                 var songId = DataInfo.PLAY_QUEUE[i];
-                var id = (songId % 1000)%30;
+                var id = (songId % 1000)%30 - 1;
+                id = (id < 0)?29:id;
                 var data = {
                     id : songId,
-                    name : songId + " - "+ SongDataTemp[id].name,
+                    name : SongDataTemp[id].name,
                     singer : SongDataTemp[id].singer,
                     download : SongDataTemp[id].download,
                     status : Globals.SING_STATUS.NORMAL
@@ -248,6 +249,21 @@ class Databases {
             }
             callback(retDatas);
         },300);
+    }
+
+    static getSong(songId,callback){
+        setTimeout(()=>{
+            var id = (songId % 1000)%30 - 1;
+            id = (id < 0)?29:id;
+            var data = {
+                id : songId,
+                name : SongDataTemp[id].name,
+                singer : SongDataTemp[id].singer,
+                download : SongDataTemp[id].download,
+                status : Globals.SING_STATUS.NORMAL
+            };
+            callback(data);
+        },100);
     }
 }
 

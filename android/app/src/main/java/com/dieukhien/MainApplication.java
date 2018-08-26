@@ -4,6 +4,10 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.bte.libs.MyPackage;
+import com.bte.libs.MyPackage;
+import com.reactlibrary.RNThreadPackage;
+import com.bte.libs.MyPackage;
+import com.bte.libs.MyPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -29,9 +33,10 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new MyPackage(),
+            new RNThreadPackage(mReactNativeHost),
             new LinearGradientPackage(),
             new SplashScreenReactPackage()
-		        , new VectorIconsPackage()
+		    , new VectorIconsPackage()
       );
     }
 

@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "postinstall": "rn-nodeify --install stream,process,util --hack"
-  },
+   },
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",

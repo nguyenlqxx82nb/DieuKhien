@@ -23,6 +23,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         //backgroundColor:"red"
     },
+    badgeContainer : {
+        position:"absolute",
+        backgroundColor:"red",
+        top : 0,
+        right:0,
+        width:20,
+        height:20,
+        borderRadius:10,
+        justifyContent:"center",
+        alignItems:"center",
+    },
+    badgeNumber:{
+        color:"#fff",
+        fontSize:12
+    }
 });
 
 const { source } = Image.propTypes;
@@ -60,6 +75,9 @@ const propTypes = {
     iconType : PropTypes.number,
 
     name1 : PropTypes.string,
+
+    badge : PropTypes.number,
+    textStyle : Text.propTypes.style,
     /**
     * Size of icon (default is 24 - see spacing in palette)
     */
@@ -83,6 +101,7 @@ const propTypes = {
     // }),
 };
 const defaultProps = {
+    badge : 0,
     name1 : "",
     iconType : 1,
     children: null,
@@ -102,9 +121,7 @@ const defaultProps = {
     text:{
         content :"",
         layout : 1,
-        fontFamily: "Arial",
-        fontSize : 16
-    }
+    },
 };
 
 class IconRippe extends PureComponent {
@@ -113,6 +130,7 @@ class IconRippe extends PureComponent {
         super(props, context);
 
         const {maxOpacity} = this.props;
+        this._badge = this.props.badge;
 
         this.state = {
             containerSize : {width:1,height:1},
@@ -169,9 +187,13 @@ class IconRippe extends PureComponent {
             />
         );
     }
+    renderBadge = () =>{
+        return (this._badge > 0)?
+            <View style={styles.badgeContainer}><Text style={styles.badgeNumber}>{this._badge}</Text></View> : null;
+    }
 
     renderImageView(){
-        const { textColor,size, color, iconSource, width, height,square, name,name1, vector,text , iconType} = this.props;
+        const {size, color, iconSource, width, height,square, name,name1, vector,text , iconType, textStyle} = this.props;
         const iconSize = {width:size, height:size};
         if(!square){
             iconSize.height = height;
@@ -179,7 +201,6 @@ class IconRippe extends PureComponent {
         }
 
         var iconName = (this._iconType == 1)?name: name1;
-       //console.warn(" renderImageView iconName = "+iconName);
         if(text.content == ""){
             if(!vector){
                 return(<Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />);
@@ -192,18 +213,30 @@ class IconRippe extends PureComponent {
         }
         else{
             if(!vector){
-                return(
-                    <View>
-                        <Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />
-                        <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize}}>{text.content}</Text>
-                    </View>
-                );
+                if(text.layout == 1){
+                    return(
+                        <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
+                            <Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />
+                            <Text style={textStyle}>{text.content}</Text>
+                        </View>
+                    );
+                }    
+                else{
+                    return(
+                        <View style={{alignItems:"center"}}>
+                            <View style={{width:size,height:size,alignItems:"center",justifyContent:"center"}}>
+                                <Image source={iconSource} style={{width:iconSize.width,height:iconSize.height}}  />
+                            </View>
+                            <Text style={textStyle}>{text.content}</Text>
+                        </View>
+                    );
+                }
             }
             else{
                 if(name == ""){
                     return(
                         <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
-                            <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor}}>{text.content}</Text>
+                            <Text style={textStyle}>{text.content}</Text>
                         </View>
                     );
                 }
@@ -212,7 +245,7 @@ class IconRippe extends PureComponent {
                         return(
                             <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
                                 <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:color}} />
-                                <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor, paddingLeft:text.left}}>{text.content}</Text>
+                                <Text style={textStyle}>{text.content}</Text>
                             </View>
                         );
                     }    
@@ -222,7 +255,7 @@ class IconRippe extends PureComponent {
                                 <View style={{width:size,height:size,alignItems:"center",justifyContent:"center"}}>
                                     <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:color}} />
                                 </View>
-                                <Text style={{fontFamily: text.fontFamily, fontSize: text.fontSize, color:textColor}}>{text.content}</Text>
+                                <Text style={textStyle}>{text.content}</Text>
                             </View>
                         );
                     }
@@ -233,7 +266,6 @@ class IconRippe extends PureComponent {
     }
 
     setIconType = (type) =>{
-        const { name,name1, vector} = this.props;
         if(type == this._iconType)
             return;
 
@@ -241,12 +273,18 @@ class IconRippe extends PureComponent {
         this.forceUpdate();
     }
 
+    updateBagde = (number) =>{
+        if(this._badge == number)
+            return;
+
+        this._badge = number;
+        this.forceUpdate();
+    }
+
     render() {
         //const { size, color, iconSource, width, height,square, name, vector } = this.props;
         const {size} = this.state;
         const iconContainer = { width: size*2, height: size*2 };
-        
-        //console.warn(" render width= "+containerSize.width +" , height = "+containerSize.height +", size = "+size);
         return (
             <View 
                 onLayout={(event) => { this.find_dimesions(event.nativeEvent.layout) }} 
@@ -255,6 +293,7 @@ class IconRippe extends PureComponent {
                     <View style={[styles.iconContainer]}>
                         {this.renderRippleView()}
                         {this.renderImageView()}
+                        {this.renderBadge()}
                     </View>
                 </TouchableWithoutFeedback>
             </View>

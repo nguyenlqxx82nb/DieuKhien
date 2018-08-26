@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
         marginRight: 10, borderRadius: 10, backgroundColor: "#565BAC", height: 35, paddingRight: 3
     },
     input: {
-        flex: 1, height: 50, fontSize: 16, color: "white", padding: 0, margin: 0, marginLeft: 10
+        flex: 1, height: 50, fontSize: 16, color: "white", padding: 0, margin: 0, marginLeft: 10,
+        fontFamily:'SF-Pro-Text-Medium'
     },
 })
