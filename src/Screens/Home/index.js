@@ -8,6 +8,7 @@ import Footer from '../Footer/footer.js';
 import HomeScreen from './Home.js';
 import SingScreen from '../BaiHat/index.js';
 import SelectedSong from '../BaiHat/SelectedSong.js';
+import SingerScreen from '../Singer/index.js';
 import SingOptionOverlay from './SingOptionOverlay.js';
 import { EventRegister } from 'react-native-event-listeners'
 import Globals from "../../DataManagers/Globals.js";
@@ -79,6 +80,10 @@ export default class Taisao extends React.Component {
 
         this._currentScreen = this._singScreen;
     }
+    _onOpenSinger = () =>{
+        this._singerScreen.show();
+        this._currentScreen = this._singerScreen;
+    }
     _onOpenSelectedSong = () => {
        // this._currentScreen.hide();
         this._selectedSong.show();
@@ -89,9 +94,7 @@ export default class Taisao extends React.Component {
         this._singOverlay.show();
     }
     _onBackHome = ()=>{
-        //this._homeScreen.show();
         this._currentScreen.hide();
-
         this._currentScreen = this._homeScreen; 
     }
     _onCloseSelectedSong = () => {
@@ -111,10 +114,16 @@ export default class Taisao extends React.Component {
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._singScreen = ref)}
                 />
+                <SingerScreen opacity= {0} maxZindex ={2} 
+                    transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._singerScreen = ref)}/>
                 <SelectedSong maxZindex ={2} transition = {Globals.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
                 <HomeScreen zIndex={1} opacity= {1} maxZindex ={1} onOpenSearch={this._onOpenSearch}
+                    onOpenSinger = {this._onOpenSinger}
                     ref={ref => (this._homeScreen = ref)} />
 
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={4} 

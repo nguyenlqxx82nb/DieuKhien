@@ -1,4 +1,4 @@
-import Globals from "./Globals";
+import GLOBALS from "./Globals";
 import DataInfo from './DataInfo';
 
 const SongDataTemp = [
@@ -188,12 +188,199 @@ const SongDataTemp = [
     },
 ];
 
+
+const SingerDataTemp = [
+    {
+        id: 1,
+        source : 0,
+        name : "Chí Dân",
+        sex : GLOBALS.SINGER_SEX.MALE,
+        //status: GLOBAL.SING_STATUS.NORMAL
+    },
+    {
+        id: 2,
+        source : 1,
+        name : "Đàm Vĩnh Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 3,
+        source : 2,
+        name : "Đan Trường",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 4,
+        source : 3,
+        name : "Hồ Ngọc Hà",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id: 5,
+        source : 4,
+        name : "Hương Tràm",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:6,
+        source : 5,
+        name : "No Phước Thịnh",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:7,
+        source : 6,
+        name : "Sơn Tùng - MTP",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:8,
+        source : 7,
+        name : "Tố My",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:9,
+        source : 8,
+        name : "Tuấn Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 10,
+        source : 0,
+        name : "Chí Dân",
+        sex : GLOBALS.SINGER_SEX.MALE,
+        //status: GLOBAL.SING_STATUS.NORMAL
+    },
+    {
+        id: 11,
+        source : 1,
+        name : "Đàm Vĩnh Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 12,
+        source : 2,
+        name : "Đan Trường",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 13,
+        source : 3,
+        name : "Hồ Ngọc Hà",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id: 14,
+        source : 4,
+        name : "Hương Tràm",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:15,
+        source : 5,
+        name : "No Phước Thịnh",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:16,
+        source : 6,
+        name : "Sơn Tùng - MTP",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:17,
+        source : 7,
+        name : "Tố My",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:18,
+        source : 8,
+        name : "Tuấn Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:19,
+        source : 6,
+        name : "Sơn Tùng - MTP",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:20,
+        source : 7,
+        name : "Tố My",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:21,
+        source : 8,
+        name : "Tuấn Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 22,
+        source : 0,
+        name : "Chí Dân",
+        sex : GLOBALS.SINGER_SEX.MALE,
+        //status: GLOBAL.SING_STATUS.NORMAL
+    },
+    {
+        id: 23,
+        source : 1,
+        name : "Đàm Vĩnh Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 24,
+        source : 2,
+        name : "Đan Trường",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id: 25,
+        source : 3,
+        name : "Hồ Ngọc Hà",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id: 26,
+        source : 4,
+        name : "Hương Tràm",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:27,
+        source : 5,
+        name : "No Phước Thịnh",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:28,
+        source : 6,
+        name : "Sơn Tùng - MTP",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+    {
+        id:29,
+        source : 7,
+        name : "Tố My",
+        sex : GLOBALS.SINGER_SEX.FEMALE,
+    },
+    {
+        id:30,
+        source : 8,
+        name : "Tuấn Hưng",
+        sex : GLOBALS.SINGER_SEX.MALE,
+    },
+];
+
 class Databases {
     static fetchSongData(lan,page, pageCount, term,callback){
         //console.warn('fetchSongData0 : '+page+" , "+lan); 
         setTimeout(()=>{
             var retDatas = [];
-            const moreId = page*SongDataTemp.length + (Globals.LANGUAGE[lan] - 1)*2000;
+            const moreId = page*SongDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
             if(page < 50){
                 for(var i in SongDataTemp){
                     if(term !="" && SongDataTemp[i].name.indexOf(term) == -1){
@@ -207,19 +394,19 @@ class Databases {
                         download : SongDataTemp[i].download
                     };
                     
-                    if(data.download == Globals.DOWNLOAD_STATUS.DOWNLOADED){
+                    if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADED){
                         if(DataInfo.PLAY_QUEUE.indexOf(data.id) > -1){
-                            data.status = Globals.SING_STATUS.SELECTED;
+                            data.status = GLOBALS.SING_STATUS.SELECTED;
                         }
                         else{
-                            data.status = Globals.SING_STATUS.NORMAL;
+                            data.status = GLOBALS.SING_STATUS.NORMAL;
                         }
                     }
-                    else if(data.download == Globals.DOWNLOAD_STATUS.DOWNLOADING){
-                        data.status = Globals.SING_STATUS.DOWNLOADING;
+                    else if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADING){
+                        data.status = GLOBALS.SING_STATUS.DOWNLOADING;
                     }
                     else{
-                        data.status = Globals.SING_STATUS.NO_DOWNLOADED;
+                        data.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
                     }
 
                     retDatas.push(data);
@@ -228,6 +415,36 @@ class Databases {
             
             callback(retDatas);
         },400);
+    }
+
+    static fetchSingerData(lan,page, pageCount, term,sex,callback){
+        //console.warn("fetchSingerData sex = "+sex);
+        setTimeout(()=>{
+            var retDatas = [];
+            const moreId = page*SingerDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
+            if(page < 50){
+                for(var i in SingerDataTemp){
+                    if(term !="" && SingerDataTemp[i].name.indexOf(term) == -1){
+                        continue;
+                    }
+
+                    if(sex != GLOBALS.SINGER_SEX.ALL && sex != SingerDataTemp[i].sex){
+                        continue;
+                    }
+
+                    var id = SingerDataTemp[i].id + moreId ;
+                    var data = {
+                        id : id,
+                        name : SingerDataTemp[i].name,
+                        sex : SingerDataTemp[i].sex,
+                        source : SingerDataTemp[i].source
+                    };
+                    retDatas.push(data);
+                }
+            }
+            //console.warn("fetchSingerData retDatas = "+retDatas.length);
+            callback(retDatas);
+        },200);
     }
 
     static fetchSelectedSong(callback){
@@ -242,7 +459,7 @@ class Databases {
                     name : SongDataTemp[id].name,
                     singer : SongDataTemp[id].singer,
                     download : SongDataTemp[id].download,
-                    status : Globals.SING_STATUS.NORMAL
+                    status : GLOBALS.SING_STATUS.NORMAL
                 };
                 
                 retDatas.push(data);
@@ -260,7 +477,7 @@ class Databases {
                 name : SongDataTemp[id].name,
                 singer : SongDataTemp[id].singer,
                 download : SongDataTemp[id].download,
-                status : Globals.SING_STATUS.NORMAL
+                status : GLOBALS.SING_STATUS.NORMAL
             };
             callback(data);
         },100);

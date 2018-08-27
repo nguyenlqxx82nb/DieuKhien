@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput } from "react-native";
+import { StyleSheet, Alert, TextInput,Text } from "react-native";
 import PropTypes from 'prop-types';
 import {
     View,
@@ -14,10 +14,11 @@ export default class SearchInput extends React.Component {
     static propTypes = {
        // onClear: PropTypes.func,
         onSearch: PropTypes.func,
+        style : Text.propTypes.style,
         //duration : PropTypes.number
     };
     static defaultProps = {
-       
+        style : {}
     };
 
     constructor(props) {
@@ -65,14 +66,15 @@ export default class SearchInput extends React.Component {
     }
     render = () => {
         const {showRemoveBtn} =this.state;
+        const {style} = this.props;
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,style]}>
                 <Icon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
                 <TextInput
                     ref = {ref => (this._searchInput = ref)}
                     underlineColorAndroid={'transparent'}
                     placeholderTextColor={'#9192C6'}
-                    style={styles.input}
+                    style={[styles.input]}
                     placeholder="Tìm kiếm ..."
                     onFocus = {this._handleTextFocus}
                     onBlur = {this._handleBlur}

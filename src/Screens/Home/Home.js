@@ -20,7 +20,7 @@ const logo = require("../../../assets/logo.png");
 export default class HomeScreen extends ScreenBase {
     static propTypes = {
         onOpenSearch: PropTypes.func,
-        //duration : PropTypes.number
+        onOpenSinger : PropTypes.func
     };
     
     constructor(props) {
@@ -30,7 +30,7 @@ export default class HomeScreen extends ScreenBase {
         //console.warn(" componentWillMount HomeScreen");
     }
     renderContentView = () => {
-        const { onOpenSearch } = this.props;
+        const { onOpenSearch,onOpenSinger } = this.props;
         return (
             <View style={{ flex: 1,width:"100%" }}>
                 <View style={{ flexDirection: "row", alignItems: "center", marginTop: 25, height: 55 }}>
@@ -74,8 +74,12 @@ export default class HomeScreen extends ScreenBase {
                             <Col size={1}>
                                 <LinearGradient colors={['#D1EB3F', '#6DCD34', '#0AAF29']} style={[styles.container3, { backgroundColor: "#52C531" }]}>
                                     <IconRippe vector={true} name="singerOpt" size={77} text={{
-                                        content: "CA SỸ", layout: 2
-                                    }} textStyle = {styles.labelBottom} />
+                                        content: "CA SỸ", layout: 2 }} textStyle = {styles.labelBottom}
+                                        onPress={()=>{
+                                            if(this.props.onOpenSinger != null){
+                                                this.props.onOpenSinger();
+                                            }
+                                        }} />
                                 </LinearGradient>
                             </Col>
                             <Col size={1}>

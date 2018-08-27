@@ -225,7 +225,6 @@ export default class SongListView extends React.Component {
     }
 
     _rowRenderer = (type, item) => {
-        //We have only one view type so not checks are needed here
         const singColor = GLOBALS.SING_COLORS[item.status];
         const singerColor = GLOBALS.SINGER_COLORS[item.status];
         let singPrefix = GLOBALS.SING_PREFIX[item.status];
@@ -237,12 +236,10 @@ export default class SongListView extends React.Component {
             <ListItem
                 style={styles.listItem}
                 onPress={this._onPressSong.bind(this, item.id, item.status)}
-                underlayColor="white"
-            >
+                underlayColor="white">
                 <View style={{
                     flex: 1, flexDirection: "row", justifyContent: "center",
-                    alignItems: "center", height: 60, marginLeft: 17, marginRight: 5
-                }}>
+                    alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
                     <View style={{ flex: 1 }}>
                         <Text style={[styles.listText, { fontSize: 17, lineHeight: 25, color: singColor }]}>
                             {singTitle}

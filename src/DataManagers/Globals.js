@@ -105,4 +105,24 @@ export default {
     Emo6 : require("../../assets/clap1.png"),
     Emo7 : require("../../assets/rose.png"),
     Emo8 : require("../../assets/like.png"),
+
+    SINGER_TEST : [
+        "http://mediaold.tiin.vn:8080/media_old_2016//archive/images/2017/05/04/142620_img_9272.jpg",
+        "http://image.baophapluat.vn/w620/Uploaded/2018/wlesfjofzyr/2018_03_25/8_ylci.jpg",
+        "https://avatar-nct.nixcdn.com/playlist/2017/05/31/4/9/7/8/1496225850244_500.jpg",
+        "http://2sao.vietnamnetjsc.vn/images/2017/09/04/19/21/ho-ngoc-ha-1.jpg",
+        "https://dantricdn.com/2018/1/29/huong-tram-111-15172246997241116257391.jpg",
+        "http://file.vforum.vn/hinh/2018/03/hinh-anh-hinh-nen-noo-phuoc-thinh-dep-nhat-de-thuong-22.jpg",
+        "https://baoconggiao.net/uploads/news/2018_05/mv-cua-son-tung-mtp-mat-khoi-top-trending-vi-xuc-pham-duc-me-va-dao-cong-giao.jpg",
+        "https://baomoi-photo-1-td.zadn.vn/w700_r1/18/03/19/255/25311763/3_487236.jpg",
+        "https://zmp3-photo-fbcrawler-te-vnso-qt-1.zadn.vn/avatars/4/d/4d870627ce2f41a989ba676e0a313597_1427689508.jpg"
+    ],
+
+    SINGER_SEX : {
+        MALE : 1,
+        FEMALE : 2,
+        GROUP : 3,
+        ALL :4,
+    }
+
   };
