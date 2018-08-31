@@ -9,6 +9,8 @@
 import React, {Component} from 'react';
 //import {Platform, StyleSheet, Text, View} from 'react-native';
 import Test from "./src/Screens/index.js"
+import ScrollScreen from "./src/Test/scroll";
+import ScrollSwagger from './src/Test/ScrollSwagger'
 //import RTCSocket from './RctSockets.js'
 type Props = {};
 export default class App extends Component<Props> {

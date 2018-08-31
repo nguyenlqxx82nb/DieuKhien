@@ -6,10 +6,14 @@ import {
 
 import Footer from '../Footer/footer.js';
 import HomeScreen from './Home.js';
-import SingScreen from '../BaiHat/index.js';
+import SearchScreen from '../BaiHat/Search.js';
 import SelectedSong from '../BaiHat/SelectedSong.js';
 import SingerScreen from '../Singer/index.js';
 import SingOptionOverlay from './SingOptionOverlay.js';
+import TheloaiScreen from '../TheLoai/index.js'
+import SongScreen from '../BaiHat/Songs';
+import HotScreen from '../BaiHat/HotSong';
+import OnlineScreen from '../Online/index.js'
 import { EventRegister } from 'react-native-event-listeners'
 import Globals from "../../DataManagers/Globals.js";
 import BoxControl from "../../DataManagers/BoxControl.js";
@@ -29,6 +33,8 @@ export default class Taisao extends React.Component {
     _currentScreen = null;
     constructor(props) {
         super(props);
+        //console.ignoredYellowBox = true;
+        //console.disableYellowBox = true;
     }
 
     componentDidMount() {
@@ -41,6 +47,7 @@ export default class Taisao extends React.Component {
 
        // BTElib.synsPlaybackQueue();
         DeviceEventEmitter.addListener('test', this.test);
+        
     }
 
     test = (e) =>{
@@ -73,16 +80,32 @@ export default class Taisao extends React.Component {
     }
     
     _onOpenSearch = () => {
-        this._singScreen.show();
+        this._searchScreen.show();
         setTimeout(()=>{
-            this._singScreen.focusSearchInput();
+            this._searchScreen.focusSearchInput();
         },300);
 
-        this._currentScreen = this._singScreen;
+        this._currentScreen = this._searchScreen;
     }
     _onOpenSinger = () =>{
         this._singerScreen.show();
         this._currentScreen = this._singerScreen;
+    }
+    _onOpenSong = () =>{
+        this._songScreen.show();
+        this._currentScreen = this._songScreen;
+    }
+    _onOpenHotSong = () =>{
+        this._hotScreen.show();
+        this._currentScreen = this._hotScreen;
+    }
+    _onOpenTheloai = () =>{
+        this._theloaiScreen.show();
+        this._currentScreen = this._theloaiScreen;
+    }
+    _onOnlineScreen = () => {
+        this._onlineScreen.show();
+        this._currentScreen = this._onlineScreen;
     }
     _onOpenSelectedSong = () => {
        // this._currentScreen.hide();
@@ -107,31 +130,56 @@ export default class Taisao extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <SingOptionOverlay opacity={0} maxZindex={5} ref={ref => (this._singOverlay = ref)} 
+                <SingOptionOverlay opacity={0} maxZindex={10} ref={ref => (this._singOverlay = ref)} 
                     onClose ={this._onSingOverlayClose}
                 />
-                <SingScreen opacity= {0} maxZindex ={2} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                <OnlineScreen  opacity= {0} maxZindex ={2} 
+                    transition = {Globals.TRANSITION.SLIDE_LEFT}
                     duration={250}
-                    onBack={this._onBackHome} ref={ref => (this._singScreen = ref)}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._onlineScreen = ref)} />
+                <SearchScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
                 />
+                <SongScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
+                />
+                <HotScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
+                />
+
+                <TheloaiScreen opacity= {0} maxZindex ={2} 
+                    transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} 
+                    ref={ref => (this._theloaiScreen = ref)}/>
+
                 <SingerScreen opacity= {0} maxZindex ={2} 
                     transition = {Globals.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._singerScreen = ref)}/>
-                <SelectedSong maxZindex ={2} transition = {Globals.TRANSITION.SLIDE_TOP}
+                <SelectedSong maxZindex ={6} transition = {Globals.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
-                <HomeScreen zIndex={1} opacity= {1} maxZindex ={1} onOpenSearch={this._onOpenSearch}
+                <HomeScreen zIndex={1} opacity= {1} maxZindex ={1} 
+                    onOpenSearch={this._onOpenSearch}
                     onOpenSinger = {this._onOpenSinger}
+                    onOpenTheloai = {this._onOpenTheloai}
+                    onOpenSong = {this._onOpenSong}
+                    onOpenHotSong = {this._onOpenHotSong}
+                    onOnlineScreen = {this._onOnlineScreen}
                     ref={ref => (this._homeScreen = ref)} />
 
-                <Footer ref={ref => (this._footer = ref)} maxZindex ={4} 
+                <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
                     onOpenEmoji = {this._onOpenEmoji} 
                     onSelectedSong={this._onOpenSelectedSong} />
                 <StatusBar
-                    backgroundColor="transparent"
-                    translucent={true}
+                    backgroundColor="#444083"
+                    // translucent={true}
                     barStyle="light-content"
                 ></StatusBar>
             </View>

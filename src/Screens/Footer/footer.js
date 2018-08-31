@@ -184,13 +184,15 @@ export default class FooterHome extends React.Component {
 
     render() {
         const { bottomValue } = this._state;
+        const { maxZindex } = this.props;
+
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
         var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
 
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
-                style={[styles.footerContainer, { transform: [{ translateY: bottomValue }] }]}>
+                style={[styles.footerContainer, {zIndex:maxZindex, transform: [{ translateY: bottomValue }] }]}>
                 <Grid>
                     <Row style={{ height: 40 }}>
                         <Animated.View style={[styles.topContainer,{zIndex:1,opacity:this._topViewOpacity.text}]} ref={ref => (this._textView=ref)}>

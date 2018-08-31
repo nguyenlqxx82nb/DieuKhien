@@ -157,30 +157,34 @@ export default class SingerListView extends React.Component {
     }
 
     rowRenderer = (type, item) => {
-        const id = item.id;
-        const source = item.source;
+        const {id,source,name} = item;
         return (
-            
             <ImageRender
                 id = {id} source = {source}
-                //style={styles.listItem}
-                //onPress={this._onPressSong.bind(this, item.id, item.status)}
+                name = {name}
+                 onPress={this._onPressSinger.bind(this, item.id, item.name)}
                 />
         );
       };
 
+      _onPressSinger = (id,name) =>{
+          EventRegister.emit("OpenSingerSong",{id:id,name:name});
+      }
+
     render = () => {
-        //console.warn("singer render = "+this._sex + ", length = "+this.state.datas.length);
         return (
-            <View style={{ flex: 1,marginLeft:10, marginRight:5,marginTop:5,marginBottom:5, borderRadius:5}}>
+            <View style={{ flex: 1,marginLeft:10, marginRight:0,marginBottom:5, borderRadius:5}}>
                 <RecyclerListView
                     style={{ flex: 1 , borderRadius:5}}
-                    //contentContainerStyle={{ margin: 3 }}
+                    showsVerticalScrollIndicator={false}
                     onEndReached={this._onEndReached}
                     dataProvider={this.state.dataProvider}
                     layoutProvider={this._layoutProvider}
                     rowRenderer={this.rowRenderer}
                     renderFooter={this._renderFooter} 
+                    onScroll = {(rawEvent, offsetX, offsetY)=>{
+                        //console.warn("onScroll "+offsetY);
+                    }}
                     //extendedState={this.state.dataProvider} 
                     />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>
@@ -190,36 +194,3 @@ export default class SingerListView extends React.Component {
     }
 }
 
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 28,
-        fontWeight: '300',
-        textAlign: 'center',
-        margin: 20,
-    },
-    listItem: {
-        height: 60,
-        justifyContent: "center",
-        alignItems: "center",
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        borderBottomWidth: 0.5,
-        borderColor: '#00ECBC',
-    },
-
-    listText: {
-        color: "#fff",
-        fontFamily:'SF-Pro-Text-Regular'
-    },
-
-    indicator: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-})

@@ -16,25 +16,26 @@ export default class SongTabsView extends React.Component {
     static propTypes = {
         lanTabs: PropTypes.array.isRequired,
         onChangeTab : PropTypes.func,
+        songType : PropTypes.number,
+        songListType : PropTypes.number,
     };
-    // static defaultProps = {
-    //     //number: PropTypes.number.isRequired,
-    //     //color: PropTypes.string.isRequired,
-    //     onOptionOverlayOpen: null,
-    //     onBack: null,
-    //     //duration : 200
-    // };
+    static defaultProps = {
+        songType : GLOBALS.SONG_TYPE.ALL,
+        songListType : GLOBALS.SONG_LIST_TYPE.NORMAL
+    };
 
     _tabs = [];
     _currPage = 0;
     _searchTerm = "";
+    _isVisible = false;
     constructor(props) {
         super(props);
     }
 
     componentWillMount() {
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-            this._tabs[this._currPage].updateSong();
+            if(this._isVisible)
+                this._tabs[this._currPage].updateSong();
         })
     }
     
@@ -56,9 +57,17 @@ export default class SongTabsView extends React.Component {
         }
     }
 
+    setVisible = (isVisible) =>{
+        this._isVisible = isVisible;
+    }
+
     loadData = (term) =>{
         this._searchTerm = term;
         this._tabs[this._currPage].loadData(term);
+    }
+
+    clear = () =>{
+        this._tabs[this._currPage].clear();
     }
 
     searchData = (term) =>{
@@ -85,7 +94,11 @@ export default class SongTabsView extends React.Component {
                        // console.warn("lanTabs lan = "+lan +" , page = "+index);
                        return (
                             <View key={index} style={[styles.tabContent]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
-                                <SongListView lan={lan} ref={ref => (this._tabs[index] = ref)} />
+                                <SongListView 
+                                    type = {this.props.songListType}
+                                    lan={lan} 
+                                    songType={this.props.songType} 
+                                    ref={ref => (this._tabs[index] = ref)} />
                             </View>) ;
                     })}
                     </ScrollableTabView>

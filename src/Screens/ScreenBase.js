@@ -31,7 +31,7 @@ class BaseScreen extends React.Component {
         posY : screen.height,
         transition : GLOBALS.TRANSITION.FADE
     };
-
+    _songTabs = null;
     constructor(props) {
         super(props);
 
@@ -121,8 +121,6 @@ class BaseScreen extends React.Component {
         let container = this._container;
         const {maxZindex,transition,duration} = this.props;
         var that = this;
-        
-
         this._isVisible = false;
         if(transition == GLOBALS.TRANSITION.FADE){
             Animated.timing(this.animate.opacity, {
@@ -171,7 +169,6 @@ class BaseScreen extends React.Component {
 
     showCompleted = () =>{
         this._processing = false;
-        //console.warn("showCompleted = "+this._processing);
         this._showCompleted();
     }
     _showCompleted = () =>{}
@@ -192,7 +189,7 @@ class BaseScreen extends React.Component {
                 ref={ref => (this._container = ref)}
                 style={[styles.container,{opacity : opacity,transform: [{translateY: posY},{translateX:posX}]}]}>
                 <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} />
-                <View style={{flex:1, marginBottom:115, width:'100%'}}>
+                <View style={{flex:1, marginBottom:140, width:'100%'}}>
                     {this.renderContentView()}
                 </View>
             </Animated.View>

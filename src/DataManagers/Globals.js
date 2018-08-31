@@ -58,7 +58,8 @@ export default {
     SING_OVERLAY :{
         NONE: 0,
         NORMAL : 1,
-        EMOJI : 2
+        EMOJI : 2,
+        SINGER : 3
     },
 
     LANGUAGE : {
@@ -87,13 +88,31 @@ export default {
         NORMAL : 1,
         SELECTED : 2,
         NO_DOWNLOAD : 3,
-        AUTO : 4
+        AUTO : 4,
+        SINGER : 5,
+        HOT : 6
     },
 
     TRANSITION : {
         FADE : 1,
         SLIDE_LEFT: 2,
         SLIDE_TOP : 3
+    },
+
+    SONG_TYPE :{
+        ALL:-1,
+        DJ:1,
+        NHACTRE:2,
+        NHACVANG:3,
+        NHACDO:4,
+        SONGCA:5,
+        THIEUNHI:6,
+        LIENKHUC:7,
+        SINHNHAT:8,
+        NHACXUAN:9,
+        NHACTRINH:10,
+        CAILUONG:11,
+        DANCA:12
     },
 
     BackgroundImage : require("../../assets/background.png"),
@@ -123,6 +142,12 @@ export default {
         FEMALE : 2,
         GROUP : 3,
         ALL :4,
+    },
+
+    SONG_ONLINE: {
+        YOUTUBE : 1,
+        SOUNDCLOUD: 2,
+        MIXCLOUD : 3
     }
 
   };

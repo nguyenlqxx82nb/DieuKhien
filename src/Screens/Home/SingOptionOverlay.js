@@ -41,8 +41,19 @@ export default class SingOptionOverlay extends React.Component {
     }
     updateView = (id,type) => {
         //console.warn(" renderView " + id);
-        this._singId = id;
-        this.setState({overlayType:type});
+        this._songId = id;
+        var height = 0;
+        if(type == GLOBALS.SING_OVERLAY.NORMAL){
+            height = 200;
+        }
+        else if(type == GLOBALS.SING_OVERLAY.EMOJI){
+            height = 220;
+        }
+        else if(type == GLOBALS.SING_OVERLAY.SINGER){
+            height = 250;
+        }
+
+        this.setState({overlayType:type,height:height});
     }
 
     renderView = () =>{
@@ -56,27 +67,61 @@ export default class SingOptionOverlay extends React.Component {
         else if(this.state.overlayType == GLOBALS.SING_OVERLAY.EMOJI){
             return this.renderEmoji();
         }
+        else if(this.state.overlayType == GLOBALS.SING_OVERLAY.SINGER){
+            return this.renderSingerOption();
+        }
     }
 
     renderSongOptionNormal = () =>{
         return(
             <View style={styles.innerContainer}>
-                <View style={{height:60,width:'100%'}}>
+                <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="play2" size={30} 
                         text={{content: "Hát Ngay", layout: 1}} textStyle={styles.textButton}
                     />
                 </View>
-                <View style={{height:60,width:'100%'}}>
+                <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="uutien" size={30} 
                         text={{content: "Ưu Tiên", layout: 1}} textStyle={styles.textButton}
                     />
                 </View>
-                <View style={{height:60,width:'100%'}}>
+                <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="delete" size={30} 
                         text={{content: "Xóa", layout: 1}} textStyle={styles.textButton}
                     />
                 </View>
-                <View style={{height:60,width:'100%', backgroundColor:"#444083"}}>
+                <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
+                    <IconRippe vector={true} name={""}
+                        text={{content: "Hủy", layout: 1}} textStyle={styles.textButton}
+                    />
+                </View>
+        </View>);
+    }
+
+    renderSingerOption = () =>{
+        return(
+            <View style={styles.innerContainer}>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="all" size={25} 
+                        text={{content: "Tất cả", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                    />
+                </View>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="male" size={25} 
+                        text={{content: "Nam ca sỹ", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                    />
+                </View>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="famale" size={25} 
+                        text={{content: "Nữ ca sỹ", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                    />
+                </View>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="nhomnhac" size={25} 
+                        text={{content: "Nhóm nhạc", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                    />
+                </View>
+                <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
                     <IconRippe vector={true} name={""}
                         text={{content: "Hủy", layout: 1}} textStyle={styles.textButton}
                     />
@@ -87,7 +132,7 @@ export default class SingOptionOverlay extends React.Component {
     renderEmoji = () =>{
         return(
             <View style={styles.innerContainer}>
-                <View style={{height:180,width:'100%'}}>
+                <View style={{height:170,width:'100%'}}>
                     <Grid>
                         <Row size={1}>
                             <Col size = {1}>
@@ -127,7 +172,7 @@ export default class SingOptionOverlay extends React.Component {
                         </Row>
                     </Grid>
                 </View>
-                <View style={{height:60,width:'100%', backgroundColor:"#444083"}}>
+                <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
                     <IconRippe vector={true} name={""}
                         text={{content: "Hủy", layout: 1}} textStyle={styles.textButton}
                     />
@@ -231,6 +276,10 @@ const styles = StyleSheet.create({
         fontSize: 18, 
         marginLeft: 15,
         color:"#fff"
+    },
+    singerText : {
+        fontSize: 14,
+        marginLeft:25
     },
     textEmoji:{
         fontFamily: "SF-Pro-Text-Medium",

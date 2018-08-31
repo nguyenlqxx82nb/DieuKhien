@@ -6,7 +6,7 @@ import { StackNavigator, DrawerNavigator } from "react-navigation";
 // screens
 import HomeScreen from "./Home/index.js";
 import SideBar from "../SideBar/SideBar.js";
-import SingScreen from "./BaiHat/index.js"
+import SingScreen from "./BaiHat/Search.js"
 
 const Drawer = DrawerNavigator(
     {

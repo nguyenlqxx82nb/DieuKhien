@@ -14,6 +14,8 @@ import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SingerTabsView from '../../Views/SingerTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
+import SingerSong from '../BaiHat/SingerSong';
+import MusicOnline from '../../Views/MusicOnlineButton'
 
 
 export default class SingerScreen extends BaseScreen {
@@ -24,6 +26,16 @@ export default class SingerScreen extends BaseScreen {
     };
     constructor(props) {
         super(props);
+    }
+    componentWillMount() {
+        // selected song changed
+        this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
+            this.singerSong.updateSinger(data.name,data.id);
+            this.singerSong.show();
+        });
+    }
+    componentWillUnmount() {
+        EventRegister.removeEventListener(this._listenerSingerSongEvent);
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -49,7 +61,9 @@ export default class SingerScreen extends BaseScreen {
     _onSearch =(value)=> {
         this._songTabs.searchData(value,this._sex);
     }
-    
+    _showOptOverlay = () =>{
+        EventRegister.emit('ShowOptOverlay', {id:-1,overlayType:GLOBALS.SING_OVERLAY.SINGER});
+    }
     renderContentView = () => {
         return (
             <View style={{ flex: 1 }}>
@@ -63,7 +77,7 @@ export default class SingerScreen extends BaseScreen {
                         onSearch={this._onSearch}  />
                     <View style={{ width: 40, height: 40}}>
                         <IconRippe vector={true} name="menu" size={20} color="#fff"
-                            onPress={this._onBack} />
+                            onPress={this._showOptOverlay} />
                     </View>
                 </View>
 
@@ -72,28 +86,14 @@ export default class SingerScreen extends BaseScreen {
                         onChangeTab = {this._onChangeTab} />
                 </View>
 
-                <View style={styles.onlineContainer}>
-                    <Grid>
-                        <Col size={1} >
-                            <LinearGradient colors={['#FF2626', '#FF2626', '#FF2626']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="youtube3" size={60} />
-                            </LinearGradient>
-                        </Col>
-                        <Col size={1}>
-                            <LinearGradient colors={['#F78B10', '#F78B10', '#F8570E']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="soundcloud" size={120} />
-                            </LinearGradient>
-                        </Col>
-                        <Col size={1}>
-                            <LinearGradient colors={['#3481D3', '#3481D3', '#3481D3']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="mixcloud" size={110} />
-                            </LinearGradient>
-                        </Col>
-                    </Grid>
-                </View>
+                <MusicOnline />
+                <SingerSong 
+                    ref = {ref => (this.singerSong = ref)} 
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {3}
+                    onBack = {() => {
+                        this.singerSong.hide();
+                    }} />
             </View>
         );
     }
@@ -126,28 +126,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.01)',
     },
     
-    onlineButton: {
-        flex: 1,
-        borderRadius: 5,
-        marginBottom: 10,
-        marginLeft: 3,
-        marginRight: 3
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.2,
-        // elevation: 2,
-    },
-
-    onlineContainer: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: 110,
-        zIndex: 2,
-        paddingLeft: 5,
-        paddingRight: 5
-    },
 
 })

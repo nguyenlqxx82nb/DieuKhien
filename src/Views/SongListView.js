@@ -20,6 +20,8 @@ export default class SongListView extends React.Component {
     static propTypes = {
         lan: PropTypes.string,
         type : PropTypes.number,
+        singer : PropTypes.string,
+        songType : PropTypes.number,
         //onOptionOverlayOpen: PropTypes.func,
         //onBack: PropTypes.func,
         //duration : PropTypes.number
@@ -27,7 +29,8 @@ export default class SongListView extends React.Component {
     };
     static defaultProps = {
         lan : 'vn',
-        type : GLOBALS.SONG_LIST_TYPE.NORMAL
+        type : GLOBALS.SONG_LIST_TYPE.NORMAL,
+        songType : GLOBALS.SONG_TYPE.ALL,
     };
     //page = 0;
     state = {
@@ -89,7 +92,7 @@ export default class SongListView extends React.Component {
                 isChange = true;
             }
         }
-        
+
         if(isChange)
             this.setState({
                 dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas)
@@ -114,6 +117,18 @@ export default class SongListView extends React.Component {
             this._page = 0;
             this._indicator.show();
             this._loadData(this.props.lan, this._page, this._pageCount,term);
+        }
+    }
+
+    clear =()=>{
+        if (!this._loading) {
+            this._searchTerm = "";
+            this._loaded = false;
+            this._page = 0;
+            this.setState({
+                dataProvider: this.state.dataProvider.cloneWithRows([]),
+                datas: []
+            });
         }
     }
 
@@ -147,7 +162,7 @@ export default class SongListView extends React.Component {
             });
         }
         else{
-            Databases.fetchSongData(lan,page, pageCount, term,function (datas) {
+            Databases.fetchSongData(lan,page,pageCount,term,this.props.songType,function (datas) {
                 that._page = page;
                 that._handleFetchDataCompleted(datas);
             });
@@ -202,7 +217,6 @@ export default class SongListView extends React.Component {
         }
 
         BoxControl.selectSong(id);
-        //EventRegister.emit('SongEvent', data);
     }
 
     _onEndReached = () => {
@@ -263,6 +277,8 @@ export default class SongListView extends React.Component {
                 <RecyclerListView
                     style={{ flex: 1 }}
                     //contentContainerStyle={{ margin: 3 }}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     onEndReached={this._onEndReached}
                     dataProvider={this.state.dataProvider}
                     layoutProvider={this._layoutProvider}

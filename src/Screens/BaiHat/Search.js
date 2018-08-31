@@ -8,15 +8,14 @@ import {
     // Tab, Tabs, ScrollableTab
 } from "native-base";
 import IconRippe from '../../Components/IconRippe.js'
-import { Grid, Col } from "react-native-easy-grid";
-import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SongTabsView from '../../Views/SongTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
+import MusicOnline from '../../Views/MusicOnlineButton.js';
 
 
-export default class SingScreen extends BaseScreen {
+export default class SearchScreen extends BaseScreen {
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
@@ -32,9 +31,14 @@ export default class SingScreen extends BaseScreen {
         }
     }
     _showCompleted = () =>{
+        this._songTabs.setVisible(true);
         this._songTabs.loadData(this._searchInput.getValue());
     }
 
+    _hideCompleted = ()=>{
+        this._songTabs.setVisible(false);
+    }
+    
     focusSearchInput = () =>{
         this._searchInput.focus();
     }
@@ -69,28 +73,7 @@ export default class SingScreen extends BaseScreen {
                         onChangeTab = {this._onChangeTab} />
                 </View>
 
-                <View style={styles.onlineContainer}>
-                    <Grid>
-                        <Col size={1} >
-                            <LinearGradient colors={['#FF2626', '#FF2626', '#FF2626']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="youtube3" size={60} />
-                            </LinearGradient>
-                        </Col>
-                        <Col size={1}>
-                            <LinearGradient colors={['#F78B10', '#F78B10', '#F8570E']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="soundcloud" size={120} />
-                            </LinearGradient>
-                        </Col>
-                        <Col size={1}>
-                            <LinearGradient colors={['#3481D3', '#3481D3', '#3481D3']}
-                                style={styles.onlineButton}>
-                                <IconRippe vector={true} name="mixcloud" size={110} />
-                            </LinearGradient>
-                        </Col>
-                    </Grid>
-                </View>
+                <MusicOnline />
             </View>
         );
     }
@@ -124,29 +107,4 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'rgba(0,0,0,0.01)',
     },
-    
-    onlineButton: {
-        flex: 1,
-        borderRadius: 5,
-        marginBottom: 10,
-        marginLeft: 3,
-        marginRight: 3
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.2,
-        // elevation: 2,
-    },
-
-    onlineContainer: {
-        width: '100%',
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: 110,
-        zIndex: 2,
-        paddingLeft: 5,
-        paddingRight: 5
-    },
-
 })

@@ -375,8 +375,161 @@ const SingerDataTemp = [
     },
 ];
 
+const songOnlineTemp = [
+    {
+        id: 1,
+        title: "RỢN LẮM Người Mẹ Quỷ - Truyện Ma Có Thật Trường Lê Viết Mà Sợ",
+        thumbnails :"https://i.ytimg.com/vi/KVcvvY2kMs4/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 2,
+        title: "[Phần 2] RỢN LẮM Người Mẹ Quỷ - Truyện Ma Có Thật Trường Lê Viết Mà Sợ",
+        thumbnails :"https://i.ytimg.com/vi/5JAzMDhep7c/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 3,
+        title: "[Phần 3] HÃI lẮM Vong Hồn - Truyện Ma Có Thật Trường Lê Viết Quá Hay",
+        thumbnails :"https://i.ytimg.com/vi/hI-Z21A-ETk/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 4,
+        title: "TRUYỆN MA CÓ THẬT - NGHIỆP ÂM PHẦN 2 [ TẬP 1 ] CON ĐƯỜNG ĐẠO SĨ NGUYỄN NGỌC QUANG - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/lO998TO3kTY/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 5,
+        title: "[SỢ LẮM] Đền Tội Cho Ác Nghiệp - Truyện Ma Có Thật Đình Soạn Kể",
+        thumbnails :"https://i.ytimg.com/vi/ZmQNyP2gWoY/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 6,
+        title: "[TRUYỆN MA] GIA ĐÌNH TRÙNG TANG - TRUYỆN MA CÓ THẬT KHỎI BẢO NÓI ĐIÊU NHÉ!",
+        thumbnails :"https://i.ytimg.com/vi/aRQJ2Goku-I/hqdefault.jpg",
+        channelTitle: "Truyện Ma 3S"
+    },
+    {
+        id: 7,
+        title: "Oan Hồn Về Làm Vợ - Truyện Ma Có Thật hay hấp dẫn nhất hiện nay",
+        thumbnails :"https://i.ytimg.com/vi/Bre1p7tBuqQ/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 8,
+        title: "TRUYỆN MA CÓ THẬT - THÁNG 7 CỦA AI [ TẬP 1 ] - BÍ ẨN THÁNG CÔ HỒN QUỶ TIẾT - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/jFTEKX9UpkQ/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 9,
+        title: "[Phần 4] HÃI lẮM Vong Hồn - Truyện Ma Có Thật Trường Lê Viết Quá Hay",
+        thumbnails :"https://i.ytimg.com/vi/bm5RIDO5pxo/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 10,
+        title: "Tiếng Rú Vào Đêm Khuya - Truyện Ma Có Thật Ngọc Lâm Kể Hãi Lắm",
+        thumbnails :"https://i.ytimg.com/vi/iHJXlTDrFyE/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 11,
+        title: "TRUYỆN MA CÓ THẬT - CÔ HỒN THÁNG 7 [ TẬP 1 ] SERI : CHẶNG ĐƯỜNG ĐÃ QUA - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/66sqn4tprY4/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 12,
+        title: "TRUYỆN MA CÓ THẬT - NGHIỆP ÂM PHẦN 2 [ TẬP 1 ] CON ĐƯỜNG ĐẠO SĨ NGUYỄN NGỌC QUANG - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/lO998TO3kTY/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 13,
+        title: "[SỢ LẮM] Đền Tội Cho Ác Nghiệp - Truyện Ma Có Thật Đình Soạn Kể",
+        thumbnails :"https://i.ytimg.com/vi/ZmQNyP2gWoY/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 14,
+        title: "[TRUYỆN MA] GIA ĐÌNH TRÙNG TANG - TRUYỆN MA CÓ THẬT KHỎI BẢO NÓI ĐIÊU NHÉ!",
+        thumbnails :"https://i.ytimg.com/vi/aRQJ2Goku-I/hqdefault.jpg",
+        channelTitle: "Truyện Ma 3S"
+    },
+    {
+        id: 15,
+        title: "Oan Hồn Về Làm Vợ - Truyện Ma Có Thật hay hấp dẫn nhất hiện nay",
+        thumbnails :"https://i.ytimg.com/vi/Bre1p7tBuqQ/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 16,
+        title: "Tiếng Rú Vào Đêm Khuya - Truyện Ma Có Thật Ngọc Lâm Kể Hãi Lắm",
+        thumbnails :"https://i.ytimg.com/vi/iHJXlTDrFyE/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 17,
+        title: "TRUYỆN MA CÓ THẬT - CÔ HỒN THÁNG 7 [ TẬP 1 ] SERI : CHẶNG ĐƯỜNG ĐÃ QUA - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/66sqn4tprY4/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 18,
+        title: "TRUYỆN MA CÓ THẬT - NGHIỆP ÂM PHẦN 2 [ TẬP 1 ] CON ĐƯỜNG ĐẠO SĨ NGUYỄN NGỌC QUANG - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/lO998TO3kTY/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 19,
+        title: "[SỢ LẮM] Đền Tội Cho Ác Nghiệp - Truyện Ma Có Thật Đình Soạn Kể",
+        thumbnails :"https://i.ytimg.com/vi/ZmQNyP2gWoY/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 20,
+        title: "[TRUYỆN MA] GIA ĐÌNH TRÙNG TANG - TRUYỆN MA CÓ THẬT KHỎI BẢO NÓI ĐIÊU NHÉ!",
+        thumbnails :"https://i.ytimg.com/vi/aRQJ2Goku-I/hqdefault.jpg",
+        channelTitle: "Truyện Ma 3S"
+    },
+    {
+        id: 21,
+        title: "Oan Hồn Về Làm Vợ - Truyện Ma Có Thật hay hấp dẫn nhất hiện nay",
+        thumbnails :"https://i.ytimg.com/vi/Bre1p7tBuqQ/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 22,
+        title: "TRUYỆN MA CÓ THẬT - NGHIỆP ÂM PHẦN 2 [ TẬP 1 ] CON ĐƯỜNG ĐẠO SĨ NGUYỄN NGỌC QUANG - MC QUÀNG A TŨN",
+        thumbnails :"https://i.ytimg.com/vi/lO998TO3kTY/hqdefault.jpg",
+        channelTitle: "Đọc Truyện Đêm Khuya"
+    },
+    {
+        id: 23,
+        title: "[SỢ LẮM] Đền Tội Cho Ác Nghiệp - Truyện Ma Có Thật Đình Soạn Kể",
+        thumbnails :"https://i.ytimg.com/vi/ZmQNyP2gWoY/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+    {
+        id: 24,
+        title: "[TRUYỆN MA] GIA ĐÌNH TRÙNG TANG - TRUYỆN MA CÓ THẬT KHỎI BẢO NÓI ĐIÊU NHÉ!",
+        thumbnails :"https://i.ytimg.com/vi/aRQJ2Goku-I/hqdefault.jpg",
+        channelTitle: "Truyện Ma 3S"
+    },
+    {
+        id: 25,
+        title: "Oan Hồn Về Làm Vợ - Truyện Ma Có Thật hay hấp dẫn nhất hiện nay",
+        thumbnails :"https://i.ytimg.com/vi/Bre1p7tBuqQ/hqdefault.jpg",
+        channelTitle: "Truyện ma Nguyễn Ngọc Ngạn"
+    },
+]
+
 class Databases {
-    static fetchSongData(lan,page, pageCount, term,callback){
+    static fetchSongData(lan,page, pageCount, term,songType,callback){
         //console.warn('fetchSongData0 : '+page+" , "+lan); 
         setTimeout(()=>{
             var retDatas = [];
@@ -481,6 +634,32 @@ class Databases {
             };
             callback(data);
         },100);
+    }
+
+    static fetchOnlineSongData(page, pageCount, term,songOln,callback){
+        //console.warn('fetchSongData0 : '+page+" , "+lan); 
+        setTimeout(()=>{
+            var retDatas = [];
+            const moreId = page*songOnlineTemp.length + (songOln - 1)*2000;
+            if(page < 50){
+                for(var i in songOnlineTemp){
+                    if(term !="" && songOnlineTemp[i].title.indexOf(term) == -1){
+                        continue;
+                    }
+                    var id = songOnlineTemp[i].id + moreId ;
+                    var data = {
+                        id : id,
+                        title : songOnlineTemp[i].title,
+                        thumb : songOnlineTemp[i].thumbnails,
+                        channelTitle : songOnlineTemp[i].channelTitle
+                    };
+                    
+                    retDatas.push(data);
+                }
+            }
+            
+            callback(retDatas);
+        },400);
     }
 }
 
