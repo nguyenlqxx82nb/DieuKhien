@@ -11,14 +11,17 @@ import Databases from '../../DataManagers/DatabaseManager.js';
 import IndicatorView from '../../Views/IndicatorView';
 import SongOnlineItem from './SongOnlineItem';
 
-let { height, width } = Dimensions.get('window');
+let { width } = Dimensions.get('window');
+let height = width*18/32 + 90;
 export default class SongOnlineListView extends React.Component {
     static propTypes = {
         onlineType: PropTypes.number,
-        onScroll : PropTypes.func
+        onScroll : PropTypes.func,
+        top : PropTypes.number
     };
     static defaultProps = {
         onlineType : GLOBALS.SONG_ONLINE.YOUTUBE,
+        top: 50
     };
     //page = 0;
     state = {
@@ -48,11 +51,11 @@ export default class SongOnlineListView extends React.Component {
                 switch (type) {
                     case "FULL":
                         dim.width = width;
-                        dim.height = width*18/32 + 90;
+                        dim.height = height;
                         break;
                     default:
                         dim.width = width;
-                        dim.height = width*18/32 + 90;
+                        dim.height = height;
                 }
             }
         );
@@ -179,7 +182,7 @@ export default class SongOnlineListView extends React.Component {
         const {thumb,id,title,channelTitle} = item;
        // console.warn("title "+title +" , channelTitle = "+channelTitle);
         return (
-            <SongOnlineItem thumbnail={thumb} id ={id} title={title} channel={channelTitle} />
+            <SongOnlineItem thumbnail={thumb} id ={id} title={title} channel={channelTitle} height = {height} />
         );
     };
 
@@ -221,7 +224,7 @@ export default class SongOnlineListView extends React.Component {
         {...props}
         scrollEventThrottle={16}
         contentContainerStyle={{
-            paddingTop: 50
+            paddingTop: this.props.top
         }}
             // Declarative API for animations ->
             // onScroll={Animated.event(

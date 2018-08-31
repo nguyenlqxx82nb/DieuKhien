@@ -12,7 +12,7 @@ import {
 import AutoHeightImage from 'react-native-auto-height-image';
 import { Col, Grid, Row } from "react-native-easy-grid";
 import IconRippe from '../../Components/IconRippe.js'
-
+import GLOBALS from '../../DataManagers/Globals'
 import LinearGradient from 'react-native-linear-gradient';
 
 const logo = require("../../../assets/logo.png");
@@ -36,7 +36,7 @@ export default class HomeScreen extends ScreenBase {
     renderContentView = () => {
         const { onOpenSearch,onOpenSinger } = this.props;
         return (
-            <View style={{ flex: 1,width:"100%",backgroundColor:"red" }}>
+            <View style={{ flex: 1,width:"100%"}}>
                 <View style={{ flexDirection: "row", alignItems: "center", marginTop: 0, height: 55 }}>
                     <Left>
                         <View style={{ width: 50, height: 50, marginLeft: 0 }}>
@@ -55,7 +55,7 @@ export default class HomeScreen extends ScreenBase {
                     </Right>
                 </View>
 
-                <View style={{ flex: 1, paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 10,backgroundColor:"blue" }}>
+                <View style={{ flex: 1, paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 10}}>
                     <Grid>
                         <Row size={1}>
                             <Grid>

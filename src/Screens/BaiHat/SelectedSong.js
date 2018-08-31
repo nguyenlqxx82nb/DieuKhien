@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginTop: 25, 
+       // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50,
         borderTopWidth: 0,
         borderLeftWidth: 0,

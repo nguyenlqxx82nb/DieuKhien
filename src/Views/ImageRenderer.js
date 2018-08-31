@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Platform, View, TouchableWithoutFeedback,Animated,Easing } from 'react-native';
+import { Image, Platform, View, Animated,Easing } from 'react-native';
 import PropTypes from 'prop-types';
 import GLOBALS from '../DataManagers/Globals.js';
 import ListItem from '../Components/ListItem.js'

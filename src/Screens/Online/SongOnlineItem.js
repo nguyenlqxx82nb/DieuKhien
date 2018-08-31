@@ -14,10 +14,14 @@ export default class SongOnlineItem extends React.Component {
     id: PropTypes.number,
     title: PropTypes.string,
     channel: PropTypes.string,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    maxOpacity: PropTypes.number,
+    onPress : PropTypes.func,
+    height : PropTypes.number
   }
 
   static defaultProps = {
+    maxOpacity: 0.25
   }
 
   shouldComponentUpdate(newProps) {
@@ -52,21 +56,21 @@ export default class SongOnlineItem extends React.Component {
   onPressedIn = () => {
     const { maxOpacity, onPress } = this.props;
     
-    // Animated.timing(this.state.scaleValue, {
-    //   toValue: 1,
-    //   duration: 225,
-    //   easing: Easing.bezier(0.0, 0.0, 0.2, 1),
-    //   useNativeDriver: Platform.OS === 'android',
-    // }).start(() => {
-    //   Animated.timing(this.state.opacityValue, {
-    //     toValue: 0,
-    //     duration: 150,
-    //     useNativeDriver: Platform.OS === 'android',
-    //   }).start(() => {
-    //     this.state.scaleValue.setValue(0.01);
-    //     this.state.opacityValue.setValue(maxOpacity);
-    //   });
-    // });
+    Animated.timing(this.state.scaleValue, {
+      toValue: 1,
+      duration: 225,
+      easing: Easing.bezier(0.0, 0.0, 0.2, 1),
+      useNativeDriver: Platform.OS === 'android',
+    }).start(() => {
+      Animated.timing(this.state.opacityValue, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: Platform.OS === 'android',
+      }).start(() => {
+        this.state.scaleValue.setValue(0.01);
+        this.state.opacityValue.setValue(maxOpacity);
+      });
+    });
 
     if(onPress != null){
       onPress();
@@ -84,7 +88,8 @@ export default class SongOnlineItem extends React.Component {
 
   renderRippleView() {
     const { scaleValue, opacityValue } = this.state;
-
+    const { height}= this.props;
+    _height = height - 25;
     return (
       <Animated.View
         ref={component => this._rippleView = component}
@@ -92,9 +97,9 @@ export default class SongOnlineItem extends React.Component {
           position: 'absolute',
           top: 0,
           left: 0,
-          width: 100,
-          height: 100,
-          borderRadius: 50,
+          width: screen.width,
+          height: _height,
+          borderRadius: _height/2,
           zIndex :2,
           transform: [{ scale: scaleValue }],
           opacity: opacityValue,
@@ -103,31 +108,33 @@ export default class SongOnlineItem extends React.Component {
       />
     );
   }
+
+  find_dimesions = (layout) =>{
+    const {x, y, width, height} = layout;
+    this._rippleView.setNativeProps({style:{
+        width: height,
+        height: height,
+        left: (width - height)/2,
+        borderRadius: height/2}});
+  }
   render() {
     //console.warn(" url = "+GLOBALS.SINGER_SEX[1]);
     var imageHeight = screen.width*18/32;
    // console.warn("channel = "+this.props.channel);
     return (
       <Button onPress = {this.onPressedIn}>
-        <View style={{flex:1}}>
+        <View style={{flex:1}}  >
+            {this.renderRippleView()}
             <View
-            style={{
-                width:'100%',
-                height: imageHeight,
-                backgroundColor: 'lightgrey',
-                // borderRadius: 5,
-                // marginRight: 5,
-                // marginTop: 5,
-                // shadowColor: '#000',
-                // shadowOffset: { width: 0, height: 2 },
-                // shadowOpacity: 0.2,
-                // elevation: 2,
-            }}>
-            <Image
-                    ref={ref => {this.imageRef = ref;}}
-                    style={{flex: 1,}}
-                    onLoad={this.handleOnLoad}
-                    source={{ uri: this.props.thumbnail }} />
+                style={{
+                    width:'100%',
+                    height: imageHeight,
+                    backgroundColor: 'lightgrey'}}>
+                <Image
+                        ref={ref => {this.imageRef = ref;}}
+                        style={{flex: 1,}}
+                        onLoad={this.handleOnLoad}
+                        source={{ uri: this.props.thumbnail }} />
             </View>
             <View style={styles.textContainer}>
                 <Text numberOfLines={2} style={styles.textTitle} >{this.props.title}</Text>

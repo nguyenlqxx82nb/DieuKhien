@@ -87,7 +87,7 @@ export default class SingerSong extends BaseScreen {
                             {singerName}
                     </Text>
                 </View>
-                <MusicOnline style={{top:75}} />
+                <MusicOnline style={{top:50}} />
 
                 <View style={{ flex: 1, marginTop:50,borderTopWidth: 0.5,borderColor: '#00ECBC'}}>
                     <SongListView ref={ref=>(this._songList = ref)} type = {GLOBALS.SONG_LIST_TYPE.SINGER} singer ={singerName}  />
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginTop: 25, 
+        //marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50,
     },
     title: {

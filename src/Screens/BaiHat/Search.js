@@ -55,11 +55,7 @@ export default class SearchScreen extends BaseScreen {
     renderContentView = () => {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{
-                    flexDirection: "row",
-                    alignItems: "center", justifyContent: "center", marginTop: 25, height: 40
-                }}>
-
+                <View style={styles.headerContainer}>
                     <View style={{ width: 40, height: 40, marginLeft: 0 }}>
                         <IconRippe vector={true} name="back" size={20} color="#fff"
                             onPress={this._onBack}
@@ -80,20 +76,13 @@ export default class SearchScreen extends BaseScreen {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: "center", alignItems: "center"
-    },
-    contentContainer: {
-        justifyContent: "center", alignItems: "center", marginRight: 25,
-        marginLeft: 25, marginTop: 10, marginBottom: 10
-    },
+  
     headerContainer: {
         justifyContent: "center",
-        flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 25,
-        height: 50,
+        //marginTop: GLOBALS.STATUS_BAR_HEIGHT,
+        height: 40,
         overflow: "hidden"
     },
     title: {

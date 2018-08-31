@@ -41,7 +41,7 @@ export default class TheloaiScreen extends BaseScreen {
     }
     renderContentView = () => {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1,position:"relative"}}>
                 <View style={{ flex: 1 }}>
                 <View style={styles.headerContainer}>
                     <View style={{ width: 40, height: 40 , marginLeft:5}}>
@@ -161,6 +161,7 @@ export default class TheloaiScreen extends BaseScreen {
                     ref = {ref => (this.theloaiSong = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {4}
+                    type={GLOBALS.SCREEN_TYPE.TOP}
                     onBack = {() => {
                         this.theloaiSong.hide();
                     }} />
@@ -170,12 +171,11 @@ export default class TheloaiScreen extends BaseScreen {
 }
 
 const styles = StyleSheet.create({
-    
     headerContainer: {
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginTop: 25, 
+        //marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50
     },
     button :{

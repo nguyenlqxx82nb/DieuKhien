@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Alert,Dimensions,Animated, Platform,LinearGradient} from "react-native";
+import { StyleSheet, Alert,Dimensions,Animated, Platform} from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
 import {
@@ -10,18 +10,20 @@ import {
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
-import SongOnlineListView from './SongOnlineListView';
-import CustomIcon from '../../Components/CustomIcon';
+import SongOnlineListView from './SongOnlineListView.js';
+import CustomIcon from '../../Components/CustomIcon.js';
+import LinearGradient from 'react-native-linear-gradient';
 
 const screen = {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
 }
-
-export default class YoutubeScreen extends BaseScreen {
+const HEADER_HEIGHT = 50;
+export default class SongOnlineScreen extends BaseScreen {
     static propTypes = {
         //onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
+        type : PropTypes.number,
     };
     _offsetY = 0;
     _headerTopY = 0;
@@ -56,34 +58,76 @@ export default class YoutubeScreen extends BaseScreen {
         this._songList.loadData("");
     }
     _handleScroll = (offsetY) =>{
-        if(offsetY > 50){
+        if(offsetY > HEADER_HEIGHT){
             if(this._offsetY <= offsetY){
-                if(this._headerTopY > -50){
+                if(this._headerTopY > -HEADER_HEIGHT){
                     var delta = offsetY - this._offsetY;
-                    this._headerTopY = Math.max(this._headerTopY - delta,-50);
+                    this._headerTopY = Math.max(this._headerTopY - delta,-HEADER_HEIGHT);
+                    this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
                     Animated.timing(this.state.scrollY,{toValue:this._headerTopY,duration:0}).start();
                 }
             }
             else{
-                if(this._headerTopY > 0){
+                if(this._headerTopY < 0){
                     this._headerTopY = 0;
                     Animated.timing(this.state.scrollY,{toValue:0,duration:150}).start();
                 }
             }
         }
         else{
-            this._headerTopY = Math.max(-offsetY,-50);
+            if(this._offsetY > HEADER_HEIGHT){
+                var delta = offsetY - this._offsetY;
+                this._headerTopY = Math.max(this._headerTopY - delta,-HEADER_HEIGHT);
+                this._headerTopY = (this._headerTopY > 0)?0:this._headerTopY;
+            }
+            else{
+                this._headerTopY =  Math.max(-offsetY,-HEADER_HEIGHT);
+            }
             Animated.timing(this.state.scrollY,{toValue:this._headerTopY,duration:0}).start();
         }
 
         this._offsetY = offsetY;
     }
+    _renderOnlineIcon = ()=>{
+        const {type} = this.props;
+        if(type == GLOBALS.SONG_ONLINE.YOUTUBE){
+            return(
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
+                    style={{marginLeft:5, height:40,width:90,justifyContent:"center",alignItems:"center"}}
+                    colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} >
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <CustomIcon name={"youtube3"} size ={60} style={{color:"#fff"}} />
+                    </View>
+                </LinearGradient>
+            );
+        }
+        else if(type == GLOBALS.SONG_ONLINE.SOUNDCLOUD){
+            return(
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
+                    style={{marginLeft:5, height:40,width:100,justifyContent:"center",alignItems:"center"}}
+                    colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} >
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <CustomIcon name={"soundcloud"} size ={90} style={{color:"#fff"}} />
+                    </View>
+                </LinearGradient>
+            );
+        }
+        else if(type == GLOBALS.SONG_ONLINE.MIXCLOUD){
+            return(
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
+                    style={{marginLeft:5, height:40,width:100,justifyContent:"center",alignItems:"center"}}
+                    colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} >
+                    <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                        <CustomIcon name={"mixcloud"} size ={90} style={{color:"#fff"}} />
+                    </View>
+                </LinearGradient>
+            );
+        }
+    }
     renderContentView = () => {
         //const { maxZindex } = this.props;
-        var bodyHeight  = screen.height- 75;
-        var width = screen.width;
         return (
-            <View style={{ flex: 1,width:'100%' }}>
+            <View style={{ flex: 1,width:'100%'}}>
                 <Animated.View 
                     style={[styles.headerContainer,{ transform: [{ translateY: this.state.scrollY }]}]}
                     ref = {ref => (this._header = ref)}>
@@ -93,13 +137,7 @@ export default class YoutubeScreen extends BaseScreen {
                         />
                     </View>
                     <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
-                        {/* <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} 
-                            style={{marginLeft:15, height:40,width:90,justifyContent:"center",alignItems:"center"}}
-                            colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} >
-                            <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                <CustomIcon name={"youtube3"} size ={60} style={{color:"#fff"}} />
-                            </View>
-                        </LinearGradient> */}
+                        {this._renderOnlineIcon()}
                     </View>
                     <View style={{ width: 40, height: 40, marginRight: 5 }}>
                         <IconRippe vector={true} name="search" size={20} color="#fff" />
@@ -110,7 +148,7 @@ export default class YoutubeScreen extends BaseScreen {
                     ref={ref => (this._videoListContainer = ref)} >
                     <SongOnlineListView ref={ref=>(this._songList = ref)} 
                         onScroll = {this._handleScroll}
-                        onlineType = {GLOBALS.SONG_ONLINE.YOUTUBE}  />
+                        onlineType = {this.props.type}  />
                 </Animated.View>
             </View>
         );
@@ -123,16 +161,12 @@ const styles = StyleSheet.create({
         alignItems: "center", 
         justifyContent: "center",
         top: 0, 
-        height: 50,
+        height: HEADER_HEIGHT,
         width:'100%',
         position:"absolute",
         zIndex: 1,
-        backgroundColor:"#44498B"
-        // borderTopWidth: 0,
-        // borderLeftWidth: 0,
-        // borderRightWidth: 0,
-        // borderBottomWidth: 0.5,
-        // borderColor: '#00ECBC',
+        backgroundColor:"#44498B",
+      //  marginTop:GLOBALS.STATUS_BAR_HEIGHT
     },
     title: {
         fontSize: 18,
@@ -141,12 +175,6 @@ const styles = StyleSheet.create({
         color:"#fff",
         flex:1,
         fontFamily:'SF-Pro-Text-Regular'
-    },
-    imageBg:{
-        position:"absolute",
-        width: screen.width,
-        height:screen.height,
-        zIndex:0
     },
     bodyContainer : {
         flex:1,

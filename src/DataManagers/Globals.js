@@ -148,6 +148,13 @@ export default {
         YOUTUBE : 1,
         SOUNDCLOUD: 2,
         MIXCLOUD : 3
-    }
+    },
+
+    SCREEN_TYPE : {
+        TOP: 1,
+        BOTTOM:2
+    },
+
+    STATUS_BAR_HEIGHT : 23,
 
   };

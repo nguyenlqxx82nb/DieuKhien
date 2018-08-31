@@ -15,7 +15,7 @@ import SongScreen from '../BaiHat/Songs';
 import HotScreen from '../BaiHat/HotSong';
 import OnlineScreen from '../Online/index.js'
 import { EventRegister } from 'react-native-event-listeners'
-import Globals from "../../DataManagers/Globals.js";
+import GLOBALS from "../../DataManagers/Globals.js";
 import BoxControl from "../../DataManagers/BoxControl.js";
 import DATA_INFO from "../../DataManagers/DataInfo.js";
 import BTElib from 'react-native-bte-lib';
@@ -35,6 +35,7 @@ export default class Taisao extends React.Component {
         super(props);
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
+        console.ignoredYellowBox = ['Warning: Stateless'];
     }
 
     componentDidMount() {
@@ -112,7 +113,7 @@ export default class Taisao extends React.Component {
         this._selectedSong.show();
     }
     _onOpenEmoji = () =>{
-        this._singOverlay.updateView(-1,Globals.SING_OVERLAY.EMOJI);
+        this._singOverlay.updateView(-1,GLOBALS.SING_OVERLAY.EMOJI);
         this._footer.hide();
         this._singOverlay.show();
     }
@@ -134,38 +135,37 @@ export default class Taisao extends React.Component {
                     onClose ={this._onSingOverlayClose}
                 />
                 <OnlineScreen  opacity= {0} maxZindex ={2} 
-                    transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._onlineScreen = ref)} />
-                <SearchScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                <SearchScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
                 />
-                <SongScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                <SongScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
                 />
-                <HotScreen opacity= {0} maxZindex ={5} transition = {Globals.TRANSITION.SLIDE_LEFT}
+                <HotScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                 />
-
                 <TheloaiScreen opacity= {0} maxZindex ={2} 
-                    transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._theloaiScreen = ref)}/>
-
                 <SingerScreen opacity= {0} maxZindex ={2} 
-                    transition = {Globals.TRANSITION.SLIDE_LEFT}
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._singerScreen = ref)}/>
-                <SelectedSong maxZindex ={6} transition = {Globals.TRANSITION.SLIDE_TOP}
+                <SelectedSong maxZindex ={6} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
-                <HomeScreen zIndex={1} opacity= {1} maxZindex ={1} 
+                <HomeScreen zIndex={1}  
+                    opacity= {1} maxZindex ={1} 
                     onOpenSearch={this._onOpenSearch}
                     onOpenSinger = {this._onOpenSinger}
                     onOpenTheloai = {this._onOpenTheloai}

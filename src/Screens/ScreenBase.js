@@ -20,7 +20,9 @@ class BaseScreen extends React.Component {
         maxZindex: PropTypes.number,
         posX : PropTypes.number,
         posY : PropTypes.number,
-        transition : PropTypes.number
+        transition : PropTypes.number,
+        bottom :  PropTypes.number,
+        type: PropTypes.number
     };
      
     static defaultProps = {
@@ -29,7 +31,9 @@ class BaseScreen extends React.Component {
         maxZindex: 1,
         posX : screen.width,
         posY : screen.height,
-        transition : GLOBALS.TRANSITION.FADE
+        transition : GLOBALS.TRANSITION.FADE,
+        bottom : 115,
+        type : GLOBALS.SCREEN_TYPE.BOTTOM
     };
     _songTabs = null;
     constructor(props) {
@@ -184,12 +188,22 @@ class BaseScreen extends React.Component {
 
     render() {
         const {opacity,posX,posY} = this.animate;
+        const { bottom,type } = this.props;
+        var style = {};
+        // if(type == GLOBALS.SCREEN_TYPE.BOTTOM){
+        //     style.top = 0;
+        // }
+        // else{
+        //     style.top = 0;
+        // }
+        style.top = 0;
+        style.height = screen.height - GLOBALS.STATUS_BAR_HEIGHT;
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
-                style={[styles.container,{opacity : opacity,transform: [{translateY: posY},{translateX:posX}]}]}>
+                style={[styles.container,style,{opacity : opacity,transform: [{translateY: posY},{translateX:posX}]}]}>
                 <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} />
-                <View style={{flex:1, marginBottom:140, width:'100%'}}>
+                <View style={{flex:1, marginBottom:bottom, width:'100%'}}>
                     {this.renderContentView()}
                 </View>
             </Animated.View>
@@ -201,11 +215,9 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: "center",
         alignItems: "center",
-        top:0,
         position:"absolute",
-        height: screen.height,
         width: screen.width,
-        zIndex:0,
+        zIndex:0
     },
     imageBg:{
         position:"absolute",

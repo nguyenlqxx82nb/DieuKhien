@@ -232,7 +232,7 @@ export default class SingOptionOverlay extends React.Component {
         <View style={{position:"absolute",
                         width: screen.width,
                         top:0,
-                        height: screen.height,opacity:1,zIndex:0 }}
+                        height: screen.height - GLOBALS.STATUS_BAR_HEIGHT,opacity:1,zIndex:0 }}
                ref={ref => (this._container = ref)}>
 
             <TouchableWithoutFeedback  style={styles.overlayContainer} 
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         position:"absolute",
         width: screen.width,
         top:0,
-        height: screen.height, 
+        height: screen.height - GLOBALS.STATUS_BAR_HEIGHT, 
         //opacity:0.6
     },
     container: {

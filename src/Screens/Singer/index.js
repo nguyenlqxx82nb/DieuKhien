@@ -91,6 +91,7 @@ export default class SingerScreen extends BaseScreen {
                     ref = {ref => (this.singerSong = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {3}
+                    type={GLOBALS.SCREEN_TYPE.TOP}
                     onBack = {() => {
                         this.singerSong.hide();
                     }} />
@@ -100,18 +101,12 @@ export default class SingerScreen extends BaseScreen {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: "center", alignItems: "center"
-    },
-    contentContainer: {
-        justifyContent: "center", alignItems: "center", marginRight: 25,
-        marginLeft: 25, marginTop: 10, marginBottom: 10
-    },
+    
     headerContainer: {
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginTop: 25, 
+       // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 40
     },
     title: {

@@ -9,7 +9,7 @@ import IconRippe from '../../Components/IconRippe.js'
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
-import YoutubeScreen from './YoutubeScreen';
+import SongOnlineScreen from './SongOnlineScreen.js';
 
 export default class OnlineScreen extends BaseScreen {
     static propTypes = {
@@ -66,23 +66,50 @@ export default class OnlineScreen extends BaseScreen {
                         </View>
                         <View style={styles.onlineContainer}>
                             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} style={[styles.button]}>
-                                <IconRippe vector={true} name="soundcloud" size={190} />
+                                <IconRippe vector={true} name="soundcloud" size={190} 
+                                    onPress = {()=>{
+                                        this.soundSong.show();
+                                    }}
+                                />
                             </LinearGradient>
                         </View>
                         <View style={styles.onlineContainer}>
                             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} style={[styles.button]}>
-                                <IconRippe vector={true} name="mixcloud" size={190} />
+                                <IconRippe vector={true} name="mixcloud" size={190} 
+                                    onPress = {()=>{
+                                        this.mixSong.show();
+                                    }}
+                                />
                             </LinearGradient>
                         </View>
                     </View>
                 </View>
 
-                <YoutubeScreen 
+                <SongOnlineScreen 
                     ref = {ref => (this.youtubeSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.YOUTUBE}
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {3}
                     onBack = {() => {
                         this.youtubeSong.hide();
+                    }}
+                />
+                <SongOnlineScreen 
+                    ref = {ref => (this.soundSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {3}
+                    onBack = {() => {
+                        this.soundSong.hide();
+                    }}
+                />
+                <SongOnlineScreen 
+                    ref = {ref => (this.mixSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.MIXCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {3}
+                    onBack = {() => {
+                        this.mixSong.hide();
                     }}
                 />
 
@@ -97,13 +124,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-        marginTop: 25, 
+      //  marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50
     },
     button :{
         margin:0,
         flex: 1,
-        borderRadius: 5,
+        borderRadius: 15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
