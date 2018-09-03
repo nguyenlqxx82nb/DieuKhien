@@ -71,6 +71,7 @@ export default class SearchInput extends React.Component {
             <View style={[styles.container,style]}>
                 <Icon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
                 <TextInput
+                   // secureTextEntry = {true}
                     ref = {ref => (this._searchInput = ref)}
                     underlineColorAndroid={'transparent'}
                     placeholderTextColor={'#9192C6'}

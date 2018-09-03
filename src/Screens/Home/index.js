@@ -1,9 +1,11 @@
 import React from "react";
-import { Text, StatusBar, Image, StyleSheet, Dimensions, Easing } from "react-native";
+import { StatusBar,StyleSheet, Dimensions} from "react-native";
 import {
-    View
+    View,
+    Container
 } from "native-base";
 
+// screens
 import Footer from '../Footer/footer.js';
 import HomeScreen from './Home.js';
 import SearchScreen from '../BaiHat/Search.js';
@@ -14,6 +16,8 @@ import TheloaiScreen from '../TheLoai/index.js'
 import SongScreen from '../BaiHat/Songs';
 import HotScreen from '../BaiHat/HotSong';
 import OnlineScreen from '../Online/index.js'
+import SecondScreen from '../../SideBar/SecondScreen';
+
 import { EventRegister } from 'react-native-event-listeners'
 import GLOBALS from "../../DataManagers/Globals.js";
 import BoxControl from "../../DataManagers/BoxControl.js";
@@ -36,6 +40,8 @@ export default class Taisao extends React.Component {
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
         console.ignoredYellowBox = ['Warning: Stateless'];
+        BTElib.checkConnectToWifiBox();
+        DeviceEventEmitter.addListener('ConnectToBox', this.handleConnectToBox);
     }
 
     componentDidMount() {
@@ -43,16 +49,18 @@ export default class Taisao extends React.Component {
         this._currentScreen = this._homeScreen; 
         //BoxControl.syncPlaybackQueue();
         setTimeout(()=>{
-            this.ping();
+            //this.ping();
         },1000);
-
-       // BTElib.synsPlaybackQueue();
-        DeviceEventEmitter.addListener('test', this.test);
-        
     }
 
-    test = (e) =>{
-        console.warn("event leng = "+e['taisao'].length);
+    handleConnectToBox = (e) =>{
+       // console.warn("event leng = "+e['isConnected']);
+        GLOBALS.IS_BOX_CONNECTED = e['isConnected'];
+        GLOBALS.IS_NO_WIFI_CHECKED = false;
+        // connect to box event
+        EventRegister.emit("ConnectToBox",e);
+        // Refresh song list
+        EventRegister.emit("SongUpdate",{});
     }
 
     componentWillMount() {
@@ -66,11 +74,17 @@ export default class Taisao extends React.Component {
                 this._footer.show();
             },300);
         });
+
         // Show overlay
         this._listenerShowOptOverlayEvent = EventRegister.addEventListener('ShowOptOverlay', (data) => {
             this._singOverlay.updateView(data.id,data.overlayType);
             this._footer.hide();
             this._singOverlay.show();
+        });
+
+        // Open Second screen
+        this._listenerOpenSecondScreenEvent = EventRegister.addEventListener('OpenSecondScreen', (data) => {
+            this._secondScreen.open(data.type);
         });
     }
     componentWillUnmount() {
@@ -78,6 +92,7 @@ export default class Taisao extends React.Component {
         EventRegister.removeEventListener(this._listenerHideFooterEvent);
         EventRegister.removeEventListener(this._listenerShowFooterEvent);
         EventRegister.removeEventListener(this._listenerShowOptOverlayEvent);
+        EventRegister.removeEventListener(this._listenerOpenSecondScreenEvent);
     }
     
     _onOpenSearch = () => {
@@ -130,7 +145,18 @@ export default class Taisao extends React.Component {
     }
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <Container style={{ flex: 1 }}>
+                <SecondScreen 
+                    bottom = {0}
+                    opacity= {0} 
+                    maxZindex ={11} 
+                    transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={()=>{
+                        this._secondScreen.hide();
+                    }} 
+                    ref={ref => (this._secondScreen = ref)} />
+
                 <SingOptionOverlay opacity={0} maxZindex={10} ref={ref => (this._singOverlay = ref)} 
                     onClose ={this._onSingOverlayClose}
                 />
@@ -172,17 +198,20 @@ export default class Taisao extends React.Component {
                     onOpenSong = {this._onOpenSong}
                     onOpenHotSong = {this._onOpenHotSong}
                     onOnlineScreen = {this._onOnlineScreen}
+                    onOpenMenu = {() =>{
+                        this.props.navigation.openDrawer();        
+                    }}
                     ref={ref => (this._homeScreen = ref)} />
 
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
                     onOpenEmoji = {this._onOpenEmoji} 
                     onSelectedSong={this._onOpenSelectedSong} />
                 <StatusBar
-                    backgroundColor="#444083"
+                    backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                     // translucent={true}
                     barStyle="light-content"
                 ></StatusBar>
-            </View>
+            </Container>
         );
     }
 
@@ -229,7 +258,7 @@ export default class Taisao extends React.Component {
         }
 
         setTimeout(()=>{
-            this.ping();
+            //this.ping();
         },1000);
     }
 }

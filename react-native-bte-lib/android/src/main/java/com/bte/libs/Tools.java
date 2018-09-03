@@ -1,5 +1,6 @@
 package com.bte.libs;
 
+import android.content.Context;
 import android.os.Message;
 
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.Promise;
 
 public class Tools {
 
@@ -199,5 +201,58 @@ public class Tools {
             }
         }).start();
     }
+
+    public static void checkWifiStatus(final ReactContext reactContext) {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    WritableMap params = Arguments.createMap();
+                    params.putBoolean("isConnected",true);
+                    SendEvent(reactContext,params,"ConnectToBox");
+                } catch (Exception e) {
+                    WritableMap params = Arguments.createMap();
+                    params.putBoolean("isConnected",false);
+                    SendEvent(reactContext,params,"ConnectToBox");
+                } finally {
+                    try {
+                        socket.close();
+                    } catch (Exception e) {
+                        // e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public static String encode(String str) {
+        String hexString = "0123456789ABCDEF";
+        byte[] bytes = str.getBytes();
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(hexString.charAt((bytes[i] & 0xf0) >> 4));
+            sb.append(hexString.charAt((bytes[i] & 0x0f) >> 0));
+        }
+
+        return sb.toString();
+    }
+
+    public static String getUrl(String singerName) {
+        String singerNameUnicodeString = Tools.encode(singerName);
+        String urlStr;
+        urlStr = "http://" + Constants.HOST_IP + ":2012/Ktv/singer_picture/";
+        urlStr = urlStr + singerNameUnicodeString + ".jpg";
+        return  urlStr;
+    }
+
+    private static  void SendEvent(ReactContext reactContext, WritableMap params, String eventName){
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
 
 }

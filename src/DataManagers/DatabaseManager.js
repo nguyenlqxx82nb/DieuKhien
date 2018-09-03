@@ -528,76 +528,280 @@ const songOnlineTemp = [
     },
 ]
 
-class Databases {
-    static fetchSongData(lan,page, pageCount, term,songType,callback){
-        //console.warn('fetchSongData0 : '+page+" , "+lan); 
-        setTimeout(()=>{
-            var retDatas = [];
-            const moreId = page*SongDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
-            if(page < 50){
-                for(var i in SongDataTemp){
-                    if(term !="" && SongDataTemp[i].name.indexOf(term) == -1){
-                        continue;
-                    }
-                    var id = SongDataTemp[i].id + moreId ;
-                    var data = {
-                        id : id,
-                        name : SongDataTemp[i].name,
-                        singer : SongDataTemp[i].singer,
-                        download : SongDataTemp[i].download
-                    };
-                    
-                    if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADED){
-                        if(DataInfo.PLAY_QUEUE.indexOf(data.id) > -1){
-                            data.status = GLOBALS.SING_STATUS.SELECTED;
-                        }
-                        else{
-                            data.status = GLOBALS.SING_STATUS.NORMAL;
-                        }
-                    }
-                    else if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADING){
-                        data.status = GLOBALS.SING_STATUS.DOWNLOADING;
-                    }
-                    else{
-                        data.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
-                    }
+const DATA_API = "http://192.168.100.17:8081/app_api.php";
+var SQLite = require('react-native-sqlite-storage')
+var db = SQLite.openDatabase({name: 'testDB', createFromLocation: '~songbook.db'})
 
-                    retDatas.push(data);
-                }
+class Databases {
+    static getSongQuery(listType,songType,lan,actor,page, pageCount,term){
+        var query = "";
+        // if(mSongListType == CommonTypes.SongListType.Downloading){
+            //     return getDownloadingQuery();
+            // }
+            // else if(mSongListType == CommonTypes.SongListType.Selected){
+            //     return getSelectedSongQuery();
+            // }
+
+            query = DATA_API + "?ajax=songs";
+            if(songType != GLOBALS.SONG_TYPE.ALL){
+                query += "&type=type&type_val="+songType;
             }
+            else if(lan != GLOBALS.LANGUAGE_KEY.ALL){
+                query += "&type=lang&type_val="+GLOBALS.LANGUAGE[lan];
+            }
+            else if(actor != ""){
+                query += "&type=star&type_val="+actor;
+            }
+
+            if(listType == GLOBALS.SONG_LIST_TYPE.NEW){
+                query += "&sort=new";
+            }
+            else if(listType == GLOBALS.SONG_LIST_TYPE.NO_DOWNLOAD){
+                query += "&temp=0&sort=new";
+            }
+            else if(listType == GLOBALS.SONG_LIST_TYPE.FAVORITE){
+                query += "&sort=hot";
+            }
+
+            if(term != ""){
+                query += "&kwd="+term;
+                //String _searchTerm  = unidecode(mSearchText);
+                //query += "&kwd_alias="+URLEncoder.encode(_searchTerm, "UTF-8");
+            }
+            query += "&page="+pageCount*page +"&pagesize="+pageCount;
+        return encodeURI(query);
+    }
+    static async fetchSongData(lan,page,pageCount,term,songType,listType,actor,callback){
+        let query = this.getSongQuery(listType,songType,lan,actor,page,pageCount,term);
+        //console.warn(query);
+        try {
+            // db.transaction((tx) => {
+            //     tx.executeSql('SELECT * FROM star WHERE ID=?', [4], (tx, results) => {
+            //         var len = results.rows.length;
+            //         if(len > 0) {
+            //           // exists owner name John
+            //           var row = results.rows.item(0);
+            //           console.warn("star name = "+row.ID);
+            //           //this.setState({petname: row.petname});
+            //         }
+            //       });
+            // });
+
+            let response = await fetch(query);
+            let responseJson = await response.json();
+
+            return responseJson.data;
+        } catch (error) {
+            console.warn(error);
+            return [];
+        }
+        //console.warn('fetchSongData0 : '+page+" , "+lan); 
+        // setTimeout(()=>{
+        //     var retDatas = [];
+        //     const moreId = page*SongDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
+        //     if(page < 50){
+        //         for(var i in SongDataTemp){
+        //             if(term !="" && SongDataTemp[i].name.indexOf(term) == -1){
+        //                 continue;
+        //             }
+        //             var id = SongDataTemp[i].id + moreId ;
+        //             var data = {
+        //                 id : id,
+        //                 name : SongDataTemp[i].name,
+        //                 singer : SongDataTemp[i].singer,
+        //                 download : SongDataTemp[i].download
+        //             };
+                    
+        //             if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADED){
+        //                 if(DataInfo.PLAY_QUEUE.indexOf(data.id) > -1){
+        //                     data.status = GLOBALS.SING_STATUS.SELECTED;
+        //                 }
+        //                 else{
+        //                     data.status = GLOBALS.SING_STATUS.NORMAL;
+        //                 }
+        //             }
+        //             else if(data.download == GLOBALS.DOWNLOAD_STATUS.DOWNLOADING){
+        //                 data.status = GLOBALS.SING_STATUS.DOWNLOADING;
+        //             }
+        //             else{
+        //                 data.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
+        //             }
+
+        //             retDatas.push(data);
+        //         }
+        //     }
             
-            callback(retDatas);
-        },400);
+        //     callback(retDatas);
+        // },400);
     }
 
-    static fetchSingerData(lan,page, pageCount, term,sex,callback){
-        //console.warn("fetchSingerData sex = "+sex);
-        setTimeout(()=>{
-            var retDatas = [];
-            const moreId = page*SingerDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
-            if(page < 50){
-                for(var i in SingerDataTemp){
-                    if(term !="" && SingerDataTemp[i].name.indexOf(term) == -1){
-                        continue;
-                    }
-
-                    if(sex != GLOBALS.SINGER_SEX.ALL && sex != SingerDataTemp[i].sex){
-                        continue;
-                    }
-
-                    var id = SingerDataTemp[i].id + moreId ;
-                    var data = {
-                        id : id,
-                        name : SingerDataTemp[i].name,
-                        sex : SingerDataTemp[i].sex,
-                        source : SingerDataTemp[i].source
-                    };
-                    retDatas.push(data);
-                }
+    static getSingerQuery(lan,sex,term,page,pageCount){
+        query = DATA_API+"?ajax=stars&type=star";
+        if(lan == GLOBALS.LANGUAGE_KEY.hot){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=20,21,19";
+                query += "&sort=area";
             }
-            //console.warn("fetchSingerData retDatas = "+retDatas.length);
-            callback(retDatas);
-        },200);
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=20";
+                query += "&sort=area";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=21";
+                query += "&sort=area";
+            }
+            else{
+                query += "&type_val=19";
+                query += "&sort=area";
+            }
+        }
+        else if(lan == GLOBALS.LANGUAGE_KEY.vn){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=20,21,19";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=20";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=21";
+            }
+            else{
+                query += "&type_val=19";
+            }
+        }
+        else if(lan == GLOBALS.LANGUAGE_KEY.cn){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=1,2,3";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=2";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=3";
+            }
+            else{
+                query += "&type_val=1";
+            }
+        }
+        else if(lan == GLOBALS.LANGUAGE_KEY.en){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=7,8,9";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=8";
+            }
+            else if(sex ==  GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=9";
+            }
+            else{
+                query += "&type_val=7";
+            }
+        }
+        else if(lan == GLOBALS.LANGUAGE_KEY.ja){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=13,14,15";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=14";
+            }
+            else if(sex ==  GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=15";
+            }
+            else{
+                query += "&type_val=13";
+            }
+        }
+        else if(lan == GLOBALS.LANGUAGE_KEY.kr){
+            if(sex == GLOBALS.SINGER_SEX.ALL){
+                query += "&type_val=22,23,24";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.MALE){
+                query += "&type_val=23";
+            }
+            else if(sex == GLOBALS.SINGER_SEX.FEMALE){
+                query += "&type_val=24";
+            }
+            else{
+                query += "&type_val=22";
+            }
+        }
+        // else if(lan == CommonTypes.Language.all){
+        //     if(mSingerType == CommonTypes.SingerType.All){
+        //         query = Constant.DATA_API+"?ajax=stars&sort=area";
+        //     }
+        //     else if(mSingerType == CommonTypes.SingerType.Male){
+        //         query += "&type_val=20,2,8,14,23";
+        //         query += "&sort=area";
+        //     }
+        //     else if(mSingerType == CommonTypes.SingerType.Female){
+        //         query += "&type_val=21,3,9,15,24";
+        //         query += "&sort=area";
+        //     }
+        //     else{
+        //         query += "&type_val=19,1,7,13,22";
+        //         query += "&sort=area";
+        //     }
+        // }
+
+        if(term != ""){
+            query += "&kwd="+ term+"&pagesize=24";
+        }
+        query += "&page="+pageCount*page +"&pagesize="+pageCount;
+        return query;
+    }
+
+    static async fetchSingerData(lan,page, pageCount, term,sex,callback){
+        let query = this.getSingerQuery(lan,sex,term,page,pageCount);
+        //console.warn(query);
+        try {
+            // db.transaction((tx) => {
+            //     tx.executeSql('SELECT * FROM star WHERE ID=?', [4], (tx, results) => {
+            //         var len = results.rows.length;
+            //         if(len > 0) {
+            //           // exists owner name John
+            //           var row = results.rows.item(0);
+            //           console.warn("star name = "+row.ID);
+            //           //this.setState({petname: row.petname});
+            //         }
+            //       });
+            // });
+
+            let response = await fetch(query);
+            let responseJson = await response.json();
+
+            return responseJson.data;
+        } catch (error) {
+            console.warn(error);
+            return [];
+        }
+
+        //console.warn("fetchSingerData sex = "+sex);
+        // setTimeout(()=>{
+        //     var retDatas = [];
+        //     const moreId = page*SingerDataTemp.length + (GLOBALS.LANGUAGE[lan] - 1)*2000;
+        //     if(page < 50){
+        //         for(var i in SingerDataTemp){
+        //             if(term !="" && SingerDataTemp[i].name.indexOf(term) == -1){
+        //                 continue;
+        //             }
+
+        //             if(sex != GLOBALS.SINGER_SEX.ALL && sex != SingerDataTemp[i].sex){
+        //                 continue;
+        //             }
+
+        //             var id = SingerDataTemp[i].id + moreId ;
+        //             var data = {
+        //                 id : id,
+        //                 name : SingerDataTemp[i].name,
+        //                 sex : SingerDataTemp[i].sex,
+        //                 source : SingerDataTemp[i].source
+        //             };
+        //             retDatas.push(data);
+        //         }
+        //     }
+        //     //console.warn("fetchSingerData retDatas = "+retDatas.length);
+        //     callback(retDatas);
+        // },200);
     }
 
     static fetchSelectedSong(callback){

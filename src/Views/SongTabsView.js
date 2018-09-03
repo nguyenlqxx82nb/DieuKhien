@@ -86,7 +86,7 @@ export default class SongTabsView extends React.Component {
                             underlineStyle={{ height: 0 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 13, color: "#fff", fontFamily:"SF-Pro-Text-Bold" }}
+                            textStyle={{ fontSize: 13, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
                             style={{ borderWidth: 0 }}
                         />}
                     >

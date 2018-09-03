@@ -24,7 +24,8 @@ export default class HomeScreen extends ScreenBase {
         onOpenTheloai : PropTypes.func,
         onOpenSong : PropTypes.func,
         onOpenHotSong: PropTypes.func,
-        onOnlineScreen : PropTypes.func
+        onOnlineScreen : PropTypes.func,
+        onOpenMenu : PropTypes.func
     };
     
     constructor(props) {
@@ -41,7 +42,11 @@ export default class HomeScreen extends ScreenBase {
                     <Left>
                         <View style={{ width: 50, height: 50, marginLeft: 0 }}>
                             <IconRippe vector={true} name="menu" size={25} color="#fff"
-                                onPress={onOpenSearch} />
+                                onPress={() =>{
+                                    //this.props.navigation.navigate("DrawerOpen");
+                                    if(this.props.onOpenMenu != null)
+                                        this.props.onOpenMenu();
+                                }} />
                         </View>
                     </Left>
                     <View>

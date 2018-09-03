@@ -22,6 +22,7 @@ export default class SongListView extends React.Component {
         type : PropTypes.number,
         singer : PropTypes.string,
         songType : PropTypes.number,
+        listType : PropTypes.number
         //onOptionOverlayOpen: PropTypes.func,
         //onBack: PropTypes.func,
         //duration : PropTypes.number
@@ -31,6 +32,7 @@ export default class SongListView extends React.Component {
         lan : 'vn',
         type : GLOBALS.SONG_LIST_TYPE.NORMAL,
         songType : GLOBALS.SONG_TYPE.ALL,
+        listType: GLOBALS.SONG_LIST_TYPE.ALL
     };
     //page = 0;
     state = {
@@ -68,6 +70,8 @@ export default class SongListView extends React.Component {
                 }
             }
         );
+
+        this._loadData = this._loadData.bind(this);
     }
     componentWillMount() {
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
@@ -150,7 +154,8 @@ export default class SongListView extends React.Component {
         this._loadData(this.props.lan, this._page, this._pageCount,term);
     }
 
-    _loadData = (lan, page, pageCount, term) => {
+    async _loadData(lan, page, pageCount, term)  {
+        const {songType,listType,singer} = this.props;
         if (this._loading)
             return;
       //  console.warn("_loadData term = "+term);
@@ -162,10 +167,13 @@ export default class SongListView extends React.Component {
             });
         }
         else{
-            Databases.fetchSongData(lan,page,pageCount,term,this.props.songType,function (datas) {
-                that._page = page;
-                that._handleFetchDataCompleted(datas);
+            const songs = await Databases.fetchSongData(lan,page,pageCount,term,songType,listType,singer,function (datas) {
+                // that._page = page;
+                // that._handleFetchDataCompleted(datas);
             });
+
+           // console.warn(" songs length = "+songs.length);
+            that._handleFetchDataCompleted(songs);
         }
     }
 
@@ -187,9 +195,9 @@ export default class SongListView extends React.Component {
             datas: newDatas
         });
 
-        for (i = 0; i < datas.length; i++) {
-            this._dataKey[datas[i].id] = startId + i;
-        }
+        // for (i = 0; i < datas.length; i++) {
+        //     this._dataKey[datas[i].id] = startId + i;
+        // }
 
         if(this.props.type !== GLOBALS.SONG_LIST_TYPE.SELECTED){
             if(datas.length <this._pageCount){
@@ -239,13 +247,15 @@ export default class SongListView extends React.Component {
     }
 
     _rowRenderer = (type, item) => {
-        const singColor = GLOBALS.SING_COLORS[item.status];
-        const singerColor = GLOBALS.SINGER_COLORS[item.status];
-        let singPrefix = GLOBALS.SING_PREFIX[item.status];
+        var status =  GLOBALS.SING_STATUS['NORMAL'];
+        const singColor = GLOBALS.SING_COLORS[status];
+        const singerColor = GLOBALS.SINGER_COLORS[status];
+        let singPrefix = GLOBALS.SING_PREFIX[status];
         let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
-
-        singPrefix = (singPrefix != "") ? (" (" + singPrefix + ")") : "";
-        const singTitle = item.name + singPrefix;
+       // console.warn("Name = "+item["Name"]+" , item = "+item);
+       // singPrefix = (singPrefix != "") ? (" (" + singPrefix + ")") : "";
+        //const singTitle = item.Name ; //+ //singPrefix;
+        const {Song_ID,Song_Name,Singer_Name} = item;
         return (
             <ListItem
                 style={styles.listItem}
@@ -256,14 +266,14 @@ export default class SongListView extends React.Component {
                     alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
                     <View style={{ flex: 1 }}>
                         <Text style={[styles.listText, { fontSize: 17, lineHeight: 25, color: singColor }]}>
-                            {singTitle}
+                            {Song_Name}
                         </Text>
                         <Text style={[styles.listText, { fontSize: 13, color: singerColor }]}>
-                            {item.singer}
+                            {Singer_Name}
                         </Text>
                     </View>
                     <View style={{ width: 40, height: 40 }}>
-                        <IconRippe vector={true} name="tuychon" size={20} onPress={this._showOptOverlay.bind(this,item.id,overlayType)} />
+                        <IconRippe vector={true} name="tuychon" size={20} onPress={this._showOptOverlay.bind(Song_ID,overlayType)} />
                     </View>
                 </View>
             </ListItem>

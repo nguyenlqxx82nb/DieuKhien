@@ -153,8 +153,8 @@ export default class SingOptionOverlay extends React.Component {
                             </Col>
                         </Row>
                         <Row size={1}>
-                        <Col size = {1}>
-                            <IconRippe vector={false} iconSource = {GLOBALS.Emo5} size = {50}
+                            <Col size = {1}>
+                                <IconRippe vector={false} iconSource = {GLOBALS.Emo5} size = {50}
                                     text={{content: "Chấm Điểm", layout: 2}} textStyle={styles.textEmoji} />
                             </Col>
                             <Col size = {1}>

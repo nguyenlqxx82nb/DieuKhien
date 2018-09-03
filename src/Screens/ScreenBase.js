@@ -6,6 +6,7 @@ import {
     Left,
     Text
 } from "native-base";
+import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../DataManagers/Globals.js';
 
 const screen = {
@@ -202,10 +203,15 @@ class BaseScreen extends React.Component {
             <Animated.View
                 ref={ref => (this._container = ref)}
                 style={[styles.container,style,{opacity : opacity,transform: [{translateY: posY},{translateX:posX}]}]}>
-                <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} />
-                <View style={{flex:1, marginBottom:bottom, width:'100%'}}>
-                    {this.renderContentView()}
-                </View>
+                {/* <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} /> */}
+                <LinearGradient 
+                    start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
+                    colors={['#444284', '#434B8C', '#445D9D', '#436BA8', '#2C87A2', '#1F98A1', '#05BA9B']} 
+                    style={{flex:1, width:'100%'}}>
+                    <View style={{flex:1, marginBottom:bottom, width:'100%'}}>
+                        {this.renderContentView()}
+                    </View>
+                </LinearGradient>
             </Animated.View>
         )
     }

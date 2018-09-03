@@ -44,6 +44,7 @@ export default class FooterHome extends React.Component {
         this.state = {
             volume : DATA_INFO.PLAYBACK_INFO.Volume,
         }
+
     }
 
     componentWillMount() {
@@ -55,7 +56,12 @@ export default class FooterHome extends React.Component {
         });
 
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
-            this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
+            if(GLOBALS.IS_BOX_CONNECTED)
+                this._listBtn.updateBagde(DATA_INFO.PLAY_QUEUE.length);
+        });
+
+        this._listenerConnectToBoxEvent = EventRegister.addEventListener('ConnectToBox', (data) => {
+            this._connectToBox(data);
         });
         
     }
@@ -182,6 +188,26 @@ export default class FooterHome extends React.Component {
         BoxControl.volumeChange(this.state.volume);
     }
 
+    _connectToBox = (data) =>{
+        //console.warn("ConnectToBox : "+GLOBALS.IS_BOX_CONNECTED);
+        this.setState({});
+    }
+    _renderRightIcon = () =>{
+        let songNumber = DATA_INFO.PLAY_QUEUE.length;
+        if(GLOBALS.IS_NO_WIFI_CHECKED || GLOBALS.IS_BOX_CONNECTED){
+            return(
+                <View style={styles.iconTopRight}>
+                    <IconRippe  vector={true} size={25} name="list" onPress={this._openSongList} badge ={songNumber} ref={ref => (this._listBtn = ref)} />
+                </View>)
+        }
+        else{
+            return(
+                <View style={styles.iconTopRight}>
+                    <IconRippe  vector={true} size={25} name="wifi" color={GLOBALS.COLORS.ERROR}  />
+                </View>)
+        }
+    }
+
     render() {
         const { bottomValue } = this._state;
         const { maxZindex } = this.props;
@@ -196,18 +222,14 @@ export default class FooterHome extends React.Component {
                 <Grid>
                     <Row style={{ height: 40 }}>
                         <Animated.View style={[styles.topContainer,{zIndex:1,opacity:this._topViewOpacity.text}]} ref={ref => (this._textView=ref)}>
-                            <Grid>
-                                <View style={{flex:1, flexDirection:"row",justifyContent:"center",alignItems:"center",}}>
-                                    <View style={styles.iconTopLeft}>
-                                        <IconRippe vector={true} size={25} name="volumnOn"
-                                            onPress ={this._openVolumeView} />
-                                    </View>
-                                    <SongTextRun />
-                                    <View style={styles.iconTopRight}>
-                                        <IconRippe  vector={true} size={25} name="list" onPress={this._openSongList} badge ={0} ref={ref => (this._listBtn = ref)} />
-                                    </View>
+                            <View style={{flex:1, flexDirection:"row",justifyContent:"center",alignItems:"center",}}>
+                                <View style={styles.iconTopLeft}>
+                                    <IconRippe vector={true} size={25} name="volumnOn"
+                                        onPress ={this._openVolumeView} />
                                 </View>
-                            </Grid>
+                                <SongTextRun />
+                                {this._renderRightIcon()}
+                            </View>
                         </Animated.View>
                         <Animated.View style={[styles.topContainer,{zIndex:0,opacity:this._topViewOpacity.volume}]} 
                             ref={ref => (this._volmView = ref)}>
@@ -237,7 +259,7 @@ export default class FooterHome extends React.Component {
                             </View>
                         </Animated.View>
                     </Row>
-                    <Row style={{ height: 75, paddingBottom: 5 }}>
+                    <Row style={{ height: 65 }}>
                         <Grid>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
@@ -286,7 +308,7 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     container2: {
-        width: 55, height: 55, marginTop: 15
+        width: 55, height: 55,marginTop:15
     },
     container3: {
         flex: 1,
@@ -311,12 +333,12 @@ const styles = StyleSheet.create({
         width : 40,
         height: 40,
         marginLeft:10,
-        marginRight:20,
+        marginRight:30,
     },
     iconTopRight:{
         width : 40,
         height: 40,
         marginRight:10,
-        marginLeft:20
+        marginLeft:30
     }
 })

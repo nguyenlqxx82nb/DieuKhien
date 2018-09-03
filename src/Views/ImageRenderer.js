@@ -10,7 +10,7 @@ const isIOS = Platform.OS === 'ios';
 export default class ImageRenderer extends React.Component {
   static propTypes = {
     source: PropTypes.number,
-    id: PropTypes.number,
+    id: PropTypes.string,
     imageUrl: PropTypes.string,
     maxOpacity: PropTypes.number,
     onPress: PropTypes.func
@@ -133,7 +133,9 @@ export default class ImageRenderer extends React.Component {
                   borderRadius: 5,
                 }}
                 onLoad={this.handleOnLoad}
-                source={{ uri: GLOBALS.SINGER_TEST[this.props.source] }} />
+                //source={{ uri: GLOBALS.SINGER_TEST[this.props.source] }} 
+                source={{ uri:this.props.imageUrl}} 
+                />
               {/* </TouchableWithoutFeedback> */}
             </View>
                   

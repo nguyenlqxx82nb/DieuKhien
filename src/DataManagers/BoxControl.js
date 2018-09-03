@@ -2,7 +2,6 @@
 import GLOBALS from './Globals.js'
 import DATA_INFO from './DataInfo.js'
 import { EventRegister } from 'react-native-event-listeners';
-import { Thread } from 'react-native-threads';
 //import PlaybackQueueThread from '../../playbackQueue.thread.js'
 
 class BoxControl {

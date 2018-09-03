@@ -16,7 +16,7 @@ import IndicatorView from './IndicatorView.js';
 import BoxControl from '../DataManagers/BoxControl.js';
 import LayoutUtils from '../Utils/LayoutUtils.js';
 import ImageRender from '../Views/ImageRenderer.js'
-
+import BTElib from 'react-native-bte-lib';
 
 let { height, width } = Dimensions.get('window');
 export default class SingerListView extends React.Component {
@@ -53,7 +53,7 @@ export default class SingerListView extends React.Component {
                 switch (type) {
                     case "FULL":
                         dim.width = (width-15 -1) /3;
-                        dim.height = dim.width*4/3;
+                        dim.height = dim.width*3.5/3;
                         break;
                     default:
                         dim.width = width;
@@ -61,6 +61,10 @@ export default class SingerListView extends React.Component {
                 }
             }
         );
+
+        this.getAvatarUrl = this.getAvatarUrl.bind(this);
+        this._loadData = this._loadData.bind(this);
+        this.rowRenderer = this.rowRenderer.bind(this);
     }
     
     componentWillMount() {
@@ -107,24 +111,47 @@ export default class SingerListView extends React.Component {
         this._loadData(this.props.lan, this._page, this._pageCount,term,sex);
     }
 
-    _loadData = (lan, page, pageCount, term,sex) => {
+    async _loadData(lan, page, pageCount, term,sex){
         if (this._loading)
             return;
-      //  console.warn("_loadData term = "+term);
+
         this._loading = true;
         var that = this;
-        Databases.fetchSingerData(lan,page, pageCount, term,sex,function (datas) {
+        const singers = await Databases.fetchSingerData(lan,page, pageCount, term,sex,function (datas) {
             that._page = page;
             that._handleFetchDataCompleted(datas);
         });
+        this._page = page;
+        that._convertData(singers);
+    }
+
+    _convertData = (datas)=>{
+        var newDatas = [];
+        for(var i=0; i<datas.length; i++){
+            const {Singer_ID,Singer_Name} = datas[i];
+            var item ={
+                id : Singer_ID,
+                name : Singer_Name,
+                url : ""
+            };
+            var index = i;
+            newDatas.push(item);
+            BTElib.getUrlActorAvatar(Singer_Name,index,(url,_index)=>{
+                newDatas[_index].url = url;
+                item.url = url;
+                if(_index == datas.length - 1){
+                    this._handleFetchDataCompleted(newDatas);
+                }
+            });
+        }
+
+        //this._handleFetchDataCompleted(newDatas);
     }
 
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
-        var startId = 0;
         var newDatas = [];
         newDatas = this.state.datas.concat(datas);
-       // console.warn(" newDatas = "+newDatas.length+", index 0 : "+newDatas[0].name);
         this.setState({
             dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
             datas: newDatas
@@ -156,20 +183,35 @@ export default class SingerListView extends React.Component {
             <View style={{ height: 1, width: '100%' }} />;
     }
 
-    rowRenderer = (type, item) => {
-        const {id,source,name} = item;
+    rowRenderer(type, item){
+        const {id,name,url} = item;
+        // BTElib.getUrlActorAvatar(singerName,(url)=>{
+        //     conso
+        // });
+        // var output = "";
+        // for (property in source) {
+        //     output += property + ': ' + source[property]+'; ';
+        // }
+        // console.warn("source = "+output);
         return (
             <ImageRender
-                id = {id} source = {source}
+                id = {id} 
+                imageUrl = {url}
                 name = {name}
-                 onPress={this._onPressSinger.bind(this, item.id, item.name)}
+                onPress={this._onPressSinger.bind(this, id, name)}
                 />
         );
       };
 
-      _onPressSinger = (id,name) =>{
-          EventRegister.emit("OpenSingerSong",{id:id,name:name});
-      }
+    _onPressSinger = (id,name) =>{
+        EventRegister.emit("OpenSingerSong",{id:id,name:name});
+    }
+
+    async getAvatarUrl(singerName) {
+        var singerUrl = await  BTElib.getUrlActorAvatar(singerName);   
+        //console.warn("source url= "+source['url']);
+        return singerUrl;
+    }
 
     render = () => {
         return (
