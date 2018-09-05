@@ -12,6 +12,7 @@
     "babel-loader": "^7.1.5",
     "babel-preset-react-native": "^4.0.0",
     "color": "1.0.3",
+    "gapi": "0.0.3",
     "lodash": "4.13.1",
     "moment": "2.13.0",
     "native-base": "2.7.0",

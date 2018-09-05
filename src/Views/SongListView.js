@@ -19,8 +19,7 @@ let { height, width } = Dimensions.get('window');
 export default class SongListView extends React.Component {
     static propTypes = {
         lan: PropTypes.string,
-        type : PropTypes.number,
-        singer : PropTypes.string,
+        actor : PropTypes.string,
         songType : PropTypes.number,
         listType : PropTypes.number
         //onOptionOverlayOpen: PropTypes.func,
@@ -29,10 +28,10 @@ export default class SongListView extends React.Component {
 
     };
     static defaultProps = {
-        lan : 'vn',
-        type : GLOBALS.SONG_LIST_TYPE.NORMAL,
+        lan : GLOBALS.LANGUAGE_KEY.ALL,
         songType : GLOBALS.SONG_TYPE.ALL,
-        listType: GLOBALS.SONG_LIST_TYPE.ALL
+        listType: GLOBALS.SONG_LIST_TYPE.ALL,
+        actor : ""
     };
     //page = 0;
     state = {
@@ -114,7 +113,6 @@ export default class SongListView extends React.Component {
     }
 
     refreshData = (term) =>{
-        //console.warn("type = "+this.props.type);
         if (!this._loading) {
             this._searchTerm = term;
             this._loaded = false;
@@ -155,25 +153,32 @@ export default class SongListView extends React.Component {
     }
 
     async _loadData(lan, page, pageCount, term)  {
-        const {songType,listType,singer} = this.props;
+        const {songType,listType,actor} = this.props;
         if (this._loading)
             return;
       //  console.warn("_loadData term = "+term);
         this._loading = true;
         var that = this;
-        if(this.props.type == GLOBALS.SONG_LIST_TYPE.SELECTED){
+        if(this.props.listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
             Databases.fetchSelectedSong(function (datas) {
                 that._handleFetchDataCompleted(datas);
             });
         }
         else{
-            const songs = await Databases.fetchSongData(lan,page,pageCount,term,songType,listType,singer,function (datas) {
-                // that._page = page;
-                // that._handleFetchDataCompleted(datas);
-            });
+            await Databases.fetchSongData(lan,page,pageCount,term,songType,listType,actor,
+                function (datas) {
+                    //console.warn("callback") ;
+                    that._page = page;
+                    that._handleFetchDataCompleted(datas);
+                },
+                function(error){
+                    that._indicator.hide();
+                    that._loading = false;    
+                });
 
            // console.warn(" songs length = "+songs.length);
-            that._handleFetchDataCompleted(songs);
+           // that._page = page;
+            //that._handleFetchDataCompleted(songs);
         }
     }
 
@@ -181,12 +186,12 @@ export default class SongListView extends React.Component {
         this._loading = false;
         var startId = 0;
         var newDatas = [];
+        //console.warn("data length = "+datas.length);
         if(this._loaded){
             startId = this.state.datas.length;
             newDatas = this.state.datas.concat(datas);
         }
         else{
-            this._dataKey = {};
             newDatas = datas;
         }
 
@@ -195,11 +200,7 @@ export default class SongListView extends React.Component {
             datas: newDatas
         });
 
-        // for (i = 0; i < datas.length; i++) {
-        //     this._dataKey[datas[i].id] = startId + i;
-        // }
-
-        if(this.props.type !== GLOBALS.SONG_LIST_TYPE.SELECTED){
+        if(this.props.listType !== GLOBALS.SONG_LIST_TYPE.SELECTED){
             if(datas.length <this._pageCount){
                 this._hasData = false;
             }
@@ -255,7 +256,7 @@ export default class SongListView extends React.Component {
        // console.warn("Name = "+item["Name"]+" , item = "+item);
        // singPrefix = (singPrefix != "") ? (" (" + singPrefix + ")") : "";
         //const singTitle = item.Name ; //+ //singPrefix;
-        const {Song_ID,Song_Name,Singer_Name} = item;
+        const {id,name,actor,singerName} = item;
         return (
             <ListItem
                 style={styles.listItem}
@@ -265,15 +266,15 @@ export default class SongListView extends React.Component {
                     flex: 1, flexDirection: "row", justifyContent: "center",
                     alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
                     <View style={{ flex: 1 }}>
-                        <Text style={[styles.listText, { fontSize: 17, lineHeight: 25, color: singColor }]}>
-                            {Song_Name}
+                        <Text numberOfLines={1} style={[styles.songText, {color: singColor }]}>
+                            {name}
                         </Text>
-                        <Text style={[styles.listText, { fontSize: 13, color: singerColor }]}>
-                            {Singer_Name}
+                        <Text style={[styles.singerText, {color: singerColor }]}>
+                            {singerName}
                         </Text>
                     </View>
                     <View style={{ width: 40, height: 40 }}>
-                        <IconRippe vector={true} name="tuychon" size={20} onPress={this._showOptOverlay.bind(Song_ID,overlayType)} />
+                        <IconRippe vector={true} name="tuychon" size={20} onPress={this._showOptOverlay.bind(id,overlayType)} />
                     </View>
                 </View>
             </ListItem>
@@ -288,13 +289,14 @@ export default class SongListView extends React.Component {
                     style={{ flex: 1 }}
                     //contentContainerStyle={{ margin: 3 }}
                     showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
+                    //showsVerticalScrollIndicator={false}
                     onEndReached={this._onEndReached}
                     dataProvider={this.state.dataProvider}
                     layoutProvider={this._layoutProvider}
                     rowRenderer={this._rowRenderer}
                     renderFooter={this._renderFooter}
-                    extendedState={this.state.dataProvider} />
+                    extendedState={this.state.dataProvider} 
+                    />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>
             </View>
 
@@ -320,9 +322,17 @@ const styles = StyleSheet.create({
         borderColor: '#00ECBC',
     },
 
-    listText: {
+    songText: {
         color: "#fff",
-        fontFamily:'SF-Pro-Text-Regular'
+        fontFamily:GLOBALS.FONT.MEDIUM,
+        fontSize: 18, 
+        lineHeight: 25, 
+    },
+
+    singerText:{
+        color: "#fff",
+        fontFamily:GLOBALS.FONT.REGULAR,
+        fontSize: 13
     },
 
     indicator: {

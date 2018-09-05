@@ -7,6 +7,7 @@ import AutoHeightImage from 'react-native-auto-height-image';
 import {
     Icon
 } from "native-base";
+import GLOBALS from '../DataManagers/Globals.js';
 
 const styles = StyleSheet.create({
     pageContainer: {
@@ -74,6 +75,9 @@ const propTypes = {
     name1 : PropTypes.string,
 
     badge : PropTypes.number,
+
+    status: PropTypes.number,
+
     textStyle : Text.propTypes.style,
     /**
     * Size of icon (default is 24 - see spacing in palette)
@@ -113,6 +117,7 @@ const defaultProps = {
     style: {},
     vector :true,
     textColor : "#fff",
+    status: GLOBALS.ICON_STATUS.ONLINE,
     text:{
         content :"",
         layout : 1,
@@ -131,7 +136,8 @@ class IconRippe extends PureComponent {
             containerSize : {width:1,height:1},
             maxOpacity,
             scaleValue: new Animated.Value(0.01),
-            opacityValue: new Animated.Value(maxOpacity)
+            opacityValue: new Animated.Value(maxOpacity),
+            status : this.props.status
         };
         this._iconType = this.props.iconType;
         this.renderRippleView = this.renderRippleView.bind(this);
@@ -140,6 +146,9 @@ class IconRippe extends PureComponent {
         this.find_dimesions = this.find_dimesions.bind(this);
     }
     onPressedIn() {
+        if(this.props.status == GLOBALS.ICON_STATUS.OFFLINE)
+            return;
+
         Animated.timing(this.state.scaleValue, {
             toValue: 1,
             duration: 225,
@@ -149,6 +158,9 @@ class IconRippe extends PureComponent {
         });
     }
     onPressedOut() {
+        if(this.props.status == GLOBALS.ICON_STATUS.OFFLINE)
+            return;
+
         const {containerSize} = this.state;
         const {maxOpacity,onPress} = this.props;
 
@@ -192,13 +204,14 @@ class IconRippe extends PureComponent {
         const iconSize = {width:size, height:size};
 
         var iconName = (this._iconType == 1)?name: name1;
+        var iconColor = (this.props.status == GLOBALS.ICON_STATUS.ONLINE)?color:"#C0C0C0";
         if(text.content == ""){
             if(!vector){
                 return(<AutoHeightImage source={iconSource} width={size}  />);
             }
             else{
                 return(
-                    <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:color}} />
+                    <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:iconColor}} />
                 );
             }
         }
@@ -233,7 +246,7 @@ class IconRippe extends PureComponent {
                     if(text.layout == 1){
                         return(
                             <View style={{flexDirection: 'row', justifyContent:"center",alignItems:"center"}}>
-                                <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:color}} />
+                                <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:iconColor}} />
                                 <Text style={textStyle}>{text.content}</Text>
                             </View>
                         );
@@ -241,7 +254,7 @@ class IconRippe extends PureComponent {
                     else{
                         return(
                             <View style={{alignItems:"center",justifyContent:"center",alignItems:"center"}}>
-                                <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:color}} />
+                                <CustomIcon ref={ref =>(this._icon = ref)} name={iconName} size ={size} style={{color:iconColor}} />
                                 <Text style={textStyle}>{text.content}</Text>
                             </View>
                         );
@@ -257,15 +270,24 @@ class IconRippe extends PureComponent {
             return;
 
         this._iconType = type;
-        this.forceUpdate();
+        //this.forceUpdate();
+        this.setState({});
     }
+
+    // setIconStatus = (status) =>{
+    //     if(status == this.state.status)
+    //         return;
+        
+    //     this.setState({status:status});   
+    // }
 
     updateBagde = (number) =>{
         if(this._badge == number)
             return;
 
         this._badge = number;
-        this.forceUpdate();
+        //this.forceUpdate();
+        this.setState({});
     }
 
     render() {

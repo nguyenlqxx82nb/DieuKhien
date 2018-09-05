@@ -14,7 +14,7 @@ import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SingerTabsView from '../../Views/SingerTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
-import SingerSong from '../BaiHat/SingerSong';
+import SongListScreen from '../BaiHat/SongListScreen.js';
 import MusicOnline from '../../Views/MusicOnlineButton'
 
 
@@ -85,23 +85,20 @@ export default class SingerScreen extends BaseScreen {
                     <SingerTabsView lanTabs={['vn','en','cn','ja','kr']} ref={ref => (this._songTabs = ref)} 
                         onChangeTab = {this._onChangeTab} />
                 </View>
-
                 <MusicOnline />
-                <SingerSong 
+                <SongListScreen 
                     ref = {ref => (this.singerSong = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {3}
-                    type={GLOBALS.SCREEN_TYPE.TOP}
+                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
                     onBack = {() => {
-                        this.singerSong.hide();
-                    }} />
+                        this.singerSong.hide();}} />
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    
     headerContainer: {
         flexDirection: "row",
         alignItems: "center", 
@@ -120,6 +117,4 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'rgba(0,0,0,0.01)',
     },
-    
-
 })

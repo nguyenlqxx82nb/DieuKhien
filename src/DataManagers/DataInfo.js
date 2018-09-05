@@ -8,5 +8,5 @@ export default {
     },
 
     PLAY_QUEUE : []
-
+    
   };

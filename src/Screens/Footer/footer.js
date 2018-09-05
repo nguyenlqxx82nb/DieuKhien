@@ -194,10 +194,11 @@ export default class FooterHome extends React.Component {
     }
     _renderRightIcon = () =>{
         let songNumber = DATA_INFO.PLAY_QUEUE.length;
+        var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
         if(GLOBALS.IS_NO_WIFI_CHECKED || GLOBALS.IS_BOX_CONNECTED){
             return(
                 <View style={styles.iconTopRight}>
-                    <IconRippe  vector={true} size={25} name="list" onPress={this._openSongList} badge ={songNumber} ref={ref => (this._listBtn = ref)} />
+                    <IconRippe status={status}  vector={true} size={25} name="list" onPress={this._openSongList} badge ={songNumber} ref={ref => (this._listBtn = ref)} />
                 </View>)
         }
         else{
@@ -215,6 +216,7 @@ export default class FooterHome extends React.Component {
         var playIconType = (DATA_INFO.PLAYBACK_INFO.IsPlaying) ? 2 : 1;
         var micIconType = (DATA_INFO.PLAYBACK_INFO.IsMute) ? 2 : 1;
 
+        var status = (GLOBALS.IS_NO_WIFI_CHECKED || !GLOBALS.IS_BOX_CONNECTED)?GLOBALS.ICON_STATUS.OFFLINE:GLOBALS.ICON_STATUS.ONLINE;
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
@@ -224,7 +226,7 @@ export default class FooterHome extends React.Component {
                         <Animated.View style={[styles.topContainer,{zIndex:1,opacity:this._topViewOpacity.text}]} ref={ref => (this._textView=ref)}>
                             <View style={{flex:1, flexDirection:"row",justifyContent:"center",alignItems:"center",}}>
                                 <View style={styles.iconTopLeft}>
-                                    <IconRippe vector={true} size={25} name="volumnOn"
+                                    <IconRippe status={status} vector={true} size={25} name="volumnOn"
                                         onPress ={this._openVolumeView} />
                                 </View>
                                 <SongTextRun />
@@ -235,7 +237,7 @@ export default class FooterHome extends React.Component {
                             ref={ref => (this._volmView = ref)}>
                             <View style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection: "row"}}>
                                 <View style={styles.iconTopLeft}>
-                                    <IconRippe vector={true} size={25} name="volumn"
+                                    <IconRippe status={status} vector={true} size={25} name="volumn"
                                             onPress ={this._closeVolumeView} />
                                 </View>
                                 <View style={{flex: 1,
@@ -253,7 +255,7 @@ export default class FooterHome extends React.Component {
                                 </View>
                                 
                                 <View style={styles.iconTopRight}>
-                                    <IconRippe vector={true} size={25} name="volumnOn" 
+                                    <IconRippe status={status} vector={true} size={25} name="volumnOn" 
                                     onPress ={this._closeVolumeView} />
                                 </View>
                             </View>
@@ -263,25 +265,25 @@ export default class FooterHome extends React.Component {
                         <Grid>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={25} name="emoji" onPress={this._onEmojiPress}  />
+                                    <IconRippe status={status} vector={true} size={25} name="emoji" onPress={this._onEmojiPress}  />
                                 </View>
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={28} name="replay" />
+                                    <IconRippe status={status} vector={true} size={28} name="replay" />
                                 </View>
                             </Col>
                             <Col size={1}>
-                                <IconRippe ref={ref => (this._playBtn = ref)} vector={true} size={45} name="play" name1="pause" iconType={playIconType} onPress={this._onPlayPress} />
+                                <IconRippe status={status} ref={ref => (this._playBtn = ref)} vector={true} size={45} name="play" name1="pause" iconType={playIconType} onPress={this._onPlayPress} />
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe vector={true} size={22} name="next" />
+                                    <IconRippe status={status} vector={true} size={22} name="next" />
                                 </View>
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe ref={ref => (this._micBtn = ref)} vector={true} size={25} name="micOn" name1="micOff" iconType={micIconType} onPress={this._onMicPress} />
+                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={25} name="micOn" name1="micOff" iconType={micIconType} onPress={this._onMicPress} />
                                 </View>
                             </Col>
                         </Grid>

@@ -44,12 +44,6 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getPlaybackInfo(Callback callback){
-        Tools.getPlaybackInfo();
-        callback.invoke(Global.volume);
-    }
-
-    @ReactMethod
     public void getUrlActorAvatar(String actor,int index,Callback callback){
         String urlStr = Tools.getUrl(actor);
         WritableMap map = Arguments.createMap();
@@ -57,12 +51,13 @@ public class MyModule extends ReactContextBaseJavaModule {
         callback.invoke(urlStr,index);
     }
     @ReactMethod
-    public void synsPlaybackQueue(){
+    public void syncPlaybackQueue(){
         Tools.synchronousPlaybackQueue(mReactContext);
+    }
 
-//        WritableMap params = Arguments.createMap();
-//        params.putInt("taisao",1);
-        //sendEvent("test",params);
+    @ReactMethod
+    public void syncPlaybackInfo(){
+        Tools.synchronousPlaybackInformation(mReactContext);
     }
 
     @ReactMethod

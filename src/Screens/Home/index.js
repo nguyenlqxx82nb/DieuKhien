@@ -40,8 +40,16 @@ export default class Taisao extends React.Component {
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
         console.ignoredYellowBox = ['Warning: Stateless'];
+        GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
+        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
+
         BTElib.checkConnectToWifiBox();
+        BTElib.syncPlaybackQueue();
+        BTElib.syncPlaybackInfo();
+
         DeviceEventEmitter.addListener('ConnectToBox', this.handleConnectToBox);
+        DeviceEventEmitter.addListener('PlaybackInfoUpdate', this.handlePlaybackChange);
+        DeviceEventEmitter.addListener('SongQueueChange', this.handleSongQueueChange);
     }
 
     componentDidMount() {
@@ -63,6 +71,15 @@ export default class Taisao extends React.Component {
         EventRegister.emit("SongUpdate",{});
     }
 
+    handlePlaybackChange = (e) =>{
+        console.warn("volume "+e['volume']);
+        console.warn("play "+e['play']);
+        console.warn("mute "+e['mute']);
+        console.warn("original "+e['original']);
+    }
+    handleSongQueueChange = (e) =>{
+        console.warn("queue length "+e['queue'].length);
+    }
     componentWillMount() {
         // Hide Footer
         this._listenerHideFooterEvent = EventRegister.addEventListener('HideFooter', (data) => {

@@ -218,4 +218,24 @@ export default {
     IS_BOX_CONNECTED: false,
     IS_WIFI_CONNECTED: false,
     IS_NO_WIFI_CHECKED: true,
+
+    ICON_STATUS :{
+        ONLINE:1,
+        OFFLINE:2
+    },
+
+    BOX_VERSION : {
+        S600:1,
+        S650:2
+    },
+
+    DATABASE_CONNECT:{
+        HTTP:1,
+        SQLITE:2
+    },
+
+    INFO:{
+        VERSION : 1,
+        CONNECT : 2
+    }
 };

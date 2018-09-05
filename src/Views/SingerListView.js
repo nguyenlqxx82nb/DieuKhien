@@ -117,12 +117,17 @@ export default class SingerListView extends React.Component {
 
         this._loading = true;
         var that = this;
-        const singers = await Databases.fetchSingerData(lan,page, pageCount, term,sex,function (datas) {
-            that._page = page;
-            that._handleFetchDataCompleted(datas);
-        });
-        this._page = page;
-        that._convertData(singers);
+        await Databases.fetchSingerData(lan,page,pageCount,term,sex,
+            function (datas) {
+                that._page = page;
+                that._handleFetchDataCompleted(datas);
+            },
+            function(error){
+                that._indicator.hide();
+                that._loading = false;
+            });
+       // this._page = page;
+        //that._convertData(singers);
     }
 
     _convertData = (datas)=>{
@@ -185,14 +190,6 @@ export default class SingerListView extends React.Component {
 
     rowRenderer(type, item){
         const {id,name,url} = item;
-        // BTElib.getUrlActorAvatar(singerName,(url)=>{
-        //     conso
-        // });
-        // var output = "";
-        // for (property in source) {
-        //     output += property + ': ' + source[property]+'; ';
-        // }
-        // console.warn("source = "+output);
         return (
             <ImageRender
                 id = {id} 
