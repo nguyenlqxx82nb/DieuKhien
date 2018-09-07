@@ -1,0 +1,102 @@
+import React from "react";
+import { StyleSheet, Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
+import {
+    View
+} from "native-base";
+
+import IconRippe from '../../Components/IconRippe.js'
+import PropTypes from 'prop-types';
+import GLOBALS from '../../DataManagers/Globals.js';
+import { Col, Grid, Row } from "react-native-easy-grid";
+import BoxControl from '../../DataManagers/BoxControl'
+import { EventRegister  } from 'react-native-event-listeners';
+
+const screen = {
+    width : Dimensions.get("window").width,
+    height : Dimensions.get("window").height
+}
+
+export default class SongMenu extends React.Component {
+    static propTypes = {
+        songId : PropTypes.string,
+        actor: PropTypes.string,
+        onClose: PropTypes.func,
+        menuType: PropTypes.number
+    };
+
+    constructor(props) {
+        super(props);
+        
+    }
+
+    _playNow = ()=>{
+        BoxControl.playNow(this.props.songId);
+        this._close();
+    }
+
+    _priority = () =>{
+        BoxControl.priority(this.props.songId);
+        this._close();
+    }
+
+    _findSinger = () =>{
+        //console.warn("actor: "+this.props.actor);
+        EventRegister.emit("OpenSingerSong",{name:this.props.actor});
+        this._close();
+    }
+
+    _close = () =>{
+        setTimeout(()=>{
+            if(this.props.onClose != null)
+                this.props.onClose()
+        },50);
+    }
+   
+    render = () =>{
+        const {menuType,actor} = this.props;
+        let isSinger = (menuType == GLOBALS.SONG_MENU_TYPE.SINGER);
+        return(
+            <View style={styles.innerContainer}>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="play2" size={23} 
+                        text={{content: "Hát Ngay", layout: 1}} textStyle={styles.textButton}
+                        onPress={this._playNow}
+                    />
+                </View>
+                <View style={{height:50,width:'100%'}}>
+                    <IconRippe vector={true} name="uutien" size={23} 
+                        text={{content: "Ưu Tiên", layout: 1}} textStyle={styles.textButton}
+                        onPress={this._priority}
+                    />
+                </View>
+                {!isSinger && 
+                    <View style={{height:50,width:'100%'}}>
+                        <IconRippe vector={true} name="singerOpt" size={25} 
+                            text={{content: actor, layout: 1}} textStyle={styles.textButton}
+                            onPress={this._findSinger}
+                        />
+                    </View>}
+        </View>);
+    }
+}
+
+
+const styles = StyleSheet.create({
+    
+    textButton: {
+        fontFamily: GLOBALS.FONT.MEDIUM,
+        fontSize: 15, 
+        marginLeft: 15,
+        color:"#fff"
+    },
+    singerText : {
+        fontSize: 14,
+        marginLeft:25
+    },
+    textEmoji:{
+        fontFamily: GLOBALS.FONT.MEDIUM,
+        fontSize: 12, 
+        marginTop: 2,
+        color:"#fff"
+    }
+})

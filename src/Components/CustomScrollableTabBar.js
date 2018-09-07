@@ -222,14 +222,14 @@ module.exports = CustomScrollableTabBar;
 
 const styles = StyleSheet.create({
   tab: {
-    height: 45,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 10,
     paddingRight: 10,
   },
   container: {
-    height: 45,
+    height: 40,
     borderWidth: 0,
     borderTopWidth: 0,
     borderLeftWidth: 0,

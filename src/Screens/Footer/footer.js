@@ -68,6 +68,7 @@ export default class FooterHome extends React.Component {
     componentWillUnmount() {
         EventRegister.removeEventListener(this._listenerPlaybackInfoEvent);
         EventRegister.removeEventListener(this._listenerSongUpdateEvent);
+        EventRegister.removeEventListener(this._listenerConnectToBoxEvent);
     }
 
     _onPlayPress = () => {
@@ -83,11 +84,11 @@ export default class FooterHome extends React.Component {
     }
 
     _onEmojiPress = () => {
-        if(this.props.onOpenEmoji != null){
-            this.props.onOpenEmoji();
-        }
+        EventRegister.emit('ShowOptOverlay', 
+            {   overlayType:GLOBALS.SING_OVERLAY.EMOJI,
+                data:{height:220}
+            });
     }
-
     _openSongList = () =>{
         const { onSelectedSong } = this.props;
         if(onSelectedSong != null){

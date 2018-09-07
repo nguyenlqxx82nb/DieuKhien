@@ -31,7 +31,8 @@ export default class SongOnlineListView extends React.Component {
         })
     };
 
-    _page = 0;
+    _page = "";
+    _offsetPage = 0;
     _dataKey = {}
     _loading = false;
     _loaded = false;
@@ -59,15 +60,18 @@ export default class SongOnlineListView extends React.Component {
                 }
             }
         );
+
+        this._loadData = this._loadData.bind(this);
     }
     searchData = (term)=>{
-        if(this._loading)
+        if(this._loading || term == this._searchTerm)
             return;
-            
+       /// console.warn("searchData "+term);
         this._searchTerm = term;
         this._loaded = false;
-        this._page = 0;
-        this._loadData(this._page, this._pageCount,term);
+        this._page = "";
+        this._offsetPage = 0;
+        this._loadData(this._pageCount,term,this._offsetPage);
     }
 
     refreshData = (term) =>{
@@ -75,9 +79,10 @@ export default class SongOnlineListView extends React.Component {
         if (!this._loading) {
             this._searchTerm = term;
             this._loaded = false;
-            this._page = 0;
+            this._page = "";
+            this._offsetPage = 0;
             this._indicator.show();
-            this._loadData(this._page, this._pageCount,term);
+            this._loadData(this._pageCount,term,this._offsetPage);
         }
     }
 
@@ -85,7 +90,8 @@ export default class SongOnlineListView extends React.Component {
         if (!this._loading) {
             this._searchTerm = "";
             this._loaded = false;
-            this._page = 0;
+            this._page = "";
+            this._offsetPage = 0;
             this.setState({
                 dataProvider: this.state.dataProvider.cloneWithRows([]),
                 datas: []
@@ -102,28 +108,39 @@ export default class SongOnlineListView extends React.Component {
        // console.warn("loadData "+term);
         this._searchTerm = term;
         this._loaded = false;
-        this._page = 0;
+        this._page = "";
+        this._offsetPage = 0;
         this._indicator.show();
-        this._loadData(this._page, this._pageCount,term);
+        this._loadData(this._pageCount,term,this._offsetPage);
     }
 
-    _loadData = (page, pageCount, term) => {
-        if (this._loading)
-            return;
+    async _loadData(pageCount, term,page){
+        // if (this._loading)
+        //     return;
         this._loading = true;
         var that = this;
-        Databases.fetchOnlineSongData(page,pageCount,term,this.props.onlineType,function (datas) {
-            that._page = page;
-            that._handleFetchDataCompleted(datas);
-        });
+        var _page = (this.props.onlineType == GLOBALS.SONG_ONLINE.MIXCLOUD)?page:that._page;
+        await Databases.fetchOnlineSongData(_page,pageCount,term,this.props.onlineType,
+            function (datas,nextPage) {
+                if(that.props.onlineType == GLOBALS.SONG_ONLINE.MIXCLOUD){
+                    that._offsetPage = page;
+                }
+                else{
+                    that._page = nextPage;
+                }
+                
+                that._handleFetchDataCompleted(datas);
+            },
+            function(error){
+                this._loading = false;
+                this._indicator.hide();
+            });
     }
 
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
-        var startId = 0;
         var newDatas = [];
         if(this._loaded){
-            startId = this.state.datas.length;
             newDatas = this.state.datas.concat(datas);
         }
         else{
@@ -134,10 +151,6 @@ export default class SongOnlineListView extends React.Component {
             dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
             datas: newDatas
         });
-
-        for (i = 0; i < datas.length; i++) {
-            this._dataKey[datas[i].id] = startId + i;
-        }
 
         if(datas.length <this._pageCount){
             this._hasData = false;
@@ -161,7 +174,7 @@ export default class SongOnlineListView extends React.Component {
 
     _onEndReached = () => {
         if (this._hasData && !this._loading && this._loaded) {
-            this._loadData(this._page + 1,this._pageCount,this._searchTerm);
+            this._loadData(this._pageCount,this._searchTerm,this._offsetPage + 1);
             this.setState({});
         }
     }

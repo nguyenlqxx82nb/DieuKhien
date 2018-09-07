@@ -21,7 +21,7 @@ export default class SongTabsView extends React.Component {
     };
     static defaultProps = {
         songType : GLOBALS.SONG_TYPE.ALL,
-        songListType : GLOBALS.SONG_LIST_TYPE.NORMAL
+        songListType : GLOBALS.SONG_LIST_TYPE.ALL
     };
 
     _tabs = [];
@@ -87,7 +87,7 @@ export default class SongTabsView extends React.Component {
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
                             textStyle={{ fontSize: 13, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
-                            style={{ borderWidth: 0 }}
+                            style={{ borderWidth: 0}}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {
@@ -109,7 +109,7 @@ export default class SongTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        marginTop: 50,
+        marginTop: 40,
         borderTopWidth: 0.5,
         borderColor: '#00ECBC',
     },

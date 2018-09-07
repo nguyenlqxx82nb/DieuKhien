@@ -48,11 +48,11 @@ export default class TheloaiScreen extends BaseScreen {
                             <IconRippe vector={true} name="back" size={20} color="#fff"
                                 onPress={this._onBack} />
                         </View>
-                        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                        <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-start" }}>
                             <Text style={[styles.title]}>Thể Loại</Text></View>
-                        <View style={{ width: 40, height: 40, marginRight: 5 }}>
+                        {/* <View style={{ width: 40, height: 40, marginRight: 5 }}>
                             <IconRippe vector={true} name="search" size={20} color="#fff" />
-                        </View>
+                        </View> */}
                     </View>
 
                     <View style={{ flex: 1, margin: 5, backgroundColor: "transparent" }}>
@@ -190,16 +190,16 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '300',
-        paddingLeft: 20,
+        paddingLeft: 10,
         //  marginLeft:5,
         color: "#fff",
         // flex:1,
-        fontFamily: 'SF-Pro-Text-Bold'
+        fontFamily: GLOBALS.FONT.BOLD
     },
 
     textButton: {
-        fontFamily: "SF-Pro-Text-Bold",
-        fontSize: 19,
+        fontFamily: GLOBALS.FONT.BOLD,
+        fontSize: 20,
         //marginLeft: 15,
         color: "#fff"
     },

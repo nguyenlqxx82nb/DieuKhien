@@ -13,6 +13,8 @@ import { EventRegister  } from 'react-native-event-listeners';
 import SongOnlineListView from './SongOnlineListView.js';
 import CustomIcon from '../../Components/CustomIcon.js';
 import LinearGradient from 'react-native-linear-gradient';
+import Header from '../Header/index';
+import SearchInput from '../../Views/SearchInput'
 
 const screen = {
     width: Dimensions.get("window").width,
@@ -27,6 +29,7 @@ export default class SongOnlineScreen extends BaseScreen {
     };
     _offsetY = 0;
     _headerTopY = 0;
+    _term = "";
     constructor(props) {
         super(props);
         this.state = {
@@ -48,16 +51,44 @@ export default class SongOnlineScreen extends BaseScreen {
     // componentWillUnmount() {
     //     EventRegister.removeEventListener(this._listenerSongUpdateEvent);
     // }
+    focus = (term) =>{
+        this._term = term;
+        this._searchHeader.showSearchInput();
+    }
+    _onSearchInputShow = () =>{
+        this._searchInput.focusSearch(this._term);
+    }
     _onBack = () => {
         const { onBack } = this.props;
+        this._searchInput.blur();
         if (onBack) {
             onBack();
         }
     }
     _showCompleted = () =>{
-        this._songList.loadData("");
+        if(this._term == ""){
+            let term = this._searchInput.getValue();
+           // console.warn("_showCompleted = "+term);
+            this._songList.loadData(term);
+        }
+    }
+    _onSearch = (value) =>{
+        this._term = value;
+       // console.warn("_onSearch = "+value);
+        this._songList.searchData(value);
+    }
+    _onSearchChange = (value) =>{
+        //this._songList.searchData(value);
     }
     _handleScroll = (offsetY) =>{
+        if(this._searchHeader.searchShow()){
+            this._headerTopY = 0;
+            Animated.timing(this.state.scrollY,{toValue:this._headerTopY,duration:0}).start();
+            this._offsetY = offsetY;
+
+            return;
+        }
+
         if(offsetY > HEADER_HEIGHT){
             if(this._offsetY <= offsetY){
                 if(this._headerTopY > -HEADER_HEIGHT){
@@ -124,6 +155,7 @@ export default class SongOnlineScreen extends BaseScreen {
             );
         }
     }
+    
     renderContentView = () => {
         //const { maxZindex } = this.props;
         return (
@@ -131,17 +163,23 @@ export default class SongOnlineScreen extends BaseScreen {
                 <Animated.View 
                     style={[styles.headerContainer,{ transform: [{ translateY: this.state.scrollY }]}]}
                     ref = {ref => (this._header = ref)}>
-                    <View style={{ width: 40, height: 40, marginLeft: 5 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
-                            onPress={this._onBack}
-                        />
-                    </View>
-                    <View style={{flex:1,justifyContent:"center",alignItems:"flex-start"}}>
-                        {this._renderOnlineIcon()}
-                    </View>
-                    <View style={{ width: 40, height: 40, marginRight: 5 }}>
-                        <IconRippe vector={true} name="search" size={20} color="#fff" />
-                    </View>
+                    <Header 
+                        ref = {ref=>(this._searchHeader = ref)}
+                        onBack = {this._onBack}
+                        onSearchInputShow = {this._onSearchInputShow}
+                        onHideInput = {()=>{
+                            this._searchInput.blur();
+                        }}
+                        searchInput = {
+                            <SearchInput style={{marginRight:0}} 
+                                onSearch={this._onSearch}
+                                onSearchChange = {this._onSearchChange}
+                                ref={ref=>(this._searchInput = ref)}  />
+                        }
+                        onSearch = {this._onSearch}
+                       // onSearchChange = {this._onSearchChange}
+                        center ={this._renderOnlineIcon()}
+                    />
                 </Animated.View>
 
                 <Animated.View style={styles.bodyContainer}
@@ -154,6 +192,7 @@ export default class SongOnlineScreen extends BaseScreen {
         );
     }
 }
+
 
 const styles = StyleSheet.create({
     headerContainer: {

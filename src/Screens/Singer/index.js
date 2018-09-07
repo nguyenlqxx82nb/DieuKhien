@@ -29,13 +29,13 @@ export default class SingerScreen extends BaseScreen {
     }
     componentWillMount() {
         // selected song changed
-        this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
-            this.singerSong.updateSinger(data.name,data.id);
-            this.singerSong.show();
-        });
+        // this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
+        //     this.singerSong.updateSinger(data.name,data.id);
+        //     this.singerSong.show();
+        // });
     }
     componentWillUnmount() {
-        EventRegister.removeEventListener(this._listenerSingerSongEvent);
+        //EventRegister.removeEventListener(this._listenerSingerSongEvent);
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -62,7 +62,7 @@ export default class SingerScreen extends BaseScreen {
         this._songTabs.searchData(value,this._sex);
     }
     _showOptOverlay = () =>{
-        EventRegister.emit('ShowOptOverlay', {id:-1,overlayType:GLOBALS.SING_OVERLAY.SINGER});
+        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:240}});
     }
     renderContentView = () => {
         return (
@@ -82,17 +82,11 @@ export default class SingerScreen extends BaseScreen {
                 </View>
 
                 <View style={{ flex: 1}}>
-                    <SingerTabsView lanTabs={['vn','en','cn','ja','kr']} ref={ref => (this._songTabs = ref)} 
+                    <SingerTabsView lanTabs={['vn','en','cn','ja','kr']} 
+                        ref={ref => (this._songTabs = ref)} 
                         onChangeTab = {this._onChangeTab} />
                 </View>
                 <MusicOnline />
-                <SongListScreen 
-                    ref = {ref => (this.singerSong = ref)} 
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {3}
-                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
-                    onBack = {() => {
-                        this.singerSong.hide();}} />
             </View>
         );
     }
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
         alignItems: "center", 
         justifyContent: "center",
        // marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
-        height: 40
+        height: 45
     },
     title: {
         fontSize: 28,

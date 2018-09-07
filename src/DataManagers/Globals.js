@@ -26,6 +26,14 @@ export default {
         NO_DOWNLOADED: 'NO_DOWNLOADED',
         DOWNLOADING: 'DOWNLOADING'
     },
+    
+    SONG_MENU_TYPE:{
+        NORMAL: 1,
+        SINGER:2,
+        SELECT:3,
+        UNDOWNLOAD:4,
+        DOWNLOADING:5
+    },
 
     SINGER_COLORS: {
         'NORMAL': "#B6BACC",
@@ -43,7 +51,7 @@ export default {
 
     SING_PREFIX: {
         'NORMAL': "",
-        'SELECTED': "Đã chọn",
+        'SELECTED': "Bài thứ",
         'NO_DOWNLOADED': "Chưa tải",
         'DOWNLOADING': "Đang tải"
     },
@@ -108,6 +116,7 @@ export default {
     },
 
     SONG_LIST_TYPE: {
+        ALL:0,
         NORMAL: 1,
         SELECTED: 2,
         NO_DOWNLOAD: 3,

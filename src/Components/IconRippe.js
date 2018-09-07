@@ -270,8 +270,8 @@ class IconRippe extends PureComponent {
             return;
 
         this._iconType = type;
-        //this.forceUpdate();
-        this.setState({});
+        this.forceUpdate();
+        //this.setState({});
     }
 
     // setIconStatus = (status) =>{
@@ -286,8 +286,8 @@ class IconRippe extends PureComponent {
             return;
 
         this._badge = number;
-        //this.forceUpdate();
-        this.setState({});
+        this.forceUpdate();
+        //this.setState({});
     }
 
     render() {

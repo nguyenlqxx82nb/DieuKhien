@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, Platform,Text, View, TouchableWithoutFeedback,Animated,Easing,Dimensions,StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import Button from '../../Components/Button';
+import GLOBALS from '../../DataManagers/Globals';
 
 const isIOS = Platform.OS === 'ios';
 const screen = {
@@ -11,7 +12,7 @@ const screen = {
 export default class SongOnlineItem extends React.Component {
   static propTypes = {
     thumbnail: PropTypes.string,
-    id: PropTypes.number,
+    id: PropTypes.string,
     title: PropTypes.string,
     channel: PropTypes.string,
     onPress: PropTypes.func,
@@ -161,9 +162,9 @@ const styles = StyleSheet.create({
         borderBottomWidth:1
     },
     textTitle :{
-        fontSize:13,
+        fontSize:16,
         color:"#fff",
-        fontFamily:"SF-Pro-Text-Regular",
+        fontFamily:GLOBALS.FONT.MEDIUM
     },
 
     textChannel :{

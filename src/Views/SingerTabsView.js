@@ -97,7 +97,7 @@ export default class SingerTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        marginTop: 50,
+        marginTop: 40,
         borderTopWidth: 0.5,
         borderColor: '#00ECBC',
     },

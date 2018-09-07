@@ -15,6 +15,7 @@ export default class SearchInput extends React.Component {
        // onClear: PropTypes.func,
         onSearch: PropTypes.func,
         style : Text.propTypes.style,
+        onSearchChange : PropTypes.func,
         //duration : PropTypes.number
     };
     static defaultProps = {
@@ -31,7 +32,10 @@ export default class SearchInput extends React.Component {
     }
 
     getValue = ()=>{
-        return this.state.value;
+        if(this._searchInput._lastNativeText == undefined)
+            return "";
+        else
+            return this._searchInput._lastNativeText;
     }
     blur = ()=>{
         this._searchInput.blur();
@@ -39,30 +43,57 @@ export default class SearchInput extends React.Component {
     focus = ()=>{
         this._searchInput.focus();
     }
+    focusSearch = (term)=>{
+        this._searchInput.setNativeProps({ text: term });
+        setTimeout(() => {
+            this._searchInput.setNativeProps({ text: term });
+        });
+        this._searchInput._lastNativeText = term;
+        this.setState({showRemoveBtn:true});
+        this._searchInput.focus();
+    }
     _handleTextFocus = () =>{
         EventRegister.emit("HideFooter",{});
+        if(this.props.onSearch != null){
+            this.props.onSearch(this.getValue());
+        }
     }
     _handleBlur = () =>{
         EventRegister.emit("ShowFooter",{});
+        if(this.props.onSearch != null){
+            this.props.onSearch(this.getValue());
+        }
     }
     _handleTextSubmit = () =>{
         EventRegister.emit("ShowFooter",{});
         if(this.props.onSearch != null){
-            this.props.onSearch(this.state.value);
+            this.props.onSearch(this.getValue());
         }
     }
     _handleClearSearch = () =>{
-        this.setState({value:"",showRemoveBtn:false});
+        this.setState({showRemoveBtn:false});
+        this.clear();
         if(this.props.onSearch != null){
             this.props.onSearch("");
         }
     }
     _handleTextChanged = (value) =>{
         var showRemoveBtn = (value == "")?false:true;
-        this.setState({value:value,showRemoveBtn:showRemoveBtn});
-        if(this.props.onSearch != null){
-            this.props.onSearch(value);
+        if(this.state.showRemoveBtn != showRemoveBtn){
+            this.setState({showRemoveBtn:showRemoveBtn});
         }
+
+        if(this.props.onSearchChange != null){
+            this.props.onSearchChange(this.getValue());
+        }
+    }
+    clear = ()=>{
+        this._searchInput.setNativeProps({ text: '' });
+        setTimeout(() => {
+            this._searchInput.setNativeProps({ text: '' });
+        });
+        //this._searchInput.clear();
+        this._searchInput._lastNativeText = '';
     }
     render = () => {
         const {showRemoveBtn} =this.state;
@@ -81,7 +112,7 @@ export default class SearchInput extends React.Component {
                     onBlur = {this._handleBlur}
                     onSubmitEditing = {this._handleTextSubmit}
                     onChangeText={this._handleTextChanged}
-                    value={this.state.value}
+                    //value={this.state.value}
                 />
                 {showRemoveBtn && 
                 (<View style={{ width: 30, height: 30 }}>
@@ -99,7 +130,7 @@ const styles = StyleSheet.create({
         marginRight: 10, borderRadius: 10, backgroundColor: "#565BAC", height: 35, paddingRight: 3
     },
     input: {
-        flex: 1, height: 50, fontSize: 16, color: "white", padding: 0, margin: 0, marginLeft: 10,
+        flex: 1, height: 35, fontSize: 16, color: "white", padding: 0, margin: 0, marginLeft: 10,
         fontFamily:'SF-Pro-Text-Medium'
     },
 })

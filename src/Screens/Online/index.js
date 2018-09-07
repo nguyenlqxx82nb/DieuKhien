@@ -47,11 +47,11 @@ export default class OnlineScreen extends BaseScreen {
                             <IconRippe vector={true} name="back" size={20} color="#fff"
                                 onPress={this._onBack} />
                         </View>
-                        <View style={{flex:1, justifyContent:"center",alignItems:"center"}}>
+                        <View style={{flex:1, justifyContent:"center",alignItems:"flex-start"}}>
                             <Text style={[styles.title]}>Nhạc Online</Text></View> 
-                        <View style={{ width: 40, height: 40, marginRight:5}}>
+                        {/* <View style={{ width: 40, height: 40, marginRight:5}}>
                             <IconRippe vector={true} name="search" size={20} color="#fff" />
-                        </View>
+                        </View> */}
                     </View>
 
                     <View style={{ flex: 1,margin:5,backgroundColor:"transparent", justifyContent:"center",alignItems:"center"}}>
@@ -59,7 +59,7 @@ export default class OnlineScreen extends BaseScreen {
                             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FF6565', '#FF4242', '#FF2C2C', '#FF0404']} style={[styles.button]}>
                                 <IconRippe vector={true} name="youtube3" size={100}
                                     onPress = {()=>{
-                                        this.youtubeSong.show();
+                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.YOUTUBE});
                                     }}
                                 />
                             </LinearGradient>
@@ -68,7 +68,7 @@ export default class OnlineScreen extends BaseScreen {
                             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#FFB223', '#FF9E1D', '#FF8315', '#FF4903']} style={[styles.button]}>
                                 <IconRippe vector={true} name="soundcloud" size={190} 
                                     onPress = {()=>{
-                                        this.soundSong.show();
+                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.SOUNDCLOUD});
                                     }}
                                 />
                             </LinearGradient>
@@ -77,42 +77,13 @@ export default class OnlineScreen extends BaseScreen {
                             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#69A5E5', '#5D9CE1', '#4B90DB', '#3783D4']} style={[styles.button]}>
                                 <IconRippe vector={true} name="mixcloud" size={190} 
                                     onPress = {()=>{
-                                        this.mixSong.show();
+                                        EventRegister.emit("ShowOnlineScreen",{type:GLOBALS.SONG_ONLINE.MIXCLOUD});
                                     }}
                                 />
                             </LinearGradient>
                         </View>
                     </View>
                 </View>
-
-                <SongOnlineScreen 
-                    ref = {ref => (this.youtubeSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.YOUTUBE}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {3}
-                    onBack = {() => {
-                        this.youtubeSong.hide();
-                    }}
-                />
-                <SongOnlineScreen 
-                    ref = {ref => (this.soundSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {3}
-                    onBack = {() => {
-                        this.soundSong.hide();
-                    }}
-                />
-                <SongOnlineScreen 
-                    ref = {ref => (this.mixSong = ref)} 
-                    type = {GLOBALS.SONG_ONLINE.MIXCLOUD}
-                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
-                    maxZindex = {3}
-                    onBack = {() => {
-                        this.mixSong.hide();
-                    }}
-                />
-
             </View>
         );
     }
@@ -124,13 +95,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", 
         justifyContent: "center",
-      //  marginTop: GLOBALS.STATUS_BAR_HEIGHT, 
         height: 50
     },
     button :{
         margin:0,
         flex: 1,
-        borderRadius: 15,
+        borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
@@ -140,18 +110,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: '300',
-        paddingLeft:20,
+        paddingLeft:10,
       //  marginLeft:5,
         color:"#fff",
        // flex:1,
-        fontFamily:'SF-Pro-Text-Bold'
-    },
-
-    textButton: {
-        fontFamily: "SF-Pro-Text-Bold",
-        fontSize: 19, 
-        //marginLeft: 15,
-        color:"#fff"
+        fontFamily:GLOBALS.FONT.BOLD
     },
     onlineContainer :{
         width:240,

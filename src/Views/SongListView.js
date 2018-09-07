@@ -14,6 +14,7 @@ import Databases from '../DataManagers/DatabaseManager.js';
 import DataInfo from '../DataManagers/DataInfo.js';
 import IndicatorView from './IndicatorView.js';
 import BoxControl from '../DataManagers/BoxControl.js';
+import Button from '../Components/Button';
 
 let { height, width } = Dimensions.get('window');
 export default class SongListView extends React.Component {
@@ -46,7 +47,7 @@ export default class SongListView extends React.Component {
     _loading = false;
     _loaded = false;
     _hasData = true;
-    _pageCount = 30;
+    _pageCount = 15;
     _searchTerm = "";
     _hasChanged = false;
 
@@ -86,8 +87,10 @@ export default class SongListView extends React.Component {
         this.hasChanged = false;
         var isChange = false;
         for(i = 0; i < this.state.datas.length; i++){
-            if(DataInfo.PLAY_QUEUE.indexOf(this.state.datas[i].id) > -1){
+            let selectIndex = DataInfo.PLAY_QUEUE.indexOf(this.state.datas[i].id);
+            if(selectIndex > -1){
                 this.state.datas[i].status = GLOBALS.SING_STATUS.SELECTED;
+                this.state.datas[i].index = " "+(selectIndex + 1);
                 isChange = true;
             }
             else if(this.state.datas[i].status == GLOBALS.SING_STATUS.SELECTED){
@@ -103,7 +106,9 @@ export default class SongListView extends React.Component {
     }
 
     searchData = (term)=>{
-        if(this._loading)
+        if(!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
+            return;
+        if(this._loading || term == this._searchTerm)
             return;
             
         this._searchTerm = term;
@@ -113,13 +118,15 @@ export default class SongListView extends React.Component {
     }
 
     refreshData = (term) =>{
-        if (!this._loading) {
-            this._searchTerm = term;
-            this._loaded = false;
-            this._page = 0;
-            this._indicator.show();
-            this._loadData(this.props.lan, this._page, this._pageCount,term);
-        }
+        if(this._loading 
+            || (!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP))
+            return;
+
+        this._searchTerm = term;
+        this._loaded = false;
+        this._page = 0;
+        this._indicator.show();
+        this._loadData(this.props.lan, this._page, this._pageCount,term);
     }
 
     clear =()=>{
@@ -135,7 +142,8 @@ export default class SongListView extends React.Component {
     }
 
     loadData = (term) => {
-        if(this._loading)
+        if(this._loading 
+                || (!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP))
             return;
         if (this._loaded && this._searchTerm == term) {
             if(this.hasChanged)
@@ -151,37 +159,23 @@ export default class SongListView extends React.Component {
         this._indicator.show();
         this._loadData(this.props.lan, this._page, this._pageCount,term);
     }
-
     async _loadData(lan, page, pageCount, term)  {
         const {songType,listType,actor} = this.props;
-        if (this._loading)
+        if (this._loading )
             return;
       //  console.warn("_loadData term = "+term);
         this._loading = true;
         var that = this;
-        if(this.props.listType == GLOBALS.SONG_LIST_TYPE.SELECTED){
-            Databases.fetchSelectedSong(function (datas) {
+        await Databases.fetchSongData(lan,page,pageCount,term,songType,listType,actor,
+            function (datas) {
+                that._page = page;
                 that._handleFetchDataCompleted(datas);
+            },
+            function(error){
+                that._indicator.hide();
+                that._loading = false;    
             });
-        }
-        else{
-            await Databases.fetchSongData(lan,page,pageCount,term,songType,listType,actor,
-                function (datas) {
-                    //console.warn("callback") ;
-                    that._page = page;
-                    that._handleFetchDataCompleted(datas);
-                },
-                function(error){
-                    that._indicator.hide();
-                    that._loading = false;    
-                });
-
-           // console.warn(" songs length = "+songs.length);
-           // that._page = page;
-            //that._handleFetchDataCompleted(songs);
-        }
     }
-
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
         var startId = 0;
@@ -216,9 +210,7 @@ export default class SongListView extends React.Component {
             this._loaded = true;
             this._hasData = false;
         }
-        
     }
-
     _onPressSong = (id, status) => {
         const data = {
             songId: id,
@@ -226,19 +218,34 @@ export default class SongListView extends React.Component {
         }
 
         BoxControl.selectSong(id);
+            
     }
-
     _onEndReached = () => {
+        if(!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP){
+            return ;
+        }
         if (this._hasData && !this._loading && this._loaded) {
             this._loadData(this.props.lan, this._page + 1,this._pageCount,this._searchTerm);
             this.setState({});
         }
     }
-
-    _showOptOverlay = (id,overlayType) =>{
-        EventRegister.emit('ShowOptOverlay', {id:id,overlayType:overlayType});
+    _showOptOverlay = (id,overlayType,actor) =>{
+        const {listType}=this.props;
+        var _height = 200;
+        var _songMenutype = GLOBALS.SONG_MENU_TYPE.NORMAL;
+        if(listType ==GLOBALS.SONG_LIST_TYPE.SINGER ){
+            _height = 150;
+            _songMenutype = GLOBALS.SONG_MENU_TYPE.SINGER;
+        }
+        EventRegister.emit('ShowOptOverlay', 
+                {overlayType:overlayType,
+                data:{
+                    menuType: _songMenutype,
+                    songId:id,
+                    height:_height,
+                    actor:actor}
+                });
     }
-
     _renderFooter = () => {
         return (this._loading && this._loaded) ?
             <View style={{ height: 60, width: '100%', justifyContent: "center", alignContent: "center" }}>
@@ -246,41 +253,40 @@ export default class SongListView extends React.Component {
             </View> :
             <View style={{ height: 1, width: '100%' }} />;
     }
-
     _rowRenderer = (type, item) => {
-        var status =  GLOBALS.SING_STATUS['NORMAL'];
-        const singColor = GLOBALS.SING_COLORS[status];
-        const singerColor = GLOBALS.SINGER_COLORS[status];
-        let singPrefix = GLOBALS.SING_PREFIX[status];
+        const {id,name,actor,singerName,status} = item;
+        var _status = (this.props.listType != GLOBALS.SONG_LIST_TYPE.SELECTED)?status:GLOBALS.SING_STATUS.NORMAL;
+        const singColor = GLOBALS.SING_COLORS[_status];
+        const singerColor = GLOBALS.SINGER_COLORS[_status];
+        let singPrefix = GLOBALS.SING_PREFIX[_status];
         let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
        // console.warn("Name = "+item["Name"]+" , item = "+item);
-       // singPrefix = (singPrefix != "") ? (" (" + singPrefix + ")") : "";
-        //const singTitle = item.Name ; //+ //singPrefix;
-        const {id,name,actor,singerName} = item;
+        singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
+        
         return (
             <ListItem
                 style={styles.listItem}
-                onPress={this._onPressSong.bind(this, item.id, item.status)}
+                onPress={this._onPressSong.bind(this, id, status)}
                 underlayColor="white">
                 <View style={{
                     flex: 1, flexDirection: "row", justifyContent: "center",
                     alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
                     <View style={{ flex: 1 }}>
                         <Text numberOfLines={1} style={[styles.songText, {color: singColor }]}>
-                            {name}
+                            {name + singPrefix}
                         </Text>
                         <Text style={[styles.singerText, {color: singerColor }]}>
                             {singerName}
                         </Text>
                     </View>
                     <View style={{ width: 40, height: 40 }}>
-                        <IconRippe vector={true} name="tuychon" size={20} onPress={this._showOptOverlay.bind(id,overlayType)} />
+                        <IconRippe vector={true} name="tuychon" size={20} 
+                            onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
                     </View>
                 </View>
             </ListItem>
         );
     };
-
     render = () => {
         //const {_loading} = this.state;
         return (

@@ -70,7 +70,9 @@ export default class SelectedSong extends BaseScreen {
                 </View>
 
                 <View style={{ flex: 1}}>
-                    <SongListView ref={ref=>(this._songList = ref)} type = {GLOBALS.SONG_LIST_TYPE.SELECTED}  />
+                    <SongListView 
+                        ref={ref=>(this._songList = ref)} 
+                        listType = {GLOBALS.SONG_LIST_TYPE.SELECTED}  />
                 </View>
             </View>
         );

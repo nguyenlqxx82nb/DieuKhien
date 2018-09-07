@@ -8,15 +8,15 @@ import {
 // screens
 import Footer from '../Footer/footer.js';
 import HomeScreen from './Home.js';
-import SearchScreen from '../BaiHat/Search.js';
+import SongTabScreen from '../BaiHat/SongTabScreen';
 import SelectedSong from '../BaiHat/SelectedSong.js';
 import SingerScreen from '../Singer/index.js';
-import SingOptionOverlay from './SingOptionOverlay.js';
+import SingOptionOverlay from '../Overlay/OptionOverlay.js';
 import TheloaiScreen from '../TheLoai/index.js'
-import SongScreen from '../BaiHat/Songs';
-import HotScreen from '../BaiHat/HotSong';
 import OnlineScreen from '../Online/index.js'
 import SecondScreen from '../../SideBar/SecondScreen';
+import SongOnlineScreen from '../Online/SongOnlineScreen';
+import SongListScreen from '../../Screens/BaiHat/SongListScreen';
 
 import { EventRegister } from 'react-native-event-listeners'
 import GLOBALS from "../../DataManagers/Globals.js";
@@ -70,15 +70,24 @@ export default class Taisao extends React.Component {
         // Refresh song list
         EventRegister.emit("SongUpdate",{});
     }
-
     handlePlaybackChange = (e) =>{
-        console.warn("volume "+e['volume']);
-        console.warn("play "+e['play']);
-        console.warn("mute "+e['mute']);
-        console.warn("original "+e['original']);
+        DATA_INFO.PLAYBACK_INFO.IsPlaying = (e['play']== 1)?true:false;
+        DATA_INFO.PLAYBACK_INFO.IsMute = (e['mute'] == 1)?true:false;
+        DATA_INFO.PLAYBACK_INFO.IsOriginal = (e['original'] == 1)?true:false;
+        DATA_INFO.PLAYBACK_INFO.Volume = e['volume'];
+
+        //EventRegister.emit("PlaybackInfoUpdate",{});
+        // console.warn("volume "+e['volume']);
+        // console.warn("play "+e['play']);
+        // console.warn("mute "+e['mute']);
+        // console.warn("original "+e['original']);
     }
     handleSongQueueChange = (e) =>{
-        console.warn("queue length "+e['queue'].length);
+        //console.warn("queue length "+e['queue'].length);
+        DATA_INFO.PLAY_QUEUE = e['queue'];
+        // Refresh song list
+        EventRegister.emit("SongUpdate",{});
+
     }
     componentWillMount() {
         // Hide Footer
@@ -94,7 +103,7 @@ export default class Taisao extends React.Component {
 
         // Show overlay
         this._listenerShowOptOverlayEvent = EventRegister.addEventListener('ShowOptOverlay', (data) => {
-            this._singOverlay.updateView(data.id,data.overlayType);
+            this._singOverlay.updateView(data.overlayType,data.data);
             this._footer.hide();
             this._singOverlay.show();
         });
@@ -103,6 +112,37 @@ export default class Taisao extends React.Component {
         this._listenerOpenSecondScreenEvent = EventRegister.addEventListener('OpenSecondScreen', (data) => {
             this._secondScreen.open(data.type);
         });
+
+        //show online screen
+        this._listenerShowOnlineScreenEvent = EventRegister.addEventListener('ShowOnlineScreen', (data) => {
+            if(data.type == GLOBALS.SONG_ONLINE.YOUTUBE){
+                this.youtubeSong.show();
+            }
+            else if(data.type == GLOBALS.SONG_ONLINE.SOUNDCLOUD){
+                this.soundSong.show();
+            }
+            else if(data.type == GLOBALS.SONG_ONLINE.MIXCLOUD){
+                this.mixSong.show();
+            }
+
+            if(data.term != null)
+                setTimeout(()=>{
+                    if(data.type == GLOBALS.SONG_ONLINE.YOUTUBE){
+                        this.youtubeSong.focus(data.term);
+                    }
+                    else if(data.type == GLOBALS.SONG_ONLINE.SOUNDCLOUD){
+                        this.soundSong.focus(data.term);
+                    }
+                    else if(data.type == GLOBALS.SONG_ONLINE.MIXCLOUD){
+                        this.mixSong.focus(data.term);
+                    }
+                },200);
+        });
+
+        this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
+            this._singerSong.updateSinger(data.name);
+            this._singerSong.show();
+        });
     }
     componentWillUnmount() {
         //EventRegister.removeEventListener(this._listenerControlEvent);
@@ -110,6 +150,8 @@ export default class Taisao extends React.Component {
         EventRegister.removeEventListener(this._listenerShowFooterEvent);
         EventRegister.removeEventListener(this._listenerShowOptOverlayEvent);
         EventRegister.removeEventListener(this._listenerOpenSecondScreenEvent);
+        EventRegister.removeEventListener(this._listenerShowOnlineScreenEvent);
+        EventRegister.removeEventListener(this._listenerSingerSongEvent);
     }
     
     _onOpenSearch = () => {
@@ -144,11 +186,7 @@ export default class Taisao extends React.Component {
        // this._currentScreen.hide();
         this._selectedSong.show();
     }
-    _onOpenEmoji = () =>{
-        this._singOverlay.updateView(-1,GLOBALS.SING_OVERLAY.EMOJI);
-        this._footer.hide();
-        this._singOverlay.show();
-    }
+   
     _onBackHome = ()=>{
         this._currentScreen.hide();
         this._currentScreen = this._homeScreen; 
@@ -177,21 +215,31 @@ export default class Taisao extends React.Component {
                 <SingOptionOverlay opacity={0} maxZindex={10} ref={ref => (this._singOverlay = ref)} 
                     onClose ={this._onSingOverlayClose}
                 />
+                <SongListScreen 
+                    ref = {ref => (this._singerSong = ref)} 
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    listType={GLOBALS.SONG_LIST_TYPE.SINGER}
+                    onBack = {() => {
+                        this._singerSong.hide();}} />
+
                 <OnlineScreen  opacity= {0} maxZindex ={2} 
                     transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._onlineScreen = ref)} />
-                <SearchScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
                 />
-                <SongScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
                 />
-                <HotScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                <SongListScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
+                    listType={GLOBALS.SONG_LIST_TYPE.HOT}
+                    title ={"Bài Hot"}
                     onBack={this._onBackHome} ref={ref => (this._hotScreen = ref)}
                 />
                 <TheloaiScreen opacity= {0} maxZindex ={2} 
@@ -204,7 +252,7 @@ export default class Taisao extends React.Component {
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._singerScreen = ref)}/>
-                <SelectedSong maxZindex ={6} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
+                <SelectedSong maxZindex ={7} transition = {GLOBALS.TRANSITION.SLIDE_TOP}
                     onBack={this._onCloseSelectedSong} ref={ref => (this._selectedSong = ref)}
                 />
                 <HomeScreen zIndex={1}  
@@ -220,8 +268,35 @@ export default class Taisao extends React.Component {
                     }}
                     ref={ref => (this._homeScreen = ref)} />
 
+                <SongOnlineScreen 
+                    ref = {ref => (this.youtubeSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.YOUTUBE}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    onBack = {() => {
+                        this.youtubeSong.hide();
+                    }}
+                />
+                <SongOnlineScreen 
+                    ref = {ref => (this.soundSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.SOUNDCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    onBack = {() => {
+                        this.soundSong.hide();
+                    }}
+                />
+                <SongOnlineScreen 
+                    ref = {ref => (this.mixSong = ref)} 
+                    type = {GLOBALS.SONG_ONLINE.MIXCLOUD}
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {6}
+                    onBack = {() => {
+                        this.mixSong.hide();
+                    }}
+                />    
+
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
-                    onOpenEmoji = {this._onOpenEmoji} 
                     onSelectedSong={this._onOpenSelectedSong} />
                 <StatusBar
                     backgroundColor={GLOBALS.COLORS.STATUS_BAR}

@@ -65,6 +65,36 @@ public class MyModule extends ReactContextBaseJavaModule {
         checkConnectToBox();
     }
 
+    @ReactMethod
+    public void addSongToEndOfList(String songId){
+        Tools.addSongToEndOfList(songId);
+    }
+
+    @ReactMethod
+    public void playNow(String songId){
+        Tools.playNow(songId);
+    }
+
+    @ReactMethod
+    public void priority(String songId){
+        Tools.priority(songId);
+    }
+
+    @ReactMethod
+    public void sendRequestControlBox(int cmd){
+        Tools.sendRequestControlBox(cmd);
+    }
+
+    @ReactMethod
+    public void sendRequestControlBox(int cmd,int state){
+        Tools.sendRequestControlBox(cmd,state);
+    }
+
+    @ReactMethod
+    public void sendRequestControlBox(int cmd,int state,int value){
+        Tools.sendRequestControlBox(cmd,state,value);
+    }
+
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         mReactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
