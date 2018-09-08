@@ -15,6 +15,34 @@ import GLOBALS from "../DataManagers/Globals";
 
 const datas = [
     {
+        title:"Chưa tải",
+        icon:"singOpt",
+        event:"OpenSecondScreen",
+        color:"#00ECBB",
+        screenType: GLOBALS.SECOND_SCREEN.SONG.UNDOWNLOAD
+    },
+    {
+        title:"Đang tải",
+        icon:"tuychon",
+        event:"OpenSecondScreen",
+        color:"#00ECBB",
+        screenType: GLOBALS.SECOND_SCREEN.SONG.DOWNLOADING
+    },
+    {
+        title:"Đã hát",
+        icon:"mic2",
+        event:"OpenSecondScreen",
+        color:"#00ECBB",
+        screenType: GLOBALS.SECOND_SCREEN.SONG.SING
+    },
+    {
+        title:"Bài USB",
+        icon:"uutien",
+        event:"OpenSecondScreen",
+        color:"#00ECBB",
+        screenType: GLOBALS.SECOND_SCREEN.SONG.USB
+    },
+    {
         title:"Ngôn ngữ",
         icon:"ngonngu",
         event:"OpenSecondScreen",
@@ -56,7 +84,7 @@ export default class SideBar extends React.Component
                     this.props.navigation.closeDrawer(); 
                     setTimeout(()=>{
                         EventRegister.emit(event,{type:screenType});
-                    },150); 
+                    },10); 
                 }}
                 style={{height:60,width:"100%"}}>
                 <View style={{flex:1, marginLeft:25,marginRight:10,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
@@ -93,7 +121,7 @@ export default class SideBar extends React.Component
 const styles = StyleSheet.create({
     headerContainer : {
         width:"100%",
-        height:100,
+        height:60,
         backgroundColor:"#444083"
     },
 

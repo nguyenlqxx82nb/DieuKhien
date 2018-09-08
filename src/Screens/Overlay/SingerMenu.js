@@ -7,7 +7,7 @@ import {
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals.js';
-import { Col, Grid, Row } from "react-native-easy-grid";
+import {EventRegister} from 'react-native-event-listeners'
 
 const screen = {
     width : Dimensions.get("window").width,
@@ -23,6 +23,18 @@ export default class SingerMenu extends React.Component {
         super(props);
         
     }
+
+    filterSinger = (sex) =>{
+        EventRegister.emit("FilterSinger",{sex:sex});
+        this._close();
+    }
+
+    _close = () =>{
+        setTimeout(()=>{
+            if(this.props.onClose != null)
+                this.props.onClose()
+        },50);
+    }
    
     render = () =>{
         return(
@@ -30,21 +42,25 @@ export default class SingerMenu extends React.Component {
                 <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="all" size={25} 
                         text={{content: "Tất cả", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.ALL)}
                     />
                 </View>
                 <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="male" size={25} 
                         text={{content: "Nam ca sỹ", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.MALE)}
                     />
                 </View>
                 <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="famale" size={25} 
                         text={{content: "Nữ ca sỹ", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.FEMALE)}
                     />
                 </View>
                 <View style={{height:50,width:'100%'}}>
                     <IconRippe vector={true} name="nhomnhac" size={25} 
                         text={{content: "Nhóm nhạc", layout: 1}} textStyle={[styles.textButton,styles.singerText]}
+                        onPress={this.filterSinger.bind(this,GLOBALS.SINGER_SEX.GROUP)}
                     />
                 </View>
                 {/* <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>

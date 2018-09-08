@@ -18,10 +18,12 @@ export default class SongTabsView extends React.Component {
         onChangeTab : PropTypes.func,
         songType : PropTypes.number,
         songListType : PropTypes.number,
+        top : PropTypes.number
     };
     static defaultProps = {
         songType : GLOBALS.SONG_TYPE.ALL,
-        songListType : GLOBALS.SONG_LIST_TYPE.ALL
+        songListType : GLOBALS.SONG_LIST_TYPE.ALL,
+        top : 40
     };
 
     _tabs = [];
@@ -91,9 +93,8 @@ export default class SongTabsView extends React.Component {
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {
-                       // console.warn("lanTabs lan = "+lan +" , page = "+index);
                        return (
-                            <View key={index} style={[styles.tabContent]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
+                            <View key={index} style={[styles.tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
                                 <SongListView 
                                     type = {this.props.songListType}
                                     lan={lan} 
@@ -109,7 +110,6 @@ export default class SongTabsView extends React.Component {
 const styles = StyleSheet.create({
     tabContent: {
         flex: 1,
-        marginTop: 40,
         borderTopWidth: 0.5,
         borderColor: '#00ECBC',
     },

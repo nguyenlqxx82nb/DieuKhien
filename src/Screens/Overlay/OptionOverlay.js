@@ -60,10 +60,14 @@ export default class OptionOverlay extends React.Component {
                         />;
         }
         else if(this.state.overlayType == GLOBALS.SING_OVERLAY.EMOJI){
-            return <Emoji />;
+            return <Emoji 
+                        onClose= {this._onClose}
+                    />;
         }
         else if(this.state.overlayType == GLOBALS.SING_OVERLAY.SINGER){
-            return <SingerMenu />;
+            return <SingerMenu 
+                        onClose= {this._onClose}
+                    />;
         }
     }
 
@@ -133,7 +137,7 @@ export default class OptionOverlay extends React.Component {
                 {this.renderView()}
                 <View style={{height:50,width:'100%', backgroundColor:"#444083"}}>
                     <IconRippe vector={true} name={""}
-                        text={{content: "Hủy", layout: 1}} textStyle={styles.textButton}
+                        text={{content: "Hủy", layout: 1}} textStyle={styles.text}
                         onPress = {this._onClose}
                     />
                 </View>
@@ -164,10 +168,9 @@ const styles = StyleSheet.create({
         backgroundColor:"#323663",
         opacity:0.85
     },
-    textButton: {
+    text: {
         fontFamily: GLOBALS.FONT.MEDIUM,
-        fontSize: 15, 
-        marginLeft: 15,
+        fontSize: 16, 
         color:"#fff"
     },
     

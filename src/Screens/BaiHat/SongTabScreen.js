@@ -19,12 +19,14 @@ export default class SongTabScreen extends BaseScreen {
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
-        lsitType: PropTypes.number
+        lsitType: PropTypes.number,
+        hasOnlineButton : PropTypes.bool
     };
     constructor(props) {
         super(props);
 
-        this._listType = (this.props._listType != null|| this.props.listType == undefined)? this.props._listType: GLOBALS.SONG_LIST_TYPE.ALL;
+        this._listType = (this.props._listType != null)? this.props._listType: GLOBALS.SONG_LIST_TYPE.ALL;
+        this._hasOnlineButton = (this.props.hasOnlineButton != null)?this.props.hasOnlineButton: true;
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -54,9 +56,12 @@ export default class SongTabScreen extends BaseScreen {
     }
     _onSearch =(value)=> {
         this._songTabs.searchData(value);
-        this._musicOnline.setTerm(value);
+        if(this._musicOnline != null)
+            this._musicOnline.setTerm(value);
     }
     renderContentView = () => {
+        var top = (this._hasOnlineButton)?40:0;
+        
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.headerContainer}>
@@ -75,22 +80,25 @@ export default class SongTabScreen extends BaseScreen {
                         lanTabs={[GLOBALS.LANGUAGE_KEY.vn,GLOBALS.LANGUAGE_KEY.en,GLOBALS.LANGUAGE_KEY.cn,GLOBALS.LANGUAGE_KEY.ja,GLOBALS.LANGUAGE_KEY.kr]} 
                         ref={ref => (this._songTabs = ref)} 
                         songListType = {this._listType}
-                        onChangeTab = {this._onChangeTab} />
+                        onChangeTab = {this._onChangeTab} 
+                        top={top}/>
                 </View>
-
-                <MusicOnline 
-                    ref={ref =>(this._musicOnline = ref)}
-                    onOpenOnline = {()=>{
-                        this._searchInput.blur();
-                    }}
+                { 
+                    this._hasOnlineButton && 
+                    <MusicOnline 
+                        ref={ref =>(this._musicOnline = ref)}
+                        onOpenOnline = {()=>{
+                            this._searchInput.blur();
+                        }}
                     />
+                }
+                
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-  
     headerContainer: {
         justifyContent: "center",
         flexDirection: "row",
@@ -98,12 +106,6 @@ const styles = StyleSheet.create({
         //marginTop: GLOBALS.STATUS_BAR_HEIGHT,
         height: 45,
         overflow: "hidden"
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: '300',
-        textAlign: 'center',
-        margin: 20,
     },
     tabView: {
         flex: 1,

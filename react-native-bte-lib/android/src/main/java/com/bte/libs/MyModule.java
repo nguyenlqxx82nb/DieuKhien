@@ -86,12 +86,12 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void sendRequestControlBox(int cmd,int state){
+    public void sendRequestControlBox2(int cmd,int state){
         Tools.sendRequestControlBox(cmd,state);
     }
 
     @ReactMethod
-    public void sendRequestControlBox(int cmd,int state,int value){
+    public void sendRequestControlBox3(int cmd,int state,int value){
         Tools.sendRequestControlBox(cmd,state,value);
     }
 

@@ -22,6 +22,7 @@ let { height, width } = Dimensions.get('window');
 export default class SingerListView extends React.Component {
     static propTypes = {
         lan: PropTypes.string,
+        
     };
     static defaultProps = {
         lan : 'vn',
@@ -74,14 +75,17 @@ export default class SingerListView extends React.Component {
     }
 
 
-    searchData = (term)=>{
+    searchData = (term,sex)=>{
         if(this._loading)
             return;
-            
-        this._searchTerm = term;
-        this._loaded = false;
-        this._page = 0;
-        this._loadData(this.props.lan, this._page, this._pageCount,term);
+        //console.warn("searchData term = "+term+", sex = "+sex);
+        if(sex != this._sex || term != this._searchTerm){
+            this._searchTerm = term;
+            this._sex = sex;
+            this._loaded = false;
+            this._page = 0;
+            this._loadData(this.props.lan, this._page, this._pageCount,term,sex);
+        }
     }
 
     refreshData = (term) =>{
@@ -91,7 +95,7 @@ export default class SingerListView extends React.Component {
             this._loaded = false;
             this._page = 0;
             this._indicator.show();
-            this._loadData(this.props.lan, this._page, this._pageCount,term);
+            this._loadData(this.props.lan, this._page, this._pageCount,term,sex);
         }
     }
 
@@ -156,7 +160,13 @@ export default class SingerListView extends React.Component {
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
         var newDatas = [];
-        newDatas = this.state.datas.concat(datas);
+        if(this._loaded){
+            newDatas = this.state.datas.concat(datas);
+        }
+        else{
+            newDatas = datas;
+        }
+        
         this.setState({
             dataProvider: this.state.dataProvider.cloneWithRows(newDatas),
             datas: newDatas

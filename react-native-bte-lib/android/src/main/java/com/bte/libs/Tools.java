@@ -131,27 +131,22 @@ public class Tools {
                             int queueLen = Global.playQueue.size();
                             WritableArray queue = Arguments.createArray();
                             if (queueLen != songIdQueueArray.length - 1 || isFirst) {
-                                Global.playQueue.clear();
-                                for (int i = 0; i < songIdQueueArray.length - 1; i++) {
-                                    Global.playQueue.add(songIdQueueArray[i]);
-                                    queue.pushString(songIdQueueArray[i]);
-                                }
                                 flag = true;
                             } else {
                                 for (int i = 0; i < songIdQueueArray.length - 1; i++) {
-                                    if (Global.playQueue.get(i).equals(songIdQueueArray[i])) {
-                                        continue;
+                                    if (!Global.playQueue.get(i).equals(songIdQueueArray[i])) {
+                                        flag = true;
+                                        break;
                                     }
-                                    Global.playQueue.clear();
-                                    for (int j = 0; j < songIdQueueArray.length - 1; j++) {
-                                        Global.playQueue.add(songIdQueueArray[j]);
-                                        queue.pushString(songIdQueueArray[i]);
-                                    }
-                                    flag = true;
-                                    break;
                                 }
                             }
                             if (flag) {
+                                Global.playQueue.clear();
+                                for (int j = 0; j < songIdQueueArray.length - 1; j++) {
+                                    Global.playQueue.add(songIdQueueArray[j]);
+                                    queue.pushString(songIdQueueArray[j]);
+                                }
+
                                 WritableMap params = Arguments.createMap();
                                 params.putArray("queue", queue);
                                 SendEvent(reactContext, params, "SongQueueChange");

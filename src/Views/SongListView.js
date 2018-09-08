@@ -121,7 +121,8 @@ export default class SongListView extends React.Component {
         if(this._loading 
             || (!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP))
             return;
-
+        
+        this.hasChanged = false;
         this._searchTerm = term;
         this._loaded = false;
         this._page = 0;

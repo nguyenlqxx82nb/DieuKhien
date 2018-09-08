@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, Animated, Platform,Image } from "react-native";
+import { StyleSheet, Dimensions, Animated, Platform,Easing } from "react-native";
 import PropTypes from 'prop-types';
 import {
     View,
@@ -53,6 +53,7 @@ class BaseScreen extends React.Component {
 
         this._isVisible = false;
         this._processing = false;
+        this._maxIndex = this.props.maxZindex;
     }
     show = () => {
         if(this._processing)
@@ -66,17 +67,19 @@ class BaseScreen extends React.Component {
         let container = this._container;
         const {maxZindex,transition,duration} = this.props;
         var that = this;
-        
+        var zindex = Math.min(this._maxIndex,maxZindex);
         this._isVisible = true;
+
         if(transition == GLOBALS.TRANSITION.FADE){
             Animated.timing(this.animate.opacity, {
                 toValue: 1,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 container.setNativeProps({
                     style: {
-                        zIndex: maxZindex
+                        zIndex: zindex
                     }
                 });
     
@@ -86,13 +89,14 @@ class BaseScreen extends React.Component {
         else if(transition == GLOBALS.TRANSITION.SLIDE_LEFT){
             container.setNativeProps({
                 style: {
-                    zIndex: maxZindex
+                    zIndex: zindex
                 }
             });
             Animated.timing(this.animate.posX, {
                 toValue: 0,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 that.showCompleted();
             });
@@ -100,19 +104,20 @@ class BaseScreen extends React.Component {
         else if(transition == GLOBALS.TRANSITION.SLIDE_TOP){
             container.setNativeProps({
                 style: {
-                    zIndex: maxZindex
+                    zIndex: zindex
                 }
             });
             Animated.timing(this.animate.posY, {
                 toValue: 0,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 that.showCompleted();
             });
         }
     }
-    hide = () => {
+    hide = (callback) => {
        // console.warn("hide = "+this._processing +" , "+this._isVisible);
         if(this._processing)
             return;
@@ -132,6 +137,7 @@ class BaseScreen extends React.Component {
                 toValue: 0,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 container.setNativeProps({
                     style: {
@@ -140,6 +146,8 @@ class BaseScreen extends React.Component {
                 });
     
                 that.hideCompleted();
+                if(callback != null)
+                    callback();
             });
         }
         else if(transition == GLOBALS.TRANSITION.SLIDE_LEFT){
@@ -147,6 +155,7 @@ class BaseScreen extends React.Component {
                 toValue: screen.width,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 that.hideCompleted();
                 container.setNativeProps({
@@ -154,6 +163,8 @@ class BaseScreen extends React.Component {
                         zIndex: 0
                     }
                 });
+                if(callback != null)
+                    callback();
             });
         }
         else if(transition == GLOBALS.TRANSITION.SLIDE_TOP){
@@ -161,8 +172,11 @@ class BaseScreen extends React.Component {
                 toValue: screen.height,
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
+                easing: Easing.bezier(0.0, 0.0, 0.2, 1),
             }).start(function onComplete() {
                 that.hideCompleted();
+                if(callback != null)
+                    callback();
                 container.setNativeProps({
                     style: {
                         zIndex: 0

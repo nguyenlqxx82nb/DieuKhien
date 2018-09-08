@@ -44,27 +44,23 @@ class BoxControl {
 
     static play(){
         if(DATA_INFO.PLAYBACK_INFO.IsPlaying)
-            BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_PLAY_OR_PAUSE,1);
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_PLAY_OR_PAUSE,1);
         else
-        BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_PLAY_OR_PAUSE,0);
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_PLAY_OR_PAUSE,0);
     }
 
-    static mic(){
-        setTimeout(() => {
-            DATA_INFO.PLAYBACK_INFO.IsMute = (DATA_INFO.PLAYBACK_INFO.IsMute)?false:true;
-            EventRegister.emit("PlaybackInfoUpdate",{});
-        }, 500);
+    static mute(){
+        if(DATA_INFO.PLAYBACK_INFO.IsMute)
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_MUTE,1);
+        else
+            BTE_LIB.sendRequestControlBox2(BOX_COMMAND.BYTE_MUTE,0);
     }
 
     static volumeChange(value){
-        setTimeout(() => {
-            DATA_INFO.PLAYBACK_INFO.Volume = value;
-            EventRegister.emit("PlaybackInfoUpdate",{});
-        }, 500);
+        BTE_LIB.sendRequestControlBox3(BOX_COMMAND.BYTE_SET_VOLUME,1,value*100);
     }
 
     static selectSong(songId){
-        //console.warn("songId");
         BTE_LIB.addSongToEndOfList(songId);
     }
 
@@ -74,6 +70,46 @@ class BoxControl {
 
     static priority(songId){
         BTE_LIB.priority(songId);
+    }
+
+    static rePlay(){
+        BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_REPLAY);
+    }
+
+    static nextSong(){
+        BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_NEXT_SONG);
+    }
+
+    static effect(type){
+        switch(type){
+            case GLOBALS.EMOJI.HuytSao:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_WHISTLE);
+                break;
+            case GLOBALS.EMOJI.HoReo:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_CHEER);
+                break;
+            case GLOBALS.EMOJI.VoTay:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_CLAP);
+                break;
+            case GLOBALS.EMOJI.Smile:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_HOOTING);
+                break;
+            case GLOBALS.EMOJI.Kiss:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_KIS);
+                break;
+            case GLOBALS.EMOJI.TangHoa:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_FLOWER);
+                break;
+            case GLOBALS.EMOJI.Like:
+                BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_LIKE);
+                break;
+            case GLOBALS.EMOJI.ChamDiem:
+                //BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_LIKE);
+                break;
+            default:
+                break;
+
+        }
     }
 
 }

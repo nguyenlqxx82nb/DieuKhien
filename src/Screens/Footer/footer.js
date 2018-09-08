@@ -49,9 +49,10 @@ export default class FooterHome extends React.Component {
 
     componentWillMount() {
         // Update playback info
-        this._listenerPlaybackInfoEvent = EventRegister.addEventListener('PlaybackInfoUpdate', (data) => {
+        this._listenerPlaybackInfoEvent = EventRegister.addEventListener('PlaybackInfoChange', (data) => {
             this._playBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsPlaying ? 2 : 1);
             this._micBtn.setIconType(DATA_INFO.PLAYBACK_INFO.IsMute ? 2 : 1);
+            //console.warn("volume = "+DATA_INFO.PLAYBACK_INFO.Volume);
             this.setState({volume:DATA_INFO.PLAYBACK_INFO.Volume});
         });
 
@@ -234,7 +235,8 @@ export default class FooterHome extends React.Component {
                                 {this._renderRightIcon()}
                             </View>
                         </Animated.View>
-                        <Animated.View style={[styles.topContainer,{zIndex:0,opacity:this._topViewOpacity.volume}]} 
+                        <Animated.View style={[styles.topContainer,
+                            {zIndex:0,opacity:this._topViewOpacity.volume}]} 
                             ref={ref => (this._volmView = ref)}>
                             <View style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection: "row"}}>
                                 <View style={styles.iconTopLeft}>
@@ -271,7 +273,11 @@ export default class FooterHome extends React.Component {
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe status={status} vector={true} size={28} name="replay" />
+                                    <IconRippe status={status} vector={true} size={28} name="replay"
+                                        onPress={()=>{
+                                            BoxControl.rePlay();
+                                        }}
+                                    />
                                 </View>
                             </Col>
                             <Col size={1}>
@@ -279,12 +285,21 @@ export default class FooterHome extends React.Component {
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe status={status} vector={true} size={22} name="next" />
+                                    <IconRippe status={status} vector={true} size={22} name="next"
+                                        onPress={()=>{
+                                            BoxControl.nextSong();
+                                        }}
+                                    />
                                 </View>
                             </Col>
                             <Col size={1} style={[styles.container_center]}>
                                 <View style={styles.container2}>
-                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={25} name="micOn" name1="micOff" iconType={micIconType} onPress={this._onMicPress} />
+                                    <IconRippe status={status} ref={ref => (this._micBtn = ref)} vector={true} size={25} 
+                                        name="micOn" name1="micOff" iconType={micIconType} 
+                                        onPress={()=>{
+                                            BoxControl.mute();
+                                        }}
+                                        />
                                 </View>
                             </Col>
                         </Grid>

@@ -145,7 +145,12 @@ export default class SongListScreen extends BaseScreen {
                         }
                     />
                 </View>
-                <MusicOnline style={{top:50}} ref={ref =>(this._musicOnline = ref)} />
+                <MusicOnline style={{top:50}} 
+                    ref={ref =>(this._musicOnline = ref)}
+                    onOpenOnline = {()=>{
+                        this._searchInput.blur();
+                    }}
+                    />
 
                 <View style={{ flex: 1, marginTop:40,borderTopWidth: 0.5,borderColor: '#00ECBC'}}>
                     <SongListView 

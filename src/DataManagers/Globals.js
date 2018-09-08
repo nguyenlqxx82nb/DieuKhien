@@ -153,7 +153,6 @@ export default {
         RAP: 115.
     },
 
-    BackgroundImage: require("../../assets/background.png"),
     Emo1: require("../../assets/Emojiii2.png"),
     Emo2: require("../../assets/Emojiii1.png"),
     Emo3: require("../../assets/Emojiii3.png"),
@@ -162,6 +161,17 @@ export default {
     Emo6: require("../../assets/clap1.png"),
     Emo7: require("../../assets/rose.png"),
     Emo8: require("../../assets/like.png"),
+
+    EMOJI :{
+        HuytSao: 1,
+        Kiss: 2,
+        Smile: 3,
+        HoReo: 4,
+        ChamDiem: 5,
+        VoTay: 6,
+        TangHoa: 7,
+        Like:8
+    },
 
     SINGER_TEST: [
         "http://mediaold.tiin.vn:8080/media_old_2016//archive/images/2017/05/04/142620_img_9272.jpg",
@@ -215,7 +225,13 @@ export default {
     SECOND_SCREEN: {
         NONE: -1,
         NGONNGU: 1,
-        SECURE: 2
+        SECURE: 2,
+        SONG:{
+            UNDOWNLOAD : 3,
+            DOWNLOADING : 4,
+            USB : 5,
+            SING : 6
+        }
     },
 
     FONT: {

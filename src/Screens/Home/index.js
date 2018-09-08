@@ -62,7 +62,6 @@ export default class Taisao extends React.Component {
     }
 
     handleConnectToBox = (e) =>{
-       // console.warn("event leng = "+e['isConnected']);
         GLOBALS.IS_BOX_CONNECTED = e['isConnected'];
         GLOBALS.IS_NO_WIFI_CHECKED = false;
         // connect to box event
@@ -74,13 +73,9 @@ export default class Taisao extends React.Component {
         DATA_INFO.PLAYBACK_INFO.IsPlaying = (e['play']== 1)?true:false;
         DATA_INFO.PLAYBACK_INFO.IsMute = (e['mute'] == 1)?true:false;
         DATA_INFO.PLAYBACK_INFO.IsOriginal = (e['original'] == 1)?true:false;
-        DATA_INFO.PLAYBACK_INFO.Volume = e['volume'];
+        DATA_INFO.PLAYBACK_INFO.Volume = e['volume']/100;
 
-        //EventRegister.emit("PlaybackInfoUpdate",{});
-        // console.warn("volume "+e['volume']);
-        // console.warn("play "+e['play']);
-        // console.warn("mute "+e['mute']);
-        // console.warn("original "+e['original']);
+        EventRegister.emit("PlaybackInfoChange",{});
     }
     handleSongQueueChange = (e) =>{
         //console.warn("queue length "+e['queue'].length);
@@ -232,7 +227,8 @@ export default class Taisao extends React.Component {
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
                 />
-                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                <SongTabScreen 
+                    opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
                     onBack={this._onBackHome} ref={ref => (this._songScreen = ref)}
                 />

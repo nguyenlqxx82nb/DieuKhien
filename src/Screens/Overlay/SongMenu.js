@@ -85,14 +85,11 @@ const styles = StyleSheet.create({
     
     textButton: {
         fontFamily: GLOBALS.FONT.MEDIUM,
-        fontSize: 15, 
-        marginLeft: 15,
-        color:"#fff"
+        color:"#fff",
+        fontSize:15,
+        marginLeft:20
     },
-    singerText : {
-        fontSize: 14,
-        marginLeft:25
-    },
+    
     textEmoji:{
         fontFamily: GLOBALS.FONT.MEDIUM,
         fontSize: 12, 

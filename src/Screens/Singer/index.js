@@ -28,14 +28,14 @@ export default class SingerScreen extends BaseScreen {
         super(props);
     }
     componentWillMount() {
-        // selected song changed
-        // this._listenerSingerSongEvent = EventRegister.addEventListener('OpenSingerSong', (data) => {
-        //     this.singerSong.updateSinger(data.name,data.id);
-        //     this.singerSong.show();
-        // });
+        this._listenerSingerSongEvent = EventRegister.addEventListener('FilterSinger', (data) => {
+            if(this._isVisible){
+                this._singerTabs.searchData(this._searchInput.getValue(),data.sex);
+            }
+        });
     }
     componentWillUnmount() {
-        //EventRegister.removeEventListener(this._listenerSingerSongEvent);
+        EventRegister.removeEventListener(this._listenerSingerSongEvent);
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -45,24 +45,27 @@ export default class SingerScreen extends BaseScreen {
         }
     }
     _showCompleted = () =>{
-        this._songTabs.loadData(this._searchInput.getValue(),this._sex);
+        this._singerTabs.loadData(this._searchInput.getValue(),this._sex);
     }
 
     focusSearchInput = () =>{
         this._searchInput.focus();
     }
-
     _onChangeTab = (page) =>{
         if(this._isVisible){
-            //console.warn("_onChangeTab");
-            this._songTabs.loadData(this._searchInput.getValue(),this._sex);
+            this._singerTabs.loadData(this._searchInput.getValue(),this._sex);
         }
     }
     _onSearch =(value)=> {
-        this._songTabs.searchData(value,this._sex);
+        this._singerTabs.searchData(value,this._sex);
+        this._musicOnline.setTerm(value);
+    }
+    _onSearchChange = (value)=>{
+        this._singerTabs.searchData(value,this._sex);
+        this._musicOnline.setTerm(value);
     }
     _showOptOverlay = () =>{
-        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:240}});
+        EventRegister.emit('ShowOptOverlay', {overlayType:GLOBALS.SING_OVERLAY.SINGER,data:{height:250}});
     }
     renderContentView = () => {
         return (
@@ -74,7 +77,8 @@ export default class SingerScreen extends BaseScreen {
                     </View>
                     <SearchInput ref={ref=>(this._searchInput = ref)}
                         style = {{marginRight:0}}    
-                        onSearch={this._onSearch}  />
+                        onSearch={this._onSearch}
+                        onSearchChange = {this._onSearchChange}  />
                     <View style={{ width: 40, height: 40}}>
                         <IconRippe vector={true} name="menu" size={20} color="#fff"
                             onPress={this._showOptOverlay} />
@@ -83,10 +87,14 @@ export default class SingerScreen extends BaseScreen {
 
                 <View style={{ flex: 1}}>
                     <SingerTabsView lanTabs={['vn','en','cn','ja','kr']} 
-                        ref={ref => (this._songTabs = ref)} 
+                        ref={ref => (this._singerTabs = ref)} 
                         onChangeTab = {this._onChangeTab} />
                 </View>
-                <MusicOnline />
+                <MusicOnline 
+                    ref={ref =>(this._musicOnline = ref)}
+                    onOpenOnline = {()=>{
+                        this._searchInput.blur();
+                    }} />
             </View>
         );
     }

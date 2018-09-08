@@ -60,7 +60,7 @@ export default class SongTextRun extends React.Component {
             DatabaseManager.getSong(songId,(song)=>{
                 this._songId == songId;
                 if(song != null){
-                    this.setState({text:" "+song.Song_Name+" -**- Ca sỹ : "+song.Actor+" "});
+                    this.setState({text:" - "+song.Song_Name+" -**- Ca sỹ : "+song.Actor+" - "});
                     setTimeout(()=>{
                         this._runText.startAnimation();
                     },100)

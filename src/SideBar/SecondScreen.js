@@ -10,6 +10,7 @@ import { Grid, Col , Row} from "react-native-easy-grid";
 import GLOBALS from '../DataManagers/Globals.js';
 import Ngonngu from '../SideBar/Ngonngu';
 import Secure from '../SideBar/Secure';
+import SongTabScreen from '../Screens/BaiHat/SongTabScreen';
 
 import { EventRegister  } from 'react-native-event-listeners';
 
@@ -43,46 +44,50 @@ export default class SecondScreen extends BaseScreen {
     }
 
     open = (type) => {
-        this.setState({type:type});
-        this.show();
-    }
-
-    renderView = () =>{
-        const {type} = this.state;
-        if(type == GLOBALS.SECOND_SCREEN.NGONNGU){
-            return <Ngonngu />
+        if(this._isVisible){
+            this.hide(()=>{
+                //console.warn("hide callback");
+                this.setState({type:type});
+                this.show();
+            });
         }
-        else if(type == GLOBALS.SECOND_SCREEN.SECURE){
-            return <Secure />
+        else{
+            this.setState({type:type});
+            this.show();
         }
+        
     }
     
     renderContentView = () => {
-        var title = "";
         const {type} = this.state;
         if(type == GLOBALS.SECOND_SCREEN.NGONNGU){
-            title = "Ngôn ngữ";
+            this._maxIndex = 11;
+            return <Ngonngu onBack = {this._onBack} />
         }
         else if(type == GLOBALS.SECOND_SCREEN.SECURE){
-            title = "Mật Khẩu";    
+            this._maxIndex = 11;
+            return <Secure onBack = {this._onBack} />
         }
-        return (
-            <View style={{ flex: 1}}>
-                <View style={{ flex: 1 }}>
-                    <View style={styles.headerContainer}>
-                        <View style={{ width: 40, height: 40 , marginLeft:5}}>
-                            <IconRippe vector={true} name="back" size={20} color="#fff"
-                                onPress={this._onBack} />
-                        </View>
-                        <View style={{flex:1, justifyContent:"center",alignItems:"flex-start"}}>
-                            <Text style={[styles.title]}>{title}</Text>
-                        </View>
-                    </View>
-
-                    {this.renderView()}
-                </View>
-            </View>
-        );
+        else if(type == GLOBALS.SECOND_SCREEN.SONG.UNDOWNLOAD){
+            this._maxIndex = 6;
+            return <SongTabScreen 
+                        //hasOnlineButton={false}
+                        listType= {GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD}
+                        opacity= {1} 
+                        maxZindex ={1} 
+                        onBack={this._onBack} 
+                        ref={ref => (this._songScreen = ref)} />
+        }
+        else  if(type == GLOBALS.SECOND_SCREEN.SONG.DOWNLOADING){
+            this._maxIndex = 6;
+            return <SongTabScreen 
+                       // hasOnlineButton={false}
+                        listType= {GLOBALS.SONG_LIST_TYPE.DOWNLOADING}
+                        opacity= {1} 
+                        maxZindex ={1} 
+                        onBack={this._onBack} 
+                        ref={ref => (this._songScreen = ref)} />
+        }
     }
 }
 

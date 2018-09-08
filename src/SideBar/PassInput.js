@@ -35,7 +35,7 @@ export default class PassInput extends React.Component {
         this.setState({value:_value});
     }
     _handleTextChanged = (value) =>{
-        console.warn("text change = "+value);
+        //console.warn("text change = "+value);
     }
     _renderIcon = () =>{
         const {value} = this.state;
