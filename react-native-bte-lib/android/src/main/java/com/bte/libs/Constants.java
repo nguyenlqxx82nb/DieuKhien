@@ -6,6 +6,7 @@ public final class Constants {
     public static String HOST_IP = "192.168.10.1";
     public static String SERVER_IP = "";
     public static String ADMIN_API = "http://192.168.10.1:8989/tablet?cmd=";
+    public static String DATA_API = "";
 
     public static int HOST_PORT = 1688;
 

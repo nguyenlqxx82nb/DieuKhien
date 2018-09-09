@@ -53,8 +53,11 @@ export default class HTTPManager {
         if(listType == GLOBALS.SONG_LIST_TYPE.NEW){
             query += "&sort=new";
         }
-        else if(listType == GLOBALS.SONG_LIST_TYPE.NO_DOWNLOAD){
+        else if(listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
             query += "&temp=0&sort=new";
+        }
+        else if(listType == GLOBALS.SONG_LIST_TYPE.DOWNLOADING){
+            query += "&temp=2";
         }
         else if(listType == GLOBALS.SONG_LIST_TYPE.FAVORITE){
             query += "&sort=hot";
@@ -65,12 +68,14 @@ export default class HTTPManager {
             //String _searchTerm  = unidecode(mSearchText);
             query += "&kwd_alias="+term;//URLEncoder.encode(_searchTerm, "UTF-8");
         }
+
         query += "&page="+pageCount*page +"&pagesize="+pageCount;
         return encodeURI(query);
     }
 
     static async getSongList(lan,page,pageCount,term,songType,listType,actor,callback,errorCallback){
         let query = this.getSongQuery(listType,songType,lan,actor,page,pageCount,term);
+        //console.warn("query = "+query);
         if(query == ""){
             callback([]);
         }
@@ -111,7 +116,15 @@ export default class HTTPManager {
                 item.index = " "+(selectIndex + 1);
             }
             else{
-                item.status = GLOBALS.SING_STATUS.NORMAL;
+                if(rows[i].Temp == 0){
+                    item.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
+                }
+                else if(rows[i].Temp == 2){
+                    item.status = GLOBALS.SING_STATUS.DOWNLOADING;
+                }
+                else{
+                    item.status = GLOBALS.SING_STATUS.NORMAL;
+                }
                 item.index = "";
             }
             datas.push(item);
@@ -153,6 +166,19 @@ export default class HTTPManager {
         }
     }
 
+    static async getDownloadQueue(callback,errorCallback){
+        let query = DATA_API + "?ajax=download";
+        try {
+            let response = await fetch(query);
+            let responseJson = await response.json();
+            var datas = responseJson.data;
+            callback(datas);
+        } catch (error) {
+            //console.warn(error);
+            errorCallback(error);
+        }
+    }
+    
     static getSingerQuery(lan,sex,term,page,pageCount){
         query = DATA_API+"?ajax=stars&type=star";
         if(lan == GLOBALS.LANGUAGE_KEY.hot){
@@ -289,41 +315,5 @@ export default class HTTPManager {
             });
         }
     }
-
-    // static fetchSelectedSong(callback){
-    //     setTimeout(()=>{
-    //         var retDatas = [];
-    //         for(var i =0; i<DataInfo.PLAY_QUEUE.length; i++){
-    //             var songId = DataInfo.PLAY_QUEUE[i];
-    //             var id = (songId % 1000)%30 - 1;
-    //             id = (id < 0)?29:id;
-    //             var data = {
-    //                 id : songId,
-    //                 name : SongDataTemp[id].name,
-    //                 singer : SongDataTemp[id].singer,
-    //                 download : SongDataTemp[id].download,
-    //                 status : GLOBALS.SING_STATUS.NORMAL
-    //             };
-                
-    //             retDatas.push(data);
-    //         }
-    //         callback(retDatas);
-    //     },300);
-    // }
-
-    // static getSong(songId,callback){
-    //     setTimeout(()=>{
-    //         var id = (songId % 1000)%30 - 1;
-    //         id = (id < 0)?29:id;
-    //         var data = {
-    //             id : songId,
-    //             name : SongDataTemp[id].name,
-    //             singer : SongDataTemp[id].singer,
-    //             download : SongDataTemp[id].download,
-    //             status : GLOBALS.SING_STATUS.NORMAL
-    //         };
-    //         callback(data);
-    //     },100);
-    // }
 
 }

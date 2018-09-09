@@ -55,6 +55,11 @@ class Databases {
             YoutubeAPI.fetchOnlineSongData(page, pageCount, term,callback,errorCallback);
         }
     }
+
+    static getDownloadQueue(callback,errorCallback){
+        if(GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP)
+             HTTPManager.getDownloadQueue(callback,errorCallback);
+     }
 }
 
 export default Databases;

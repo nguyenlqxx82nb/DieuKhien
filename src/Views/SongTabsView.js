@@ -77,6 +77,10 @@ export default class SongTabsView extends React.Component {
         this._tabs[this._currPage].searchData(term);
     }
 
+    refreshData = () =>{
+        this._tabs[this._currPage].refreshData("");
+    }
+
     render() {
         return (
             <ScrollableTabView
@@ -96,7 +100,7 @@ export default class SongTabsView extends React.Component {
                        return (
                             <View key={index} style={[styles.tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
                                 <SongListView 
-                                    type = {this.props.songListType}
+                                    listType = {this.props.songListType}
                                     lan={lan} 
                                     songType={this.props.songType} 
                                     ref={ref => (this._tabs[index] = ref)} />

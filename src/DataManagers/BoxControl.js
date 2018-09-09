@@ -1,6 +1,7 @@
 
 import GLOBALS from './Globals.js'
 import DATA_INFO from './DataInfo.js'
+import DatabaseManager from './DatabaseManager';
 import { EventRegister } from 'react-native-event-listeners';
 //import PlaybackQueueThread from '../../playbackQueue.thread.js'
 import BTE_LIB from 'react-native-bte-lib';
@@ -21,7 +22,8 @@ const BOX_COMMAND ={
     BYTE_SET_VOLUME : 136,
     BYTE_PRIORITY : 152,
     BYTE_KARAOKE_TYPE : 137,
-    BYTE_GRAP_SONG : 152
+    BYTE_GRAP_SONG : 152,
+    BYTE_DOWNLOAD_SONG: 249
 }
 
 class BoxControl {
@@ -80,6 +82,14 @@ class BoxControl {
         BTE_LIB.sendRequestControlBox(BOX_COMMAND.BYTE_NEXT_SONG);
     }
 
+    static downloadSong(id,callback) {
+        //console.warn("Download song id = "+id);
+        BTE_LIB.stbset(BOX_COMMAND.BYTE_DOWNLOAD_SONG,id+",",(errorCode)=>{
+            //console.warn("Download errorCode = "+errorCode);
+            callback(errorCode);
+        });
+    }   
+
     static effect(type){
         switch(type){
             case GLOBALS.EMOJI.HuytSao:
@@ -110,6 +120,24 @@ class BoxControl {
                 break;
 
         }
+    }
+
+    static getDownloadQueue(){
+        DatabaseManager.getDownloadQueue(
+            (datas)=>{
+                if(datas != null){
+                    console.warn("download length = "+datas.length);
+                    //BTE_LIB.setDownloadStatus(1);
+                }
+                else{
+                    console.warn("download length = "+0);
+                   // BTE_LIB.setDownloadStatus(0);
+                }
+            },
+            () =>{
+
+            }
+        )
     }
 
 }

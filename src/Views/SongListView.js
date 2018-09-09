@@ -14,7 +14,6 @@ import Databases from '../DataManagers/DatabaseManager.js';
 import DataInfo from '../DataManagers/DataInfo.js';
 import IndicatorView from './IndicatorView.js';
 import BoxControl from '../DataManagers/BoxControl.js';
-import Button from '../Components/Button';
 
 let { height, width } = Dimensions.get('window');
 export default class SongListView extends React.Component {
@@ -217,8 +216,16 @@ export default class SongListView extends React.Component {
             songId: id,
             cmd: GLOBALS.CONTROL_CMD.SELECT
         }
-
-        BoxControl.selectSong(id);
+        if(status == GLOBALS.SING_STATUS.NO_DOWNLOADED)
+        {
+            BoxControl.downloadSong(id,(errorCode)=>{
+                console.warn("downloadSong id= "+id+", errorCode = "+errorCode);
+                //BTE_LIB.setDownloadStatus(1);
+            });        
+        }
+        else{
+            BoxControl.selectSong(id);
+        }
             
     }
     _onEndReached = () => {
@@ -234,10 +241,12 @@ export default class SongListView extends React.Component {
         const {listType}=this.props;
         var _height = 200;
         var _songMenutype = GLOBALS.SONG_MENU_TYPE.NORMAL;
+        
         if(listType ==GLOBALS.SONG_LIST_TYPE.SINGER ){
             _height = 150;
             _songMenutype = GLOBALS.SONG_MENU_TYPE.SINGER;
         }
+
         EventRegister.emit('ShowOptOverlay', 
                 {overlayType:overlayType,
                 data:{
@@ -256,7 +265,8 @@ export default class SongListView extends React.Component {
     }
     _rowRenderer = (type, item) => {
         const {id,name,actor,singerName,status} = item;
-        var _status = (this.props.listType != GLOBALS.SONG_LIST_TYPE.SELECTED)?status:GLOBALS.SING_STATUS.NORMAL;
+        const {listType} = this.props;
+        var _status = (listType != GLOBALS.SONG_LIST_TYPE.SELECTED)?status:GLOBALS.SING_STATUS.NORMAL;
         const singColor = GLOBALS.SING_COLORS[_status];
         const singerColor = GLOBALS.SINGER_COLORS[_status];
         let singPrefix = GLOBALS.SING_PREFIX[_status];
@@ -264,6 +274,9 @@ export default class SongListView extends React.Component {
        // console.warn("Name = "+item["Name"]+" , item = "+item);
         singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
         
+        var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
+                                || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
+
         return (
             <ListItem
                 style={styles.listItem}
@@ -280,10 +293,11 @@ export default class SongListView extends React.Component {
                             {singerName}
                         </Text>
                     </View>
-                    <View style={{ width: 40, height: 40 }}>
-                        <IconRippe vector={true} name="tuychon" size={20} 
-                            onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
-                    </View>
+                    { hasOptionButton &&
+                        <View style={{ width: 55, height: 55 }}>
+                            <IconRippe vector={true} name="tuychon" size={20} 
+                                onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
+                        </View> }
                 </View>
             </ListItem>
         );

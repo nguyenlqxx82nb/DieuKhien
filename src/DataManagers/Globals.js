@@ -52,8 +52,8 @@ export default {
     SING_PREFIX: {
         'NORMAL': "",
         'SELECTED': "Bài thứ",
-        'NO_DOWNLOADED': "Chưa tải",
-        'DOWNLOADING': "Đang tải"
+        'NO_DOWNLOADED': "",
+        'DOWNLOADING': ""
     },
 
     SING_COLORS_2: {
@@ -119,7 +119,7 @@ export default {
         ALL:0,
         NORMAL: 1,
         SELECTED: 2,
-        NO_DOWNLOAD: 3,
+        UNDOWNLOAD: 3,
         AUTO: 4,
         SINGER: 5,
         HOT: 6,
@@ -226,12 +226,10 @@ export default {
         NONE: -1,
         NGONNGU: 1,
         SECURE: 2,
-        SONG:{
-            UNDOWNLOAD : 3,
-            DOWNLOADING : 4,
-            USB : 5,
-            SING : 6
-        }
+        UNDOWNLOAD : 3,
+        DOWNLOADING : 4,
+        USB : 5,
+        SING : 6
     },
 
     FONT: {

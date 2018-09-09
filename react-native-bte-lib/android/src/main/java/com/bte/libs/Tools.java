@@ -504,7 +504,7 @@ public class Tools {
         }).start();
     }
 
-    public static void stbset(final int cmd,final String url){
+    public static void stbset(final int cmd,final String url,final Callback callback){
         new Thread(new Runnable() {
             public void run() {
                 Socket socket = null;
@@ -540,21 +540,15 @@ public class Tools {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }finally{
-
                     try {
-//                        if(listener != null)
-//                        {
-//                            XLog.e("-----------------> stbset= returnflag:" +returnflag);
-//                            if(returnflag != -1)
-//                            {
-//                                listener.onResponse(0);
-//                            }
-//                            else
-//                            {
-//                                listener.onResponse(1);
-//                            }
-//                        }
-
+                        if(returnflag != -1)
+                        {
+                            callback.invoke(0);
+                        }
+                        else
+                        {
+                            callback.invoke(1);
+                        }
                         socket.close();
                         writes.close();
                     } catch (Exception e) {
@@ -567,7 +561,7 @@ public class Tools {
         }).start();
     }
 
-    public static void stbset1(final int cmd,final String url){
+    public static void stbset1(final int cmd,final String url,final Callback callback){
         new Thread(new Runnable() {
             public void run() {
                 Socket socket = null;
@@ -605,11 +599,8 @@ public class Tools {
                 }finally{
 
                     try {
-//                        if(listener != null)
-//                        {
-//                            XLog.e("-----------------> stbset= returnflag:" +returnflag);
-//                            listener.onResponse(returnflag);
-//                        }
+
+                        callback.invoke(returnflag);
 
                         socket.close();
                         writes.close();
@@ -622,6 +613,233 @@ public class Tools {
             }
         }).start();
     }
+
+    public static void getSystemInfo()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                OutputStream writes = null;
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    writes= socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    buff[3] = (byte)255;
+                    writes.write(buff);
+                    writes.flush();
+
+                    InputStream inputStream = socket.getInputStream();
+                    byte[] bytes = new byte[1024];
+                    inputStream.read(bytes);
+                    if (bytes[3] == (byte)255) {
+                        byte[] queue = new byte[1020];
+                        System.arraycopy(bytes,4,queue,0,1020);
+                        String queueString = new String(queue);
+
+                        //XLog.e("-----------------> System Info =" + queueString);
+
+                        String[] array = queueString.split("\n");
+                        for(int i=0; i<array.length; i++){
+                            //XLog.e(array[i]);
+                            if (array[i].indexOf("cvbsoutput=") != -1) {
+                                Global.stb_videoput = Integer.parseInt(array[i].substring(11));
+                            }
+                            else if (array[i].indexOf("disableaudio=") != -1) {
+                                Global.stb_audioput = Integer.parseInt(array[i].substring(13));
+                            }
+                            else if (array[i].indexOf("revolvint=") != -1) {
+                                String run_text = array[i].substring(10);
+                                if(run_text.indexOf("|") != -1)
+                                {
+                                    String[] run_texts = run_text.split("\\|");
+
+                                    Global.stb_revolvint1 = "";
+                                    Global.stb_revolvint2 = "";
+
+                                    if(run_texts.length == 1)
+                                    {
+                                        Global.stb_revolvint1 = run_texts[0];
+                                    }
+                                    else if(run_texts.length == 2)
+                                    {
+                                        Global.stb_revolvint1 = run_texts[0];
+                                        Global.stb_revolvint2 = run_texts[1];
+                                    }
+                                }
+                                else
+                                {
+                                    Global.stb_revolvint1 = run_text;
+                                    Global.stb_revolvint2 = "";
+                                }
+                            }
+                            else if (array[i].indexOf("databasetype=") != -1) {
+                                Global.stb_databasetype = Integer.parseInt(array[i].substring(13));
+                            }
+                            else if (array[i].indexOf("downdomain=") != -1) {
+                                Global.stb_downdomain = array[i].substring(11);
+                            }
+                            else if (array[i].indexOf("delesongpwd=") != -1) {
+                                Global.stb_delesongpwd = array[i].substring(12);
+                            }
+                            else if (array[i].indexOf("netmode=") != -1) {
+                                Global.stb_netmode = Integer.parseInt(array[i].substring("netmode=".length()));
+                            }
+                            else if (array[i].indexOf("lantype=") != -1) {
+                                Global.stb_lantype = Integer.parseInt(array[i].substring("lantype=".length()));
+                            }
+                            else if (array[i].indexOf("ipadd=") != -1) {
+                                Global.stb_ipadd = array[i].substring("ipadd=".length());
+                            }
+                            else if (array[i].indexOf("gateway=") != -1) {
+                                Global.stb_gateway = array[i].substring("gateway=".length());
+                            }
+                            else if (array[i].indexOf("wlanid=") != -1) {
+                                Global.stb_wlanid = array[i].substring("wlanid=".length());
+                            }
+                            else if (array[i].indexOf("wlanpwd=") != -1) {
+                                Global.stb_wlanpwd = array[i].substring("wlanpwd=".length());
+                            }
+                            else if (array[i].indexOf("ssidid=") != -1) {
+                                Global.stb_ssidid = array[i].substring("ssidid=".length());
+                            }
+                            else if (array[i].indexOf("ssidpwd=") != -1) {
+                                Global.stb_ssidpwd = array[i].substring("ssidpwd=".length());
+                            }
+                            else if (array[i].indexOf("publicsong=") != -1) {
+                                Global.stb_publicsong = array[i].substring("publicsong=".length());
+                            }
+                        }
+                    }
+
+//                    if(listener != null)
+//                        listener.onResponse(1);
+
+                } catch (Exception e) {
+//                    if(listener != null)
+//                        listener.onResponse(0);
+//                    // TODO Auto-generated catch block
+//
+//                    XLog.e("-----------------> System Info Exception =" + e.getMessage());
+                    // threadAlert("���������⣬������ָ����wifi!");
+                } finally {
+                    try {
+                        socket.close();
+                        writes.close();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    // threadAlert("����ɹ�");
+                }
+
+            }
+        }).start();
+
+    }
+
+    public static void getSongsFromUsb()
+    {
+        new Thread(new Runnable() {
+            public void run() {
+                Socket socket = null;
+                OutputStream writes = null;
+                try {
+                    socket = new Socket();
+                    SocketAddress socketAddress = new InetSocketAddress(Constants.HOST_IP, Constants.HOST_PORT);
+                    socket.connect(socketAddress, 3000);
+                    writes= socket.getOutputStream();
+                    byte[] buff = new byte[2048];
+                    buff[3] = (byte)215;
+                    writes.write(buff);
+                    writes.flush();
+
+                    InputStream inputStream = socket.getInputStream();
+                    byte[] bytes = new byte[1024];
+                    inputStream.read(bytes);
+                    if (bytes[3] == (byte)215) {
+                        byte[] queue = new byte[1020];
+                        System.arraycopy(bytes,4,queue,0,1020);
+                        //String queueString = new String(queue);
+                        String usbSong = new String(queue);
+                        if(usbSong != null && usbSong.indexOf(".") != -1)
+                            Global.stb_usbsongs = usbSong;
+
+                        //XLog.e("USB Songs = "+Global.stb_usbsongs);
+                    }
+
+//                    if(listener != null)
+//                        listener.onResponse(0);
+
+                } catch (Exception e) {
+//                    if(listener != null)
+//                        listener.onResponse(-1);
+//                    // TODO Auto-generated catch block
+//
+//                    XLog.e("----------------->getSongsFromUsb  Exception =" + e.getMessage());
+//                    // threadAlert("���������⣬������ָ����wifi!");
+                } finally {
+                    try {
+                        socket.close();
+                        writes.close();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    // threadAlert("����ɹ�");
+                }
+
+            }
+        }).start();
+
+    }
+
+    public static void syncDownloadQueue(final ReactContext reactContext){
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    while (true) {
+                        if(Global.isWifiConnected  && !Global.isHasDownloading){
+                            WritableMap params = Arguments.createMap();
+                            params.putBoolean("isConnected",true);
+                            SendEvent(reactContext,params,"DownloadQueue");
+                        }
+
+
+//
+//                        String url = Constants.DATA_API +"?ajax=download";
+//                        AsyncLoadDownload asyncloadDownload = new AsyncLoadDownload();
+//                        asyncloadDownload.execute(url);
+//
+////						Global.songDownloadings = Database.getDownloadingItems();
+////						if(Global.songDownloadings != null){
+////							Message msg = Global.handler.obtainMessage();
+////							msg.what = Global.HASDOWNLOADING;
+////							Global.handler.sendMessage(msg);
+////							if(Global.songDownloadings.size() == 0){
+////								Global.isHasDownloading = false;
+////							}
+////						}
+
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+
+                } finally {
+                    ;
+                }
+
+            }
+        }).start();
+
+    }
+
 
     private static String encode(String str) {
         String hexString = "0123456789ABCDEF";

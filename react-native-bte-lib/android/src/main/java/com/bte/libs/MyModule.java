@@ -61,6 +61,16 @@ public class MyModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void syncDownloadQueue(){
+        Tools.syncDownloadQueue(mReactContext);
+    }
+
+    @ReactMethod
+    public void setDownloadStatus(int status){
+        Global.isHasDownloading = (status == 1)?true:false;
+    }
+
+    @ReactMethod
     public void checkConnectToWifiBox(){
         checkConnectToBox();
     }
@@ -93,6 +103,16 @@ public class MyModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void sendRequestControlBox3(int cmd,int state,int value){
         Tools.sendRequestControlBox(cmd,state,value);
+    }
+
+    @ReactMethod
+    public void stbset(int cmd,String url,Callback callback){
+        Tools.stbset(cmd,url,callback);
+    }
+
+    @ReactMethod
+    public void stbset1(int cmd,String url,Callback callback){
+        Tools.stbset1(cmd,url,callback);
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

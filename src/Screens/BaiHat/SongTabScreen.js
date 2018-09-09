@@ -19,14 +19,15 @@ export default class SongTabScreen extends BaseScreen {
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
         onBack: PropTypes.func,
-        lsitType: PropTypes.number,
+        listType: PropTypes.number,
         hasOnlineButton : PropTypes.bool
     };
     constructor(props) {
         super(props);
 
-        this._listType = (this.props._listType != null)? this.props._listType: GLOBALS.SONG_LIST_TYPE.ALL;
+        this._listType = (this.props.listType != null)? this.props.listType: GLOBALS.SONG_LIST_TYPE.ALL;
         this._hasOnlineButton = (this.props.hasOnlineButton != null)?this.props.hasOnlineButton: true;
+        //console.warn("listType = "+this._listType+" , "+this.props.listType);
     }
     _onBack = () => {
         const { onBack } = this.props;
@@ -39,15 +40,12 @@ export default class SongTabScreen extends BaseScreen {
         this._songTabs.setVisible(true);
         this._songTabs.loadData(this._searchInput.getValue());
     }
-
     _hideCompleted = ()=>{
         this._songTabs.setVisible(false);
     }
-    
     focusSearchInput = () =>{
         this._searchInput.focus();
     }
-
     _onChangeTab = (page) =>{
         if(this._isVisible){
             //console.warn("_onChangeTab");
@@ -58,6 +56,9 @@ export default class SongTabScreen extends BaseScreen {
         this._songTabs.searchData(value);
         if(this._musicOnline != null)
             this._musicOnline.setTerm(value);
+    }
+    loadData = () =>{
+        this._songTabs.refreshData();
     }
     renderContentView = () => {
         var top = (this._hasOnlineButton)?40:0;

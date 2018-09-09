@@ -19,28 +19,28 @@ const datas = [
         icon:"singOpt",
         event:"OpenSecondScreen",
         color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.SONG.UNDOWNLOAD
+        screenType: GLOBALS.SECOND_SCREEN.UNDOWNLOAD
     },
     {
         title:"Đang tải",
         icon:"tuychon",
         event:"OpenSecondScreen",
         color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.SONG.DOWNLOADING
+        screenType: GLOBALS.SECOND_SCREEN.DOWNLOADING
     },
     {
         title:"Đã hát",
         icon:"mic2",
         event:"OpenSecondScreen",
         color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.SONG.SING
+        screenType: GLOBALS.SECOND_SCREEN.SING
     },
     {
         title:"Bài USB",
         icon:"uutien",
         event:"OpenSecondScreen",
         color:"#00ECBB",
-        screenType: GLOBALS.SECOND_SCREEN.SONG.USB
+        screenType: GLOBALS.SECOND_SCREEN.USB
     },
     {
         title:"Ngôn ngữ",
