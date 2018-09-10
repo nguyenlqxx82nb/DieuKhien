@@ -801,7 +801,7 @@ public class Tools {
             public void run() {
                 try {
                     while (true) {
-                        if(Global.isWifiConnected  && !Global.isHasDownloading){
+                        if(Global.isWifiConnected  && Global.isHasDownloading){
                             WritableMap params = Arguments.createMap();
                             params.putBoolean("isConnected",true);
                             SendEvent(reactContext,params,"DownloadQueue");

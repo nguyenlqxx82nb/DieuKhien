@@ -72,14 +72,15 @@ export default class SongListView extends React.Component {
 
         this._loadData = this._loadData.bind(this);
     }
+    
     componentWillMount() {
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
             this.hasChanged = true;
-        })
+        });
     }
     
     componentWillUnmount() {
-        EventRegister.removeEventListener(this._listenerSongUpdateEvent)
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
     }
 
     updateSong = () => {
@@ -102,6 +103,22 @@ export default class SongListView extends React.Component {
             this.setState({
                 dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas)
             });
+    }
+
+    updateDownloadSong = () =>{
+       // console.warn("updateDownloadSong");
+        for(i = 0; i < this.state.datas.length; i++){
+            var id = this.state.datas[i].id;
+            if(DataInfo.DOWN_QUEUE[id] != null){
+                this.state.datas[i].status = GLOBALS.SING_STATUS.DOWNLOADING;
+                this.state.datas[i].progress = DataInfo.DOWN_QUEUE[id].progress;
+               // console.warn("id = "+id +",progress = "+this.state.datas[i].progress);
+            }
+        }
+
+        this.setState({
+            dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas)
+        });
     }
 
     searchData = (term)=>{
@@ -219,14 +236,13 @@ export default class SongListView extends React.Component {
         if(status == GLOBALS.SING_STATUS.NO_DOWNLOADED)
         {
             BoxControl.downloadSong(id,(errorCode)=>{
-                console.warn("downloadSong id= "+id+", errorCode = "+errorCode);
+                //console.warn("downloadSong id= "+id+", errorCode = "+errorCode);
                 //BTE_LIB.setDownloadStatus(1);
             });        
         }
         else{
             BoxControl.selectSong(id);
         }
-            
     }
     _onEndReached = () => {
         if(!GLOBALS.IS_BOX_CONNECTED && GLOBALS.INFO.CONNECT == GLOBALS.DATABASE_CONNECT.HTTP){
@@ -272,8 +288,12 @@ export default class SongListView extends React.Component {
         let singPrefix = GLOBALS.SING_PREFIX[_status];
         let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
        // console.warn("Name = "+item["Name"]+" , item = "+item);
-        singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
-        
+        if(status == GLOBALS.SING_STATUS.DOWNLOADING){
+            singPrefix = "[ " + item.progress  + " ]";
+        }
+        else{
+            singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
+        }
         var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
                                 || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
 

@@ -18,6 +18,7 @@ export default class SecondScreen extends BaseScreen {
     static propTypes = {
         onBack: PropTypes.func,
     };
+    
     constructor(props) {
         super(props);
 
@@ -25,6 +26,7 @@ export default class SecondScreen extends BaseScreen {
             type : GLOBALS.SECOND_SCREEN.NONE
         }
     }
+    
     _onBack = () => {
         const { onBack } = this.props;
         if (onBack) {
@@ -36,10 +38,10 @@ export default class SecondScreen extends BaseScreen {
        // console.warn("_showCompleted = "+type);
         if(type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD)
         {
-            this._undownloadScreen.loadData();
+            this._undownloadScreen._showCompleted();
         }
         else if(type == GLOBALS.SECOND_SCREEN.DOWNLOADING){
-            this._downloadingScreen.loadData();
+            this._undownloadScreen._showCompleted();
         }
     }
 
@@ -69,7 +71,7 @@ export default class SecondScreen extends BaseScreen {
         }
         else if(type == GLOBALS.SECOND_SCREEN.SECURE){
             this._maxIndex = 11;
-            return <Secure onBack = {this._onBack} />
+            return <Secure onBack = {this._onBack}  />
         }
         else if(type == GLOBALS.SECOND_SCREEN.UNDOWNLOAD){
             //console.warn("renderContentView UNDOWNLOAD = "+type);

@@ -38,11 +38,19 @@ export default class SongTabsView extends React.Component {
         this._listenerSongUpdateEvent = EventRegister.addEventListener('SongUpdate', (data) => {
             if(this._isVisible)
                 this._tabs[this._currPage].updateSong();
-        })
+        });
+
+        this._listenerDownloadSongEvent = EventRegister.addEventListener('SongDownloadUpdate', () => {
+            if(this.props.songListType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD){
+                if(this._isVisible)
+                    this._tabs[this._currPage].updateDownloadSong();
+            }
+        });
     }
     
     componentWillUnmount() {
-        EventRegister.removeEventListener(this._listenerSongUpdateEvent)
+        EventRegister.removeEventListener(this._listenerSongUpdateEvent);
+        EventRegister.removeEventListener(this._listenerDownloadSongEvent);
     }
 
     _onOptionBaiHatClick = (id, overlayType) => {
@@ -80,7 +88,7 @@ export default class SongTabsView extends React.Component {
     refreshData = () =>{
         this._tabs[this._currPage].refreshData("");
     }
-
+    
     render() {
         return (
             <ScrollableTabView

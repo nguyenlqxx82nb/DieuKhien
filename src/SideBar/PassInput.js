@@ -10,6 +10,8 @@ import CustomIcon from '../Components/CustomIcon';
 export default class PassInput extends React.Component {
     static propTypes = {
         pass:PropTypes.string,
+        onSuccess: PropTypes.func,
+        onFailure : PropTypes.func
     };
     static defaultProps = {
         pass : "12345"
@@ -22,11 +24,25 @@ export default class PassInput extends React.Component {
         }
     }
     AddNumber = (number)=>{
+        const {onSuccess,onFailure} = this.props;
         if(this.state.value.length == 5)
             return;
 
         let _value = this.state.value+number;
         this.setState({value:_value});
+        if(_value.length == 5){
+            if(_value == this.props.pass){
+                if(onSuccess != null){
+                    onSuccess();
+                }
+            }
+            else{
+                if(onFailure != null){
+                    onFailure();
+                }
+            }
+        }
+        
     }
     RemoveText = () =>{
         if(this.state.value.length == 0)

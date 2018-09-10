@@ -3,8 +3,6 @@ import { StyleSheet, Dimensions, Animated, Platform,Easing } from "react-native"
 import PropTypes from 'prop-types';
 import {
     View,
-    Left,
-    Text
 } from "native-base";
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../DataManagers/Globals.js';

@@ -86,6 +86,18 @@ class BoxControl {
         //console.warn("Download song id = "+id);
         BTE_LIB.stbset(BOX_COMMAND.BYTE_DOWNLOAD_SONG,id+",",(errorCode)=>{
             //console.warn("Download errorCode = "+errorCode);
+            if(errorCode == 0){
+                var item = {
+                    id: id,
+                    progress: 0
+                }
+                if(DATA_INFO.DOWN_QUEUE[id] == null){
+                    DATA_INFO.DOWN_QUEUE[id] = item;
+                }
+                BTE_LIB.setDownloadStatus(1);
+                EventRegister.emit("SongDownloadUpdate",{});
+            }  
+                
             callback(errorCode);
         });
     }   
@@ -118,7 +130,6 @@ class BoxControl {
                 break;
             default:
                 break;
-
         }
     }
 
@@ -126,13 +137,29 @@ class BoxControl {
         DatabaseManager.getDownloadQueue(
             (datas)=>{
                 if(datas != null){
-                    console.warn("download length = "+datas.length);
-                    //BTE_LIB.setDownloadStatus(1);
+                    //console.warn("download length = "+datas.length);
+                    BTE_LIB.setDownloadStatus(1);
+                    for(var i=0; i<datas.length; i++){
+                        var item = {
+                            id: datas[i].ID,
+                            progress:datas[i].Progress
+                        }    
+
+                        if(DATA_INFO.DOWN_QUEUE[item.id] != null){
+                            DATA_INFO.DOWN_QUEUE[item.id] = item.progress;
+                        }
+                        else{
+                            DATA_INFO.DOWN_QUEUE[item.id] = item;
+                        }
+                    }
                 }
                 else{
-                    console.warn("download length = "+0);
-                   // BTE_LIB.setDownloadStatus(0);
+                    //console.warn("download length = "+0);
+                    BTE_LIB.setDownloadStatus(0);
+                    DATA_INFO.DOWN_QUEUE = {};
                 }
+
+                EventRegister.emit("SongDownloadUpdate",{});
             },
             () =>{
 

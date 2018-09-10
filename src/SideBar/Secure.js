@@ -9,10 +9,12 @@ import { Col, Grid, Row } from "react-native-easy-grid";
 import GLOBALS from '../DataManagers/Globals.js';
 import PassInput from './PassInput';
 import Header from '../Screens/Header/header1';
+import {EventRegister} from 'react-native-event-listeners';
 
 export default class Secure extends React.Component {
     static propTypes = {
         onBack: PropTypes.func,
+        onHide: PropTypes.func
     };
     static defaultProps = {
     }
@@ -20,6 +22,7 @@ export default class Secure extends React.Component {
         super(props);
 
     }
+    
     _handleAddNumber = (number)=>{
         this._passInput.AddNumber(number);
     }
@@ -34,7 +37,16 @@ export default class Secure extends React.Component {
                 <View style={{ flex: 1,backgroundColor:"transparent",justifyContent:"center",alignItems:"center"}}>
                     <Text style={styles.title}>NHẬP MẬT KHẨU</Text>
                     <PassInput 
-                        ref = {ref=>(this._passInput = ref)}/>
+                            ref = {ref=>(this._passInput = ref)}
+                            onSuccess = {()=>{
+                                setTimeout(()=>{
+                                    setTimeout(()=>{
+                                        this.props.onBack();
+                                    },250);
+                                    EventRegister.emit("OpenAdminScreen",{});   
+                                },200);
+                            }}
+                        />
 
                     <View style={styles.numberContainer}>
                         <Grid >

@@ -232,6 +232,21 @@ export default {
         SING : 6
     },
 
+    ADMIN_SCREEN:{
+        CHU_CHAY : 1,
+        AUTO_PLAY: 2,
+        NGO_VIDEO: 3,
+        MAT_KHAU: 4,
+        WIFI: 5,
+        LAN: 6,
+        WLAN:7,
+        SERVER: 8,
+        SAN_MUSIC:9,
+        DATA:10,
+        RESTART:11,
+        SHUTDOWN:12
+    },
+
     FONT: {
         REGULAR: "SF-Pro-Text-Regular",
         MEDIUM: "SF-Pro-Text-Medium",

@@ -78,6 +78,8 @@ const propTypes = {
 
     status: PropTypes.number,
 
+    fit : PropTypes.bool,
+
     textStyle : Text.propTypes.style,
     /**
     * Size of icon (default is 24 - see spacing in palette)
@@ -117,6 +119,7 @@ const defaultProps = {
     style: {},
     vector :true,
     textColor : "#fff",
+    fit: false,
     status: GLOBALS.ICON_STATUS.ONLINE,
     text:{
         content :"",
@@ -136,7 +139,7 @@ class IconRippe extends PureComponent {
             containerSize : {width:1,height:1},
             maxOpacity,
             scaleValue: new Animated.Value(0.01),
-            opacityValue: new Animated.Value(maxOpacity),
+            opacityValue: new Animated.Value(0),
             status : this.props.status
         };
         this._iconType = this.props.iconType;
@@ -149,6 +152,7 @@ class IconRippe extends PureComponent {
         if(this.props.status == GLOBALS.ICON_STATUS.OFFLINE)
             return;
 
+        this.state.opacityValue.setValue(this.state.maxOpacity);
         Animated.timing(this.state.scaleValue, {
             toValue: 1,
             duration: 225,
@@ -169,7 +173,7 @@ class IconRippe extends PureComponent {
             useNativeDriver: Platform.OS === 'android',
         }).start(() => {
             this.state.scaleValue.setValue(0.01);
-            this.state.opacityValue.setValue(maxOpacity);
+            this.state.opacityValue.setValue(0);
         });
         
         if(onPress){
@@ -310,16 +314,27 @@ class IconRippe extends PureComponent {
     }
 
     find_dimesions(layout){
+        const {fit} = this.props;
         const {x, y, width, height} = layout;
         let size = Math.max(width,height);
-        this._rippleView.setNativeProps({
-            
-        style:{
-            top: (height - size)/2,
-            left: (width - size)/2,
-            width: size,
-            height: size,
-            borderRadius: size/2}});
+        if (!fit)  {
+            this._rippleView.setNativeProps({
+                style:{
+                    top: (height - size)/2,
+                    left: (width - size)/2,
+                    width: size,
+                    height: size,
+                    borderRadius: size/2}});
+        }
+        else{
+            this._rippleView.setNativeProps({
+                style:{
+                    top: 0,
+                    left: 0,
+                    width: width,
+                    height: height,
+                    borderRadius: height/2}});
+        }
     }
 }
 

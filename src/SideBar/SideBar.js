@@ -1,13 +1,11 @@
 import React from "react";
-import {AppRegistry, Image, StatusBar,Text,StyleSheet,View} from "react-native";
-import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
+import {Text,StyleSheet,View} from "react-native";
 import ListItem from '../Components/ListItem';
 import CustomIcon from '../Components/CustomIcon';
 import { EventRegister } from 'react-native-event-listeners'
 
 import {
     Container,
-   // ListItem,
     List
 } from "native-base";
 import LinearGradient from 'react-native-linear-gradient';

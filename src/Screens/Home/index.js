@@ -17,6 +17,7 @@ import OnlineScreen from '../Online/index.js'
 import SecondScreen from '../../SideBar/SecondScreen';
 import SongOnlineScreen from '../Online/SongOnlineScreen';
 import SongListScreen from '../../Screens/BaiHat/SongListScreen';
+import AdminScreen from '../../Screens/Admin/index';
 
 import { EventRegister } from 'react-native-event-listeners'
 import GLOBALS from "../../DataManagers/Globals.js";
@@ -46,10 +47,12 @@ export default class Taisao extends React.Component {
         BTElib.checkConnectToWifiBox();
         BTElib.syncPlaybackQueue();
         BTElib.syncPlaybackInfo();
+        BTElib.syncDownloadQueue();
 
         DeviceEventEmitter.addListener('ConnectToBox', this.handleConnectToBox);
         DeviceEventEmitter.addListener('PlaybackInfoUpdate', this.handlePlaybackChange);
         DeviceEventEmitter.addListener('SongQueueChange', this.handleSongQueueChange);
+        DeviceEventEmitter.addListener('DownloadQueue', this.handleDownloadQueue);
     }
 
     componentDidMount() {
@@ -84,6 +87,11 @@ export default class Taisao extends React.Component {
         EventRegister.emit("SongUpdate",{});
 
     }
+    handleDownloadQueue = (e)=>{
+        //console.warn("dcm");
+        BoxControl.getDownloadQueue();
+    }
+
     componentWillMount() {
         // Hide Footer
         this._listenerHideFooterEvent = EventRegister.addEventListener('HideFooter', (data) => {
@@ -138,6 +146,10 @@ export default class Taisao extends React.Component {
             this._singerSong.updateSinger(data.name);
             this._singerSong.show();
         });
+
+        this._listenerAdminScreenEvent = EventRegister.addEventListener('OpenAdminScreen', (data) => {
+            this._adminScreen.show();
+        });
     }
     componentWillUnmount() {
         //EventRegister.removeEventListener(this._listenerControlEvent);
@@ -147,6 +159,7 @@ export default class Taisao extends React.Component {
         EventRegister.removeEventListener(this._listenerOpenSecondScreenEvent);
         EventRegister.removeEventListener(this._listenerShowOnlineScreenEvent);
         EventRegister.removeEventListener(this._listenerSingerSongEvent);
+        EventRegister.removeEventListener(this._listenerAdminScreenEvent);
     }
     
     _onOpenSearch = () => {
@@ -294,6 +307,15 @@ export default class Taisao extends React.Component {
 
                 <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
                     onSelectedSong={this._onOpenSelectedSong} />
+                <AdminScreen 
+                    ref = {ref => (this._adminScreen = ref)} 
+                    transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
+                    maxZindex = {12}
+                    bottom = {10}
+                    onBack = {() => {
+                        this._adminScreen.hide();
+                    }}
+                />
                 <StatusBar
                     backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                     // translucent={true}
