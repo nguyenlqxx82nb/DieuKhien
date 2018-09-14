@@ -1,12 +1,8 @@
 import React from "react";
-import { StyleSheet, ActivityIndicator, Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 import PropTypes from 'prop-types';
 import ListItem from '../Components/ListItem.js';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import {
-    View,
-    Text,
-} from "native-base";
 import IconRippe from '../Components/IconRippe.js'
 import GLOBALS from '../DataManagers/Globals.js';
 import { EventRegister } from 'react-native-event-listeners';

@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import CustomIcon from './CustomIcon.js'
 import AutoHeightImage from 'react-native-auto-height-image';
 
-import {
-    Icon
-} from "native-base";
 import GLOBALS from '../DataManagers/Globals.js';
 
 const styles = StyleSheet.create({

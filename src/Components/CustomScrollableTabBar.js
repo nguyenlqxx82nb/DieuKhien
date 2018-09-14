@@ -11,7 +11,8 @@ const {
   Platform,
   Dimensions,
 } = ReactNative;
-const Button = require('./Button');
+//const Button = require('./Button');
+import Button from './ListItem';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
@@ -27,10 +28,13 @@ const CustomScrollableTabBar = createReactClass({
     style: ViewPropTypes.style,
     tabStyle: ViewPropTypes.style,
     tabsContainerStyle: ViewPropTypes.style,
+    tabContainerStyle: ViewPropTypes.style,
     textStyle: Text.propTypes.style,
     renderTab: PropTypes.func,
     underlineStyle: ViewPropTypes.style,
     onScroll: PropTypes.func,
+    isTabRound : PropTypes.bool,
+    rippleColor : PropTypes.string,
   },
 
   getDefaultProps() {
@@ -42,7 +46,10 @@ const CustomScrollableTabBar = createReactClass({
       style: {},
       tabStyle: {},
       tabsContainerStyle: {},
+      tabContainerStyle:{},
       underlineStyle: {},
+      isTabRound : false,
+      rippleColor : '#ccc'
     };
   },
 
@@ -125,30 +132,57 @@ const CustomScrollableTabBar = createReactClass({
   },
 
   renderTab(name, page, isTabActive, onPressHandler, onLayoutHandler) {
-    const { activeTextColor, inactiveTextColor, textStyle, } = this.props;
+    const { activeTextColor, inactiveTextColor, textStyle,isTabRound,rippleColor, tabContainerStyle } = this.props;
     const textColor = isTabActive ? activeTextColor : inactiveTextColor;
     const fontWeight = isTabActive ? 'bold' : 'normal';
-
+    const bgColor = isTabActive ? {backgroundColor : activeTextColor}: {};
     //console.warn("renderTab name = "+name+" , active color = "+textColor);
-
-    return <Button
-      key={`${name}_${page}`}
-      accessible={true}
-      accessibilityLabel={name}
-      accessibilityTraits='button'
-      onPress={() => onPressHandler(page)}
-      onLayout={onLayoutHandler}
-    >
-      <View style={[styles.tab, this.props.tabStyle, ]}>
-        <Text style={[textStyle,{color: textColor, fontWeight, }, ]}>
-          {name}
-        </Text>
-      </View>
-    </Button>;
+    if(!isTabRound){
+      return <Button
+        key={`${name}_${page}`}
+        accessible={true}
+        accessibilityLabel={name}
+        accessibilityTraits='button'
+        onPress={() => onPressHandler(page)}
+        onLayout={onLayoutHandler}
+        rippleColor = {rippleColor}
+      >
+        <View style={[styles.tab, this.props.tabStyle, ]}>
+          <Text style={[textStyle,{color: textColor, fontWeight, }, ]}>
+            {name}
+          </Text>
+        </View>
+      </Button>;
+    }
+    else{
+      return (
+      <View 
+        key={`${name}_${page}`}
+        accessible={true}
+        accessibilityLabel={name}
+        onLayout={(event) =>{
+          this.measureTab(page,event);
+        }}
+        style={[styles.tabContainerStyle,tabContainerStyle,bgColor]}>
+          <Button
+            onPress={() => onPressHandler(page)}
+            rippleRound = {true}
+            rippleColor = {rippleColor}
+          >
+            <View style={[styles.tab, this.props.tabStyle, ]}>
+              <Text style={[textStyle,{color: "#fff", fontWeight, }, ]}>
+                {name}
+              </Text>
+            </View>
+          </Button>
+      </View>);
+    }
+    
   },
 
   measureTab(page, event) {
     const { x, width, height, } = event.nativeEvent.layout;
+    //console.warn("measureTab page = "+page +" , x = "+x+" , width = "+width+" , h = "+height);
     this._tabsMeasurements[page] = {left: x, right: x + width, width, height, };
     this.updateView({value: this.props.scrollValue._value, });
   },
@@ -239,5 +273,10 @@ const styles = StyleSheet.create({
   tabs: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems:"center"
   },
+  tabContainerStyle :{
+    justifyContent:"center",
+    alignItems:"center"
+  }
 });

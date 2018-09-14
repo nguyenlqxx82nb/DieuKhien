@@ -1,8 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Dimensions, Animated, Platform ,Text} from "react-native";
-import {
-    View
-} from "native-base";
+import { Image, View,StyleSheet, Dimensions, Animated, Platform ,Text} from "react-native";
 
 import TextTicker from 'react-native-text-ticker'
 import PropTypes from 'prop-types';
@@ -24,9 +21,11 @@ export default class SongTextRun extends React.Component {
         //this.onPlayPress = this.onPlayPress.bind(this);
         this.state = {
             volume : DATA_INFO.PLAYBACK_INFO.Volume,
-            text : "-- Chọn bài tiếp theo --",
+            text : "- Chọn bài -",
         }
-
+        setTimeout(()=>{
+            this._runText.stopAnimation();
+        },20);
         this._songId = -1;
         //this._updateSongText();
     }
@@ -47,10 +46,10 @@ export default class SongTextRun extends React.Component {
             // if(this._songId == -1)
             //     return;
             this._songId == -1;
-            this.setState({text:"-- Chọn bài tiếp theo --"});
+            this.setState({text:"- Chọn bài -"});
             setTimeout(()=>{
                 this._runText.stopAnimation();
-            },60)
+            },20);
         }
         else{
             let songId = DATA_INFO.PLAY_QUEUE[0];
@@ -97,6 +96,9 @@ export default class SongTextRun extends React.Component {
 
 const styles = StyleSheet.create({
     text : {
-        fontSize: 15, color: 'white',overflow: 'hidden', fontFamily:'SF-Pro-Text-Regular'
+        fontSize: 13, 
+        color: 'white',
+        overflow: 'hidden',
+        fontFamily:GLOBALS.FONT.MEDIUM
     }
 })

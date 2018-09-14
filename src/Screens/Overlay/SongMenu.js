@@ -1,20 +1,10 @@
 import React from "react";
-import { StyleSheet, Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
-import {
-    View
-} from "native-base";
-
+import { StyleSheet,View, Dimensions} from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals.js';
-import { Col, Grid, Row } from "react-native-easy-grid";
 import BoxControl from '../../DataManagers/BoxControl'
 import { EventRegister  } from 'react-native-event-listeners';
-
-const screen = {
-    width : Dimensions.get("window").width,
-    height : Dimensions.get("window").height
-}
 
 export default class SongMenu extends React.Component {
     static propTypes = {

@@ -72,6 +72,7 @@
 		2AB0F8E74A6A49E1B2FA5B91 /* SF-Pro-Text-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C370274EE40C41B980FBBE14 /* SF-Pro-Text-Bold.ttf */; };
 		ABF9F76817B44EF48DD9AFDA /* SF-Pro-Text-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 476B04A2EC264E89852E251F /* SF-Pro-Text-Medium.ttf */; };
 		A57591F3BEE247C3B49BE569 /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D21BF785E84F4687EAC71F /* libSQLite.a */; };
+		C27B10330FCA48F88CC1274F /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B761FB2860A945F9AB28AA69 /* libRCTOrientation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -447,6 +448,8 @@
 		476B04A2EC264E89852E251F /* SF-Pro-Text-Medium.ttf */ = {isa = PBXFileReference; name = "SF-Pro-Text-Medium.ttf"; path = "../resources/fonts/SF-Pro-Text-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		BC6D2AAEF21642369453C2F2 /* SQLite.xcodeproj */ = {isa = PBXFileReference; name = "SQLite.xcodeproj"; path = "../node_modules/react-native-sqlite-storage/src/ios/SQLite.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		84D21BF785E84F4687EAC71F /* libSQLite.a */ = {isa = PBXFileReference; name = "libSQLite.a"; path = "libSQLite.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		D3240E64B20145DBA053196F /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; name = "RCTOrientation.xcodeproj"; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B761FB2860A945F9AB28AA69 /* libRCTOrientation.a */ = {isa = PBXFileReference; name = "libRCTOrientation.a"; path = "libRCTOrientation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -482,6 +485,7 @@
 				D632484F48FC468380542323 /* libRNReactNativeBteLib.a in Frameworks */,
 				8BDD61F2695048C7A1A4C8CD /* libRNThread.a in Frameworks */,
 				A57591F3BEE247C3B49BE569 /* libSQLite.a in Frameworks */,
+				C27B10330FCA48F88CC1274F /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +714,7 @@
 				04AD6E32023A4BD089F5E71A /* RNReactNativeBteLib.xcodeproj */,
 				4745874ACC78405295A863F5 /* RNThread.xcodeproj */,
 				BC6D2AAEF21642369453C2F2 /* SQLite.xcodeproj */,
+				D3240E64B20145DBA053196F /* RCTOrientation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1444,12 +1449,14 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = DieuKhienTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1482,12 +1489,14 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = DieuKhienTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1521,6 +1530,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = DieuKhien/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1550,6 +1560,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = DieuKhien/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1585,11 +1596,13 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "DieuKhien-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1631,11 +1644,13 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "DieuKhien-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1676,11 +1691,13 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "DieuKhien-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1721,11 +1738,13 @@
 					"$(SRCROOT)\..\node_modules\react-native-bte-lib\ios",
 					"$(SRCROOT)\..\node_modules\react-native-threads\ios",
 					"$(SRCROOT)\..\node_modules\react-native-sqlite-storage\src\ios",
+					"$(SRCROOT)\..\node_modules\react-native-orientation\iOS\RCTOrientation/**",
 				);
 				INFOPLIST_FILE = "DieuKhien-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

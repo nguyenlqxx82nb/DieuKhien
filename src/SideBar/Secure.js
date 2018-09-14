@@ -1,9 +1,6 @@
 import React from "react";
-import { StyleSheet, Text} from "react-native";
+import { StyleSheet, Text,View} from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-} from "native-base";
 import IconRippe from '../Components/IconRippe.js'
 import { Col, Grid, Row } from "react-native-easy-grid";
 import GLOBALS from '../DataManagers/Globals.js';

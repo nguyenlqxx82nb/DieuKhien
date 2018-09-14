@@ -9,7 +9,18 @@ import SongTabsView from '../../Views/SongTabsView.js';
 import SearchInput from '../../Views/SearchInput.js';
 import MusicOnline from '../../Views/MusicOnlineButton.js';
 
-
+const lans = [
+    GLOBALS.LANGUAGE_KEY.vn,
+    GLOBALS.LANGUAGE_KEY.en,
+    GLOBALS.LANGUAGE_KEY.cn,
+    GLOBALS.LANGUAGE_KEY.ja,
+    GLOBALS.LANGUAGE_KEY.kr,
+    GLOBALS.LANGUAGE_KEY.taiwan,
+    GLOBALS.LANGUAGE_KEY.hk,
+    GLOBALS.LANGUAGE_KEY.ml,
+    GLOBALS.LANGUAGE_KEY.tl,
+    GLOBALS.LANGUAGE_KEY.ca
+];
 export default class SongTabScreen extends BaseScreen {
     static propTypes = {
         onOptionOverlayOpen: PropTypes.func,
@@ -56,24 +67,28 @@ export default class SongTabScreen extends BaseScreen {
         this._songTabs.refreshData();
     }
     renderContentView = () => {
-        var top = (this._hasOnlineButton)?40:0;
+        var top = (this._hasOnlineButton)?(GLOBALS.LANDSCAPE?55:40):0;
         
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.headerContainer}>
-                    <View style={{ width: 40, height: 40, marginLeft: 0 }}>
-                        <IconRippe vector={true} name="back" size={20} color="#fff"
-                            onPress={this._onBack}
-                        />
+                    <View style={{height:40, width:"15%"}}>
+                        <View style={{ width: 40, height: 40, marginLeft: 0 }}>
+                            <IconRippe vector={true} name="back" size={20} color="#fff"
+                                onPress={this._onBack}
+                            />
+                        </View>
                     </View>
-                    <SearchInput ref={ref=>(this._searchInput = ref)} 
-                        onSearchChange={this._onSearch}
-                        onSearch={this._onSearch} />
+                    <View style={{height:40, width:"70%",alignItems:"center",justifyContent:"center"}}>
+                        <SearchInput ref={ref=>(this._searchInput = ref)} 
+                            onSearchChange={this._onSearch}
+                            onSearch={this._onSearch} />
+                    </View>
                 </View>
 
                 <View style={{ flex: 1}}>
                     <SongTabsView 
-                        lanTabs={[GLOBALS.LANGUAGE_KEY.vn,GLOBALS.LANGUAGE_KEY.en,GLOBALS.LANGUAGE_KEY.cn,GLOBALS.LANGUAGE_KEY.ja,GLOBALS.LANGUAGE_KEY.kr]} 
+                        lanTabs={lans} 
                         ref={ref => (this._songTabs = ref)} 
                         songListType = {this._listType}
                         onChangeTab = {this._onChangeTab} 
@@ -99,8 +114,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flexDirection: "row",
         alignItems: "center",
+        justifyContent:"flex-start",
         //marginTop: GLOBALS.STATUS_BAR_HEIGHT,
-        height: 45,
+        height: 40,
         overflow: "hidden"
     },
     tabView: {

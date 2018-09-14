@@ -1,21 +1,12 @@
 import React from "react";
-import { StyleSheet, Alert,Dimensions,Animated, Image, Platform} from "react-native";
+import { StyleSheet,View,Text} from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SongListView from '../../Views/SongListView.js';
-
-const screen = {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-}
+import Utils from '../../Utils/Utils';
 
 export default class SelectedSong extends BaseScreen {
     static propTypes = {
@@ -100,11 +91,5 @@ const styles = StyleSheet.create({
         flex:1,
         fontFamily:'SF-Pro-Text-Regular'
     },
-    imageBg:{
-        position:"absolute",
-        width: screen.width,
-        height:screen.height,
-        zIndex:0
-    }
 
 })

@@ -1,15 +1,8 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput } from "react-native";
+import { StyleSheet, View } from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
-import {
-    View,
-    Icon,
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
 import IconRippe from '../../Components/IconRippe.js'
-import { Grid, Col } from "react-native-easy-grid";
-import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
 import SingerTabsView from '../../Views/SingerTabsView.js';

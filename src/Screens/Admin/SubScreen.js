@@ -1,11 +1,7 @@
 import React from "react";
-import {StyleSheet,View} from "react-native";
+import {StyleSheet,View,List} from "react-native";
 import BaseScreen from '../ScreenBase';
 import Header from '../Header/header1';
-import {
-    Container,
-    List
-} from "native-base";
 import GLOBALS from "../../DataManagers/Globals";
 import { EventRegister } from 'react-native-event-listeners'
 

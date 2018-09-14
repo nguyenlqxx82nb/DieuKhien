@@ -1,9 +1,6 @@
 import React from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput,View } from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-} from "native-base";
 import GLOBALS from '../DataManagers/Globals.js';
 import CustomIcon from '../Components/CustomIcon';
 

@@ -1,18 +1,14 @@
 import React from "react";
-import { StyleSheet, ActivityIndicator, Dimensions,Animated,ScrollView } from "react-native";
+import { StyleSheet, View,ScrollView } from "react-native";
 import PropTypes from 'prop-types';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import {
-    View,
-    Text,
-} from "native-base";
 import GLOBALS from '../../DataManagers/Globals.js';
 import Databases from '../../DataManagers/DatabaseManager.js';
 import IndicatorView from '../../Views/IndicatorView';
 import SongOnlineItem from './SongOnlineItem';
+import Utils from '../../Utils/Utils';
 
-let { width } = Dimensions.get('window');
-let height = width*18/32 + 90;
+let height = Utils.Width()*18/32 + 90;
 export default class SongOnlineListView extends React.Component {
     static propTypes = {
         onlineType: PropTypes.number,
@@ -51,11 +47,11 @@ export default class SongOnlineListView extends React.Component {
             (type, dim) => {
                 switch (type) {
                     case "FULL":
-                        dim.width = width;
+                        dim.width = Utils.Width();
                         dim.height = height;
                         break;
                     default:
-                        dim.width = width;
+                        dim.width = Utils.Width();
                         dim.height = height;
                 }
             }

@@ -1,5 +1,5 @@
 import React from "react";
-import {Text,StyleSheet,View} from "react-native";
+import {Text,StyleSheet,View,ListView} from "react-native";
 import ListItem from '../../Components/ListItem';
 import CustomIcon from '../../Components/CustomIcon';
 import { EventRegister } from 'react-native-event-listeners'
@@ -16,9 +16,6 @@ import ServerAdmin from './ServerAdress';
 import NgoVideo from './NgoVideo';
 import Auto from './Auto';
 
-import {
-   List
-} from "native-base";
 import GLOBALS from "../../DataManagers/Globals";
 
 const datas = [
@@ -112,6 +109,10 @@ export default class AdminScreen extends BaseScreen
 {
     constructor(props) {
         super(props);
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+          dataSource: ds.cloneWithRows(datas),
+        };
     }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
@@ -177,8 +178,8 @@ export default class AdminScreen extends BaseScreen
                 }} />
 
                 <View style={{flex:1}}>
-                    <List
-                        dataArray = {datas}
+                    <ListView
+                        dataSource = {this.state.dataSource}
                         contentContainerStyle = {{ marginTop: 0 }}
                         renderRow={this.renderRow}
                     /> 

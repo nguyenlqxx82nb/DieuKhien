@@ -1,9 +1,5 @@
 import React from "react";
-import { StyleSheet, Text} from "react-native";
-import {
-     View,
-     Icon
-} from "native-base";
+import { View,StyleSheet, Text} from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals';

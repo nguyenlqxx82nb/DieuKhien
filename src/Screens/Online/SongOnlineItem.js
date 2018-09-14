@@ -3,12 +3,10 @@ import { Image, Platform,Text, View, TouchableWithoutFeedback,Animated,Easing,Di
 import PropTypes from 'prop-types';
 import Button from '../../Components/Button';
 import GLOBALS from '../../DataManagers/Globals';
+import Utils from '../../Utils/Utils';
 
 const isIOS = Platform.OS === 'ios';
-const screen = {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-}
+
 export default class SongOnlineItem extends React.Component {
   static propTypes = {
     thumbnail: PropTypes.string,
@@ -98,7 +96,7 @@ export default class SongOnlineItem extends React.Component {
           position: 'absolute',
           top: 0,
           left: 0,
-          width: screen.width,
+          width: Utils.Width(),
           height: _height,
           borderRadius: _height/2,
           zIndex :2,
@@ -120,7 +118,7 @@ export default class SongOnlineItem extends React.Component {
   }
   render() {
     //console.warn(" url = "+GLOBALS.SINGER_SEX[1]);
-    var imageHeight = screen.width*18/32;
+    var imageHeight = Utils.Width()*18/32;
    // console.warn("channel = "+this.props.channel);
     return (
       <Button onPress = {this.onPressedIn}>

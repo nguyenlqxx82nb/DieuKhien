@@ -1,21 +1,12 @@
 import React from "react";
-import { StyleSheet, Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
-import {
-    View
-} from "native-base";
-
+import { StyleSheet, View,TouchableWithoutFeedback,Platform,Animated} from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals.js';
-import { Col, Grid, Row } from "react-native-easy-grid";
 import Emoji from "./Emoji";
 import SingerMenu from "./SingerMenu";
 import SongMenu from "./SongMenu";
-
-const screen = {
-    width : Dimensions.get("window").width,
-    height : Dimensions.get("window").height
-}
+import Utils from "../../Utils/Utils";
 
 export default class OptionOverlay extends React.Component {
     static propTypes = {
@@ -121,9 +112,9 @@ export default class OptionOverlay extends React.Component {
         const {opacityValue,yPos} = this.state;
         return (
         <View style={{position:"absolute",
-                        width: screen.width,
+                        width: Utils.Width(),
                         top:0,
-                        height: screen.height - GLOBALS.STATUS_BAR_HEIGHT,opacity:1,zIndex:0 }}
+                        height: Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT,opacity:1,zIndex:0 }}
                ref={ref => (this._container = ref)}>
 
             <TouchableWithoutFeedback  style={styles.overlayContainer} 
@@ -155,14 +146,14 @@ const styles = StyleSheet.create({
     },
     overlayContainer: {
         position:"absolute",
-        width: screen.width,
+        width: Utils.Width(),
         top:0,
-        height: screen.height - GLOBALS.STATUS_BAR_HEIGHT, 
+        height: Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT, 
         //opacity:0.6
     },
     container: {
         position:"absolute",
-        width:screen.width,
+        width:Utils.Width(),
         bottom:0,
         height:240,
         backgroundColor:"#323663",

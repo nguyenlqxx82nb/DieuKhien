@@ -2,7 +2,7 @@
 import {LayoutProvider} from 'recyclerlistview';
 import Utils from './Utils.js'
 
-const columnWidth = (Utils.getScreenWidth() - 10*2-5*2)/3;
+const columnWidth = (Utils.Width() - 10*2-5*2)/3;
 export default class LayoutUtils {
     static getLayoutProvider(type){
         return new LayoutProvider(

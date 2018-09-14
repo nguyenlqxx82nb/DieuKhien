@@ -1,14 +1,10 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput,Text } from "react-native";
+import { StyleSheet, View, TextInput,Text } from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-    Icon,
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
+import CustomIcon from '../Components/CustomIcon'
 import IconRippe from '../Components/IconRippe.js'
 import { EventRegister  } from 'react-native-event-listeners';
-
+import GLOBALS from '../DataManagers/Globals';
 
 export default class SearchInput extends React.Component {
     static propTypes = {
@@ -98,9 +94,10 @@ export default class SearchInput extends React.Component {
     render = () => {
         const {showRemoveBtn} =this.state;
         const {style} = this.props;
+        //console.warn("LANDSCAPE = "+GLOBALS.LANDSCAPE);
         return (
             <View style={[styles.container,style]}>
-                <Icon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
+                <CustomIcon size={15} name="search" style={{ color: "#9197CC", marginLeft: 10 }} />
                 <TextInput
                    // secureTextEntry = {true}
                     ref = {ref => (this._searchInput = ref)}
@@ -126,11 +123,25 @@ export default class SearchInput extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center",
-        marginRight: 10, borderRadius: 10, backgroundColor: "#565BAC", height: 35, paddingRight: 3
+        width:"100%", 
+        flexDirection: "row",
+        alignItems: "center", 
+        justifyContent: "center",
+        marginRight:(GLOBALS.LANDSCAPE)?0:10,
+        borderRadius: 5,
+        backgroundColor: "#565BAC", 
+        height: 35, 
+        paddingRight: 3,
+        marginLeft: (GLOBALS.LANDSCAPE)?0:10,
     },
     input: {
-        flex: 1, height: 35, fontSize: 16, color: "white", padding: 0, margin: 0, marginLeft: 10,
-        fontFamily:'SF-Pro-Text-Medium'
+        flex: 1,
+        height: 35, 
+        fontSize: (GLOBALS.LANDSCAPE)?10:16,
+        color: "white", 
+        padding: 0, 
+        margin: 0,
+        fontFamily:GLOBALS.FONT.MEDIUM,
+        marginLeft:10
     },
 })

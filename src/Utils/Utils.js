@@ -1,16 +1,23 @@
 import {Dimensions,Platform } from 'react-native';
+import GLOBALS from '../DataManagers/Globals'
+
+const _screen = {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height
+}
 
 const screen = {
-    width : Math.round(Dimensions.get('window').width * 1000) / 1000,
-    height : Math.round(Dimensions.get('window').height * 1000) / 1000,
+    width: (Math.max(_screen.width,_screen.height) > 800)?Math.max(_screen.width,_screen.height):Math.min(_screen.width,_screen.height),
+    height: (Math.max(_screen.width,_screen.height) > 800)?Math.min(_screen.width,_screen.height):Math.max(_screen.width,_screen.height),
 }
+
 export default class Utils{
 
-    static getScreenWidth(){
+    static Width(){
         return screen.width;
     }
 
-    static getScreenHeight(){
+    static Height(){
         return screen.height;
     }
 

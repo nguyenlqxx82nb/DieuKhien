@@ -1,13 +1,8 @@
 import React from "react";
-import {Text,StyleSheet,View} from "react-native";
+import {Text,StyleSheet,View,ListView} from "react-native";
 import ListItem from '../Components/ListItem';
 import CustomIcon from '../Components/CustomIcon';
 import { EventRegister } from 'react-native-event-listeners'
-
-import {
-    Container,
-    List
-} from "native-base";
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from "../DataManagers/Globals";
 
@@ -71,9 +66,13 @@ const datas = [
 ];
 export default class SideBar extends React.Component
 {
-    constructor(props) {
-        super(props);
-    }
+    constructor() {
+        super();
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+          dataSource: ds.cloneWithRows(datas),
+        };
+      }
     renderRow =(item)=>{
         const {title,icon,color,event,screenType} =item;
         return(
@@ -98,20 +97,20 @@ export default class SideBar extends React.Component
 
     render(){
         return(
-            <Container>
+            <View style={{flex:1}}>
                 <View style={styles.headerContainer}>
                 </View>
                 <LinearGradient 
                     start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
                     colors={['#434B8F', '#435A9D', '#436BA8', '#4780B1', '#55BFC8']} 
                     style={[styles.listContainer]}>
-                    <List
-                        dataArray = {datas}
-                        contentContainerStyle = {{ marginTop: 10 }}
+                    <ListView
+                        dataSource = {this.state.dataSource }
+                        contentContainerStyle = {{ marginTop: 0}}
                         renderRow={this.renderRow}
                     /> 
                 </LinearGradient>   
-            </Container>
+            </View>
         );
     }
 } 

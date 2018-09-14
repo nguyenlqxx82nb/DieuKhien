@@ -1,17 +1,9 @@
 import React from "react";
-import { Image, StyleSheet, Dimensions,Animated,Easing,Platform,TextInput } from "react-native";
-import {
-     View,
-     Icon
-} from "native-base";
+import { View, StyleSheet, Dimensions,Animated,Easing,Platform,TextInput } from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from "../../DataManagers/Globals.js";
 import PropTypes from 'prop-types';
-
-const screen = {
-    width : Dimensions.get("window").width,
-    height : Dimensions.get("window").height
-}
+import Utils from '../../Utils/Utils';
 
 export default class Header extends React.Component {
     static propTypes = {
@@ -130,7 +122,7 @@ export default class Header extends React.Component {
     }
     render() {
         const {opacity1,opacity2}= this.state;
-        var searchWidth = screen.width-40;
+        var searchWidth = Utils.Width()-40;
         return (
             <View style={styles.container}>
                 <View style={{ width: 40, height: 40, marginLeft: 0 }}>

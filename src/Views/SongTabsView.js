@@ -1,11 +1,7 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput } from "react-native";
+import { StyleSheet, View } from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
-import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import CustomScrollableTabBar from '../Components/CustomScrollableTabBar.js'
 import GLOBALS from '../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
@@ -72,6 +68,7 @@ export default class SongTabsView extends React.Component {
     }
 
     loadData = (term) =>{
+        //console.warn("SongTab loadData term = "+term);
         this._searchTerm = term;
         this._tabs[this._currPage].loadData(term);
     }
@@ -90,23 +87,34 @@ export default class SongTabsView extends React.Component {
     }
     
     render() {
+        var tabContent = {};
+        if(GLOBALS.LANDSCAPE){
+            tabContent ={
+                borderTopWidth: 0
+            }
+        }
         return (
             <ScrollableTabView
                         style={{ marginTop: 0, }}
+                        
                         initialPage={0}
                         onChangeTab = {this._onChangeTab}
                         renderTabBar={() => 
                         <CustomScrollableTabBar
+                            //backgroundColor = {"red"}
+                            isTabRound={true}
+                            tabContainerStyle={{borderRadius:15, height:30,  borderWidth:1, borderColor:"#fff",marginLeft:5}}
+                            tabsContainerStyle={{marginLeft:20}}
                             underlineStyle={{ height: 0 }}
                             activeTextColor={"#0ECAB1"}
                             inactiveTextColor={"#fff"}
-                            textStyle={{ fontSize: 13, color: "#fff", fontFamily:GLOBALS.FONT.BOLD }}
+                            textStyle={{ fontSize: 12, color: "#fff", fontFamily:GLOBALS.FONT.BOLD,paddingLeft: 15, paddingRight: 15, }}
                             style={{ borderWidth: 0}}
                         />}
                     >
                     {this.props.lanTabs.map((lan, index) => {
                        return (
-                            <View key={index} style={[styles.tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
+                            <View key={index} style={[styles.tabContent,tabContent,{marginTop:this.props.top}]} tabLabel={GLOBALS.LANGUAGE_NAME[lan]}>
                                 <SongListView 
                                     listType = {this.props.songListType}
                                     lan={lan} 

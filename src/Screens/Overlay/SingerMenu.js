@@ -1,8 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
-import {
-    View
-} from "native-base";
+import { StyleSheet, View,Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
 
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';

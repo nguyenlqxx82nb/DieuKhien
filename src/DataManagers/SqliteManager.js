@@ -1,6 +1,7 @@
 
 import GLOBALS from './Globals';
 import BTElib from 'react-native-bte-lib';
+import DATA_INFO from '../DataManagers/DataInfo';
 
 var SQLite = require('react-native-sqlite-storage')
 var db = SQLite.openDatabase({name: 'testDB', createFromLocation: '~songbook.db'})
@@ -62,7 +63,7 @@ export default class SQLiteMagager {
             kwd = "",
             kwd_alias="",
             page = pageCount*page ;
-       // console.warn("song type = "+songType);
+        //console.warn("song type = "+songType);
         if(songType != GLOBALS.SONG_TYPE.ALL){
             type="type";
             type_val=""+songType;
@@ -91,11 +92,12 @@ export default class SQLiteMagager {
             kwd_alias=term;
         }
         var query = this.getSongQuery(type,type_val,sort,temp,kwd,kwd_alias,page,pageCount)
-        //console.warn("query = "+query);
+      //  console.warn("query = "+query);
         db.transaction((tx) => {
             tx.executeSql(query, [], (tx, results) => {
-                ///console.warn("length = "+results.rows.length);
+               // console.warn("length = "+results.rows.length);
                 var datas = this.covertSongDatas(results.rows);
+               // console.warn("length = "+results.rows.length +" , data = "+datas.length);
                 callback(datas);
             },(error)=>{
                 errorCallback(error)
@@ -118,7 +120,25 @@ export default class SQLiteMagager {
                 actor : rows.item(i).Actor,
                 singerName: singerName
             }
-            //console.warn(" actor = "+rows.item(i).Actor);
+            //console.warn("covertSongDatas = "+singerName);
+            let selectIndex = DATA_INFO.PLAY_QUEUE.indexOf(item.id);
+            if(selectIndex > -1){
+                item.status = GLOBALS.SING_STATUS.SELECTED;
+                item.index = " "+(selectIndex + 1);
+            }
+            else{
+                // if(rows.item(i).Temp == 0){
+                //     item.status = GLOBALS.SING_STATUS.NO_DOWNLOADED;
+                // }
+                // else if(rows[i].Temp == 2){
+                //     item.status = GLOBALS.SING_STATUS.DOWNLOADING;
+                // }
+                // else{
+                //     item.status = GLOBALS.SING_STATUS.NORMAL;
+                // }
+                item.status = GLOBALS.SING_STATUS.NORMAL;
+                item.index = "";
+            }
             datas.push(item);
         }
         return datas;

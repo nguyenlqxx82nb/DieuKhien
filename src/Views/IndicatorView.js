@@ -1,12 +1,6 @@
 import React from "react";
-import { StyleSheet,ActivityIndicator } from "react-native";
+import { StyleSheet,ActivityIndicator,View } from "react-native";
 import PropTypes from 'prop-types';
-
-import {
-    View,
-    Text,
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
 
 export default class IndicatorView extends React.Component {
     static propTypes = {

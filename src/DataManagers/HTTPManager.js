@@ -103,7 +103,7 @@ export default class HTTPManager {
         }
 
         for(var i=0; i<rows.length; i++){
-             var item = {
+            var item = {
                 id: rows[i].Song_ID,
                 name : rows[i].Song_Name,
                 actor : rows[i].Actor,

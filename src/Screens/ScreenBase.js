@@ -1,16 +1,9 @@
 import React from "react";
-import { StyleSheet, Dimensions, Animated, Platform,Easing } from "react-native";
+import { StyleSheet, View, Animated, Platform,Easing } from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-} from "native-base";
 import LinearGradient from 'react-native-linear-gradient';
 import GLOBALS from '../DataManagers/Globals.js';
-
-const screen = {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-}
+import Utils from '../Utils/Utils';
 
 class BaseScreen extends React.Component {
     static propTypes = {
@@ -28,8 +21,8 @@ class BaseScreen extends React.Component {
         duration: 250,
         opacity: 1,
         maxZindex: 1,
-        posX : screen.width,
-        posY : screen.height,
+        posX : Utils.Width(),
+        posY : Utils.Height(),
         transition : GLOBALS.TRANSITION.FADE,
         bottom : 115,
         type : GLOBALS.SCREEN_TYPE.BOTTOM
@@ -150,7 +143,7 @@ class BaseScreen extends React.Component {
         }
         else if(transition == GLOBALS.TRANSITION.SLIDE_LEFT){
             Animated.timing(this.animate.posX, {
-                toValue: screen.width,
+                toValue: Utils.Width(),
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
                 easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -167,7 +160,7 @@ class BaseScreen extends React.Component {
         }
         else if(transition == GLOBALS.TRANSITION.SLIDE_TOP){
             Animated.timing(this.animate.posY, {
-                toValue: screen.height,
+                toValue: Utils.Height(),
                 useNativeDriver: Platform.OS === 'android',
                 duration: duration,
                 easing: Easing.bezier(0.0, 0.0, 0.2, 1),
@@ -210,12 +203,12 @@ class BaseScreen extends React.Component {
         //     style.top = 0;
         // }
         style.top = 0;
-        style.height = screen.height - GLOBALS.STATUS_BAR_HEIGHT;
+        style.height = Utils.Height() - GLOBALS.STATUS_BAR_HEIGHT;
         return (
             <Animated.View
                 ref={ref => (this._container = ref)}
                 style={[styles.container,style,{opacity : opacity,transform: [{translateY: posY},{translateX:posX}]}]}>
-                {/* <Image source={GLOBALS.BackgroundImage} style={styles.imageBg} /> */}
+                
                 <LinearGradient 
                     start={{x: 0.1, y: 0.1}} end={{x: 1, y: 1}} 
                     colors={['#444284', '#434B8C', '#445D9D', '#436BA8', '#2C87A2', '#1F98A1', '#05BA9B']} 
@@ -224,6 +217,7 @@ class BaseScreen extends React.Component {
                         {this.renderContentView()}
                     </View>
                 </LinearGradient>
+                
             </Animated.View>
         )
     }
@@ -234,13 +228,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         position:"absolute",
-        width: screen.width,
-        zIndex:0
-    },
-    imageBg:{
-        position:"absolute",
-        width: screen.width,
-        height:screen.height,
+        width: Utils.Width(),
         zIndex:0
     }
 })

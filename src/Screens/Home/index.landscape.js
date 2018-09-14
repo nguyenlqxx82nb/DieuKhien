@@ -1,19 +1,19 @@
 import React from "react";
-import { StatusBar,View} from "react-native";
+import { StatusBar,StyleSheet,View} from "react-native";
 
 // screens
-import Footer from '../Footer/footer.js';
-import HomeScreen from './Home.js';
-import SongTabScreen from '../BaiHat/SongTabScreen';
-import SelectedSong from '../BaiHat/SelectedSong.js';
-import SingerScreen from '../Singer/index.js';
-import SingOptionOverlay from '../Overlay/OptionOverlay.js';
-import TheloaiScreen from '../TheLoai/index.js'
-import OnlineScreen from '../Online/index.js'
-import SecondScreen from '../../SideBar/SecondScreen';
-import SongOnlineScreen from '../Online/SongOnlineScreen';
-import SongListScreen from '../../Screens/BaiHat/SongListScreen';
-import AdminScreen from '../../Screens/Admin/index';
+import Footer from '../Footer/footer.landscape.js';
+import HomeScreen from './home.landscape';
+import SongTabScreen from '../BaiHat/SongTab.landscape';
+// import SelectedSong from '../BaiHat/SelectedSong.js';
+// import SingerScreen from '../Singer/index.js';
+// import SingOptionOverlay from '../Overlay/OptionOverlay.js';
+// import TheloaiScreen from '../TheLoai/index.js'
+// import OnlineScreen from '../Online/index.js'
+// import SecondScreen from '../../SideBar/SecondScreen';
+// import SongOnlineScreen from '../Online/SongOnlineScreen';
+// import SongListScreen from '../../Screens/BaiHat/SongListScreen';
+// import AdminScreen from '../../Screens/Admin/index';
 
 import { EventRegister } from 'react-native-event-listeners'
 import GLOBALS from "../../DataManagers/Globals.js";
@@ -22,19 +22,17 @@ import DATA_INFO from "../../DataManagers/DataInfo.js";
 import BTElib from 'react-native-bte-lib';
 import { DeviceEventEmitter } from 'react-native';
 
-export default class Taisao extends React.Component {
+export default class Landscape extends React.Component {
     _currentScreen = null;
     constructor(props) {
         super(props);
-        console.ignoredYellowBox = ['Warning: Stateless'];
-    }
-
-    componentDidMount() {
         //console.ignoredYellowBox = true;
         //console.disableYellowBox = true;
+        console.ignoredYellowBox = ['Warning: Stateless'];
         GLOBALS.INFO.VERSION = GLOBALS.BOX_VERSION.S650;
-        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
-        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        //GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.HTTP;
+        GLOBALS.INFO.CONNECT = GLOBALS.DATABASE_CONNECT.SQLITE;
+        GLOBALS.LANDSCAPE = true;
 
         BTElib.checkConnectToWifiBox();
         BTElib.syncPlaybackQueue();
@@ -45,7 +43,10 @@ export default class Taisao extends React.Component {
         DeviceEventEmitter.addListener('PlaybackInfoUpdate', this.handlePlaybackChange);
         DeviceEventEmitter.addListener('SongQueueChange', this.handleSongQueueChange);
         DeviceEventEmitter.addListener('DownloadQueue', this.handleDownloadQueue);
-        
+    }
+
+    componentDidMount() {
+        //console.warn("componentDidMount");
         this._currentScreen = this._homeScreen; 
     }
 
@@ -151,7 +152,7 @@ export default class Taisao extends React.Component {
         this._searchScreen.show();
         setTimeout(()=>{
             this._searchScreen.focusSearchInput();
-        },300);
+        },500);
 
         this._currentScreen = this._searchScreen;
     }
@@ -194,7 +195,7 @@ export default class Taisao extends React.Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <SecondScreen 
+                {/* <SecondScreen 
                     bottom = {0}
                     opacity= {0} 
                     maxZindex ={11} 
@@ -221,10 +222,7 @@ export default class Taisao extends React.Component {
                     duration={250}
                     onBack={this._onBackHome} 
                     ref={ref => (this._onlineScreen = ref)} />
-                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
-                    duration={250}
-                    onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
-                />
+                
                 <SongTabScreen 
                     opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
                     duration={250}
@@ -276,8 +274,13 @@ export default class Taisao extends React.Component {
                     onBack = {() => {
                         this.mixSong.hide();
                     }}
-                />    
-                
+                />     */}
+
+                <SongTabScreen opacity= {0} maxZindex ={5} transition = {GLOBALS.TRANSITION.SLIDE_LEFT}
+                    duration={250}
+                    onBack={this._onBackHome} ref={ref => (this._searchScreen = ref)}
+                    bottom={60}
+                />
                 <HomeScreen zIndex={1}  
                     opacity= {1} maxZindex ={1} 
                     onOpenSearch={this._onOpenSearch}
@@ -289,11 +292,11 @@ export default class Taisao extends React.Component {
                     onOpenMenu = {() =>{
                         this.props.navigation.openDrawer();        
                     }}
-                    ref={ref => (this._homeScreen = ref)} />
+                    ref={ref => (this._homeScreen = ref)} 
+                    bottom={60}
+                    />
 
-                <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
-                    onSelectedSong={this._onOpenSelectedSong} />
-                <AdminScreen 
+                {/* <AdminScreen 
                     ref = {ref => (this._adminScreen = ref)} 
                     transition={GLOBALS.TRANSITION.SLIDE_LEFT} 
                     maxZindex = {12}
@@ -301,7 +304,10 @@ export default class Taisao extends React.Component {
                     onBack = {() => {
                         this._adminScreen.hide();
                     }}
-                />
+                /> */}
+
+                <Footer ref={ref => (this._footer = ref)} maxZindex ={8} 
+                    onSelectedSong={this._onOpenSelectedSong} />
                 <StatusBar
                     backgroundColor={GLOBALS.COLORS.STATUS_BAR}
                     // translucent={true}
@@ -310,6 +316,8 @@ export default class Taisao extends React.Component {
             </View>
         );
     }
-
 }
 
+const styles = StyleSheet.create({
+    
+})

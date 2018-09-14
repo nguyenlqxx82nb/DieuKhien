@@ -1,13 +1,7 @@
 import React from "react";
-import { StyleSheet} from "react-native";
+import { StyleSheet,View} from "react-native";
 import PropTypes from 'prop-types';
 import ScreenBase from '../ScreenBase.js';
-import {
-    Container,
-    Left,
-    Right,
-    View
-} from "native-base";
 
 import AutoHeightImage from 'react-native-auto-height-image';
 import { Col, Grid, Row } from "react-native-easy-grid";
@@ -38,26 +32,22 @@ export default class HomeScreen extends ScreenBase {
         const { onOpenSearch,onOpenSinger } = this.props;
         return (
             <View style={{ flex: 1,width:"100%"}}>
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 0, height: 55 }}>
-                    <Left>
-                        <View style={{ width: 50, height: 50, marginLeft: 0 }}>
-                            <IconRippe vector={true} name="menu" size={25} color="#fff"
-                                onPress={() =>{
-                                    //this.props.navigation.navigate("DrawerOpen");
-                                    if(this.props.onOpenMenu != null)
-                                        this.props.onOpenMenu();
-                                }} />
-                        </View>
-                    </Left>
-                    <View>
+                <View style={{ flexDirection: "row",justifyContent:"flex-start", alignItems: "center", marginTop: 0, height: 50 }}>
+                    <View style={{ width: 40, height: 40, marginLeft: 0 }}>
+                        <IconRippe vector={true} name="menu" size={20} color="#fff"
+                            onPress={() =>{
+                                //this.props.navigation.navigate("DrawerOpen");
+                                if(this.props.onOpenMenu != null)
+                                    this.props.onOpenMenu();
+                            }} />
+                    </View>
+                    <View style={{flex:1}}>
                         <AutoHeightImage source={logo} width={70} ></AutoHeightImage>
                     </View>
-                    <Right>
-                        <View style={{ width: 50, height: 50, marginLeft: 0 }}>
-                            <IconRippe vector={true} name="search" size={25} color="#fff"
+                    <View style={{ width: 40, height:40, marginLeft: 0 }}>
+                            <IconRippe vector={true} name="search" size={20} color="#fff"
                                 onPress={onOpenSearch} />
-                        </View>
-                    </Right>
+                    </View>
                 </View>
 
                 <View style={{ flex: 1, paddingLeft: 20, paddingRight: 20, paddingTop: 10, paddingBottom: 10}}>

@@ -1,12 +1,7 @@
 import React from "react";
-import { StyleSheet, Alert,Dimensions,Animated, Image, Platform} from "react-native";
+import { StyleSheet,View, Text} from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
-import {
-    View,
-    Text
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
 import IconRippe from '../../Components/IconRippe.js'
 import GLOBALS from '../../DataManagers/Globals.js';
 import { EventRegister  } from 'react-native-event-listeners';
@@ -15,11 +10,6 @@ import MusicOnline from '../../Views/MusicOnlineButton.js';
 import Header from '../Header/index';
 import SearchInput from '../../Views/SearchInput';
 
-const screen = {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-}
-
 export default class SongListScreen extends BaseScreen {
     static propTypes = {
         ...this.props,
@@ -27,7 +17,6 @@ export default class SongListScreen extends BaseScreen {
         listType: PropTypes.number,
         songType: PropTypes.number,
         title: PropTypes.string,
-        // songType: PropTypes.number,
     };
 
     // static defaultProps ={

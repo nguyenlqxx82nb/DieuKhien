@@ -139,22 +139,19 @@ class BoxControl {
                 if(datas != null){
                     //console.warn("download length = "+datas.length);
                     BTE_LIB.setDownloadStatus(1);
+                    DATA_INFO.DOWN_QUEUE = {};
                     for(var i=0; i<datas.length; i++){
+                        //console.warn("id , progress = "+datas[i].ID +" , "+datas[i].Progress);
                         var item = {
                             id: datas[i].ID,
                             progress:datas[i].Progress
                         }    
 
-                        if(DATA_INFO.DOWN_QUEUE[item.id] != null){
-                            DATA_INFO.DOWN_QUEUE[item.id] = item.progress;
-                        }
-                        else{
-                            DATA_INFO.DOWN_QUEUE[item.id] = item;
-                        }
+                        DATA_INFO.DOWN_QUEUE[item.id] = item;
                     }
                 }
                 else{
-                    //console.warn("download length = "+0);
+                   // console.warn("download length = "+0);
                     BTE_LIB.setDownloadStatus(0);
                     DATA_INFO.DOWN_QUEUE = {};
                 }

@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { StackNavigator, DrawerNavigator } from "react-navigation";
 
 // screens
-import HomeScreen from "./Home/index.js";
+import HomeScreen from "./Home/index.landscape";
 import SideBar from "../SideBar/SideBar.js";
 
 const Drawer = DrawerNavigator(
@@ -19,7 +19,6 @@ const Drawer = DrawerNavigator(
 const AppNavigator = StackNavigator(
     {
         Drawer: { screen: Drawer },
-        //Header1: { screen: Header1 }
     },
     {
         initialRouteName: "Drawer",
@@ -28,6 +27,6 @@ const AppNavigator = StackNavigator(
 );
 
 export default () =>
-  <View style={{flex:1}}>
-    <AppNavigator />
-  </View>;
+    <View style={{flex:1}}>
+        <AppNavigator />
+    </View>;

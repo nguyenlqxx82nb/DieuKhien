@@ -1,10 +1,6 @@
 import React from "react";
-import { StyleSheet, Alert, TextInput } from "react-native";
+import { StyleSheet, View, TextInput } from "react-native";
 import PropTypes from 'prop-types';
-import {
-    View,
-    // Tab, Tabs, ScrollableTab
-} from "native-base";
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
 import CustomScrollableTabBar from '../Components/CustomScrollableTabBar.js'
 import GLOBALS from '../DataManagers/Globals.js';

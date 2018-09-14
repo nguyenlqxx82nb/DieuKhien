@@ -1,19 +1,11 @@
 import React from "react";
-import { StyleSheet, Dimensions, TouchableWithoutFeedback,Platform,Animated} from "react-native";
-import {
-    View
-} from "native-base";
-
+import { StyleSheet,View,} from "react-native";
 import IconRippe from '../../Components/IconRippe.js'
 import PropTypes from 'prop-types';
 import GLOBALS from '../../DataManagers/Globals.js';
 import { Col, Grid, Row } from "react-native-easy-grid";
 import BoxControl from '../../DataManagers/BoxControl';
 
-const screen = {
-    width : Dimensions.get("window").width,
-    height : Dimensions.get("window").height
-}
 
 export default class Emoji extends React.Component {
     static propTypes = {

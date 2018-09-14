@@ -1,12 +1,8 @@
 import React from "react";
-import { StyleSheet, ActivityIndicator, Dimensions } from "react-native";
+import { StyleSheet, Dimensions,Text,View } from "react-native";
 import PropTypes from 'prop-types';
 import ListItem from '../Components/ListItem.js';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import {
-    View,
-    Text,
-} from "native-base";
 import IconRippe from '../Components/IconRippe.js'
 import GLOBALS from '../DataManagers/Globals.js';
 import { EventRegister } from 'react-native-event-listeners';
@@ -70,6 +66,23 @@ export default class SongListView extends React.Component {
             }
         );
 
+        this._layoutProvider2 = new LayoutProvider(
+            index => {
+                return "FULL";
+            },
+            (type, dim) => {
+                switch (type) {
+                    case "FULL":
+                        dim.width = width/2 - 1;
+                        dim.height = 50;
+                        break;
+                    default:
+                        dim.width = width/2;
+                        dim.height = 50;
+                }
+            }
+        );
+
         this._loadData = this._loadData.bind(this);
     }
     
@@ -85,6 +98,9 @@ export default class SongListView extends React.Component {
 
     updateSong = () => {
         this.hasChanged = false;
+        if(this.props.listType == GLOBALS.SONG_LIST_TYPE.UNDOWNLOAD)
+            return;
+
         var isChange = false;
         for(i = 0; i < this.state.datas.length; i++){
             let selectIndex = DataInfo.PLAY_QUEUE.indexOf(this.state.datas[i].id);
@@ -107,17 +123,27 @@ export default class SongListView extends React.Component {
 
     updateDownloadSong = () =>{
        // console.warn("updateDownloadSong");
+        var newDatas = [];
         for(i = 0; i < this.state.datas.length; i++){
             var id = this.state.datas[i].id;
             if(DataInfo.DOWN_QUEUE[id] != null){
                 this.state.datas[i].status = GLOBALS.SING_STATUS.DOWNLOADING;
                 this.state.datas[i].progress = DataInfo.DOWN_QUEUE[id].progress;
-               // console.warn("id = "+id +",progress = "+this.state.datas[i].progress);
+                newDatas.push(this.state.datas[i]);
+            }
+            else if(this.state.datas[i].status != GLOBALS.SING_STATUS.DOWNLOADING){
+                newDatas.push(this.state.datas[i]);
+            }
+            else if(this.state.datas[i].status == GLOBALS.SING_STATUS.DOWNLOADING
+                        && this.state.datas[i].progress == 0){
+                //console.warn("id = "+this.state.datas[i].id+", name = "+this.state.datas[i].name);   
+                this.state.datas[i].status = GLOBALS.SING_STATUS.NO_DOWNLOADED; 
+                newDatas.push(this.state.datas[i]);     
             }
         }
-
+        this.state.datas = newDatas;
         this.setState({
-            dataProvider: this.state.dataProvider.cloneWithRows(this.state.datas)
+            dataProvider: this.state.dataProvider.cloneWithRows(newDatas)
         });
     }
 
@@ -169,7 +195,7 @@ export default class SongListView extends React.Component {
                 }, 50);
             return;
         }
-       // console.warn("loadData "+term);
+       // console.warn("Song List loadData ="+term);
         this._searchTerm = term;
         this._loaded = false;
         this._page = 0;
@@ -195,9 +221,8 @@ export default class SongListView extends React.Component {
     }
     _handleFetchDataCompleted = (datas) =>{
         this._loading = false;
-        var startId = 0;
         var newDatas = [];
-        //console.warn("data length = "+datas.length);
+    //    console.warn("_handleFetchDataCompleted data length = "+datas.length);
         if(this._loaded){
             startId = this.state.datas.length;
             newDatas = this.state.datas.concat(datas);
@@ -229,15 +254,10 @@ export default class SongListView extends React.Component {
         }
     }
     _onPressSong = (id, status) => {
-        const data = {
-            songId: id,
-            cmd: GLOBALS.CONTROL_CMD.SELECT
-        }
+        return;
         if(status == GLOBALS.SING_STATUS.NO_DOWNLOADED)
         {
             BoxControl.downloadSong(id,(errorCode)=>{
-                //console.warn("downloadSong id= "+id+", errorCode = "+errorCode);
-                //BTE_LIB.setDownloadStatus(1);
             });        
         }
         else{
@@ -289,7 +309,7 @@ export default class SongListView extends React.Component {
         let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
        // console.warn("Name = "+item["Name"]+" , item = "+item);
         if(status == GLOBALS.SING_STATUS.DOWNLOADING){
-            singPrefix = "[ " + item.progress  + " ]";
+            singPrefix = "[ " + item.progress  + "% ]";
         }
         else{
             singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
@@ -301,7 +321,8 @@ export default class SongListView extends React.Component {
             <ListItem
                 style={styles.listItem}
                 onPress={this._onPressSong.bind(this, id, status)}
-                underlayColor="white">
+               // underlayColor="white"
+                >
                 <View style={{
                     flex: 1, flexDirection: "row", justifyContent: "center",
                     alignItems: "center", height: 60, marginLeft: 17, marginRight: 5}}>
@@ -322,8 +343,53 @@ export default class SongListView extends React.Component {
             </ListItem>
         );
     };
+
+    _rowRenderer2 = (type, item) => {
+        const {id,name,actor,singerName,status} = item;
+        const {listType} = this.props;
+        var _status = (listType != GLOBALS.SONG_LIST_TYPE.SELECTED)?status:GLOBALS.SING_STATUS.NORMAL;
+        const singColor = GLOBALS.SING_COLORS[_status];
+        const singerColor = GLOBALS.SINGER_COLORS[_status];
+        let singPrefix = GLOBALS.SING_PREFIX[_status];
+        let overlayType = GLOBALS.SING_OVERLAY.NORMAL;
+       // console.warn("Name = "+item["Name"]+" , item = "+item);
+        if(status == GLOBALS.SING_STATUS.DOWNLOADING){
+            singPrefix = "[ " + item.progress  + "% ]";
+        }
+        else{
+            singPrefix = (singPrefix != "") ? ("(" + singPrefix  + item.index  + ")") : "";
+        }
+        var hasOptionButton = (status  == GLOBALS.SING_STATUS.NO_DOWNLOADED
+                                || status  == GLOBALS.SING_STATUS.DOWNLOADING)?false:true;
+
+        return (
+            <View style={styles.listItem2}>
+                <ListItem
+                    style={{width:"100%",height:38}}
+                    rippleRound = {true}
+                    onPress={this._onPressSong.bind(this, id, status)}
+                    >
+                    <View style={{
+                        flex: 1, flexDirection: "row", justifyContent: "center",alignItems:"center"}}>
+                        <View  style={{ flex:1,justifyContent: "center"}}>
+                            <Text numberOfLines={1} style={[styles.songText, {color: singColor,fontSize:15,marginLeft:10,fontFamily:GLOBALS.FONT.BOLD }]}>
+                                    {name + " - " + singerName + singPrefix}
+                            </Text>
+                        </View>
+                        {/* <Text style={[styles.singerText, {color: singerColor, marginLeft:5 }]}>
+                                {singerName}
+                        </Text> */}
+                        { hasOptionButton &&
+                            <View style={{ width: 30, height: 30 }}>
+                                <IconRippe vector={true} name="tuychon2" size={20} 
+                                    onPress={this._showOptOverlay.bind(this,id,overlayType,actor)} />
+                            </View> }
+                    </View>
+                </ListItem>
+            </View>
+        );
+    };
     render = () => {
-        //const {_loading} = this.state;
         return (
             <View style={{ flex: 1 }}>
                 <RecyclerListView
@@ -333,10 +399,11 @@ export default class SongListView extends React.Component {
                     //showsVerticalScrollIndicator={false}
                     onEndReached={this._onEndReached}
                     dataProvider={this.state.dataProvider}
-                    layoutProvider={this._layoutProvider}
-                    rowRenderer={this._rowRenderer}
+                    layoutProvider={(GLOBALS.LANDSCAPE)?this._layoutProvider2:this._layoutProvider}
+                    rowRenderer={(GLOBALS.LANDSCAPE)?this._rowRenderer2:this._rowRenderer}
                     renderFooter={this._renderFooter}
                     extendedState={this.state.dataProvider} 
+                    renderAheadOffset = {1000}
                     />
                 <IndicatorView ref={ref => (this._indicator = ref)}/>
             </View>
@@ -361,6 +428,17 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
         borderBottomWidth: 0.5,
         borderColor: '#00ECBC',
+    },
+
+    listItem2: {
+        marginLeft:5,
+        marginRight:5,
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#B3DADF',
+        borderRadius: 5,
+        // justifyContent:"center",
+        // alignItems:"center"
     },
 
     songText: {

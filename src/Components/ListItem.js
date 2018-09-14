@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
 import PropTypes from "prop-types";
 import {
   TouchableHighlight,
@@ -7,19 +7,21 @@ import {
   View
 } from "react-native";
 
-// import { connectStyle } from "native-base-shoutem-theme";
-// import mapPropsToStyleNames from "../utils/mapPropsToStyleNames";
-// import variable from "../theme/variables/platform";
-
 export default class ListItem extends Component {
   static contextTypes = {
     theme: PropTypes.object
   };
-  render() {
-    // const variables = this.context.theme
-    //   ? this.context.theme["@@shoutem.theme/themeStyle"].variables
-    //   : variable;
 
+  static propTypes = {
+    rippleColor: PropTypes.string,
+    rippleRound:PropTypes.bool
+  };
+  static defaultProps = {
+    rippleColor : '#ccc',
+    rippleRound : false
+  }
+  render() {
+    const {rippleColor,rippleRound} = this.props;
     if (
       Platform.OS === "ios" ||
       Platform.OS === "web" ||
@@ -44,8 +46,8 @@ export default class ListItem extends Component {
         <TouchableNativeFeedback
           ref={c => (this._root = c)}
           {...this.props}
-          background={TouchableNativeFeedback.Ripple('white')}
-          delayPressIn={0}
+          background={(rippleRound)?TouchableNativeFeedback.Ripple(rippleColor,true):TouchableNativeFeedback.Ripple(rippleColor)}
+        //  delayPressIn={30}
         >
           <View style={{ marginLeft: 0, paddingLeft: 0 }}>
             <View {...this.props}>{this.props.children}</View>

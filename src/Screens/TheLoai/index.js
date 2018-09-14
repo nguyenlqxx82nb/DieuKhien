@@ -1,10 +1,7 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text,View } from "react-native";
 import BaseScreen from "../ScreenBase.js"
 import PropTypes from 'prop-types';
-import {
-    View,
-} from "native-base";
 import IconRippe from '../../Components/IconRippe.js'
 import { Grid, Col, Row } from "react-native-easy-grid";
 import LinearGradient from 'react-native-linear-gradient';

@@ -7,7 +7,7 @@ export default {
         Volume : 0,
     },
 
-    PLAY_QUEUE : {},
+    PLAY_QUEUE : [],
 
     DOWN_QUEUE : []
     

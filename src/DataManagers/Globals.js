@@ -71,7 +71,7 @@ export default {
     },
 
     LANGUAGE: {
-        'vn': 8,
+        'vn': 10,
         'en': 4,
         'cn': 1,
         'ja': 5,
@@ -106,7 +106,12 @@ export default {
         'en': "ENGLISH",
         'cn': "CHINESE",
         'ja': "JAPANESE",
-        'kr': "KOREAN"
+        'kr': "KOREAN",
+        'taiwan':"TAIWAN",
+        'hk' : "HONGKONG",
+        'ml':"MALAYSIA",
+        'tl' :"THÁI-LÀO",
+        'ca' :"CAMPUCHIA"
     },
 
     DOWNLOAD_STATUS: {
@@ -275,5 +280,14 @@ export default {
     INFO:{
         VERSION : 1,
         CONNECT : 2
-    }
+    },
+
+    ORIENTATION_TYPE:{
+        LANDSCAPE:1,
+        PORTRAIT:2
+    },
+
+    ORIENTATION : 2,
+    LANDSCAPE : false,
+    
 };

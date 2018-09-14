@@ -96,7 +96,7 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+	
     defaultConfig {
         applicationId "com.dieukhien"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -105,6 +105,16 @@ android {
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
+        }
+    }
+	signingConfigs {
+        release {
+            if (project.hasProperty('T2_RELEASE_STORE_FILE')) {
+                storeFile file(T2_RELEASE_STORE_FILE)
+                storePassword T2_RELEASE_STORE_PASSWORD
+                keyAlias T2_RELEASE_KEY_ALIAS
+                keyPassword T2_RELEASE_KEY_PASSWORD
+            }
         }
     }
     splits {
@@ -119,6 +129,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+			signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,6 +148,7 @@ android {
 }
 
 dependencies {
+	compile project(':react-native-orientation')
 	compile project(':react-native-sqlite-storage')
 	compile project(':react-native-bte-lib')
     compile project(':react-native-linear-gradient')
